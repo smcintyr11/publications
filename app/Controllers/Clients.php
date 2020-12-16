@@ -11,16 +11,14 @@ class Clients extends Controller
         $uri = service('uri');
 
         // Parse the URI
-        $id_sort = $uri->getSegment(3);
-        $client_sort = $uri->getSegment(4);
-        $rows = $uri->getSegment(5);
-        $offset = $uri->getSegment(6);
+        $cur_sort = $uri->getSegment(3);
+        $rows = $uri->getSegment(4);
+        $page = $uri->setSilent()->getSegment(5, 1);
+        $filter = $uri->setSilent()->getSegment(6, '');
 
         // Check for a post
         if ($this->request->getMethod() === "post") {
             $filter = $this->request->getPost('filter');
-        } else {
-            $filter = $uri->getSegment(7);
         }
 
         // Get the client model
@@ -29,14 +27,14 @@ class Clients extends Controller
         //$cc = $model->getClients($id_sort, $client_sort, $filter, $rows, $offset);
 
         // Populate the data going to the view
+        //$offset = ((int)$rows * ($page - 1));
         $data = [
-            'clients' => $model->getClients($id_sort, $client_sort, $filter, $rows, $offset),
+            'clients' => $model->getClients($cur_sort, $filter, $rows, ((int)$rows * ($page - 1))),
             'title' => 'Clients',
-            'id_sort' => $id_sort,
-            'client_sort' => $client_sort,
-            'filter' => $filter,
-            'rows' =>  $rows,
-            'offset' => $offset,
+            'cur_sort' => $cur_sort,
+            'rows' => $rows,
+            'page' => $page,
+            'filter' => $filter
         ];
 
         // Generate the view

@@ -1,16 +1,12 @@
-<?php
-    if (isset($_SESSION['rows']) == false) {
-        
-    }
- ?>
 <div class="container-lg my-3 py-3">
     <h1><?= esc($title); ?></h1>
 
 
-    <form class="form-inline" action="/clients/index/<?= $id_sort ?>/<?= $client_sort ?>/<?= $rows ?>/<?= $offset ?>" method="post">
+    <form class="form-inline" action="/clients/index/<?= $cur_sort ?>/<?= $rows ?>" method="post">
         <?= csrf_field() ?>
         <input class="form-control mr-sm-2" type="text" name="filter" placeholder="Search">
-        <button class="btn btn-success" type="submit">Search</button>
+        <button class="btn btn-success m-1" type="submit">Search</button>
+        <a class="btn btn-info m-1" href="/clients/index/id_asc/<?= $rows ?>">Reset</a>
     </form>
 
     <a class="btn btn-primary my-3" href="/clients/new">Create Client</a>
@@ -22,33 +18,30 @@
             <col style="width: 15%">
             <thead class="thead-light">
                 <?php
-                    if ($id_sort == "id_asc") {
+                    $id_sort_param = "id_asc";
+                    $client_sort_param = "client_asc";
+                    if ($cur_sort == "id_asc") {
                         $id_sort_param = "id_desc";
-                    } else {
-                        $id_sort_param = "id_asc";
-                    }
-                    if ($client_sort == "client_asc") {
+                    } elseif ($cur_sort == "client_asc") {
                         $client_sort_param = "client_desc";
-                    } else {
-                        $client_sort_param = "client_asc";
                     }
                  ?>
                 <th scope="col">
-                    <a class="btn btn-link" href="/clients/index/<?= $id_sort_param ?>/client_none/<?= $rows ?>/<?= $offset ?>/<?= $filter ?>">Client ID</a>
+                    <a class="btn btn-link" href="/clients/index/<?= $id_sort_param ?>/<?= $rows ?>/<?= $page ?>/<?= $filter ?>">Client ID</a>
                     <?php
-                        if ($id_sort == "id_asc") {
+                        if ($cur_sort == "id_asc") {
                             echo ("^");
-                        } elseif ($id_sort == "id_desc") {
+                        } elseif ($cur_sort == "id_desc") {
                             echo ("V");
                         }
                     ?>
                 </th>
                 <th scope="col">
-                    <a class="btn btn-link" href="/clients/index/id_none/<?= $client_sort_param ?>/<?= $rows ?>/<?= $offset ?>/<?= $filter ?>">Client</a>
+                    <a class="btn btn-link" href="/clients/index/<?= $client_sort_param ?>/<?= $rows ?>/<?= $page ?>/<?= $filter ?>">Client</a>
                     <?php
-                        if ($client_sort == "client_asc") {
+                        if ($cur_sort == "client_asc") {
                             echo ("^");
-                        } elseif ($client_sort == "client_desc") {
+                        } elseif ($cur_sort == "client_desc") {
                             echo ("V");
                         }
                     ?>
@@ -76,19 +69,19 @@
             echo("disabled");
         }
         ?>
-        " href="/clients/index/<?= $id_sort ?>/<?= $client_sort ?>/25/<?= $offset ?>/<?= $filter ?>">25</a><a class="btn btn-link
+        " href="/clients/index/<?= $cur_sort ?>/25/1/<?= $filter ?>">25</a><a class="btn btn-link
         <?php if ($rows == 50)
         {
             echo("disabled");
         }
         ?>
-        " href="/clients/index/<?= $id_sort ?>/<?= $client_sort ?>/50/<?= $offset ?>/<?= $filter ?>">50</a><a class="btn btn-link
+        " href="/clients/index/<?= $cur_sort ?>/50/1/<?= $filter ?>">50</a><a class="btn btn-link
         <?php if ($rows == 100)
         {
             echo("disabled");
         }
         ?>
-        " href="/clients/index/<?= $id_sort ?>/<?= $client_sort ?>/100/<?= $offset ?>/<?= $filter ?>">100</a>
+        " href="/clients/index/<?= $cur_sort ?>/100/1/<?= $filter ?>">100</a>
     </div>
 
 </div>
