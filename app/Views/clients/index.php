@@ -1,7 +1,6 @@
 <div class="container-lg my-3 py-3">
     <h1><?= esc($title); ?></h1>
 
-
     <form class="form-inline" action="/clients/index/<?= $cur_sort ?>/<?= $rows ?>" method="post">
         <?= csrf_field() ?>
         <input class="form-control mr-sm-2" type="text" name="filter" placeholder="Search">
@@ -27,7 +26,7 @@
                     }
                  ?>
                 <th scope="col">
-                    <a class="btn btn-link" href="/clients/index/<?= $id_sort_param ?>/<?= $rows ?>/<?= $page ?>/<?= $filter ?>">Client ID</a>
+                    <a class="btn btn-link" href="/clients/index/<?= $id_sort_param ?>/<?= $rows ?>/1/<?= $filter ?>">Client ID</a>
                     <?php
                         if ($cur_sort == "id_asc") {
                             echo ("^");
@@ -37,7 +36,7 @@
                     ?>
                 </th>
                 <th scope="col">
-                    <a class="btn btn-link" href="/clients/index/<?= $client_sort_param ?>/<?= $rows ?>/<?= $page ?>/<?= $filter ?>">Client</a>
+                    <a class="btn btn-link" href="/clients/index/<?= $client_sort_param ?>/<?= $rows ?>/1/<?= $filter ?>">Client</a>
                     <?php
                         if ($cur_sort == "client_asc") {
                             echo ("^");
@@ -61,27 +60,37 @@
             </tbody>
         </table>
     </div>
-    <div class="text-right">
-        Rows per page:
-    <a class="btn btn-link
-        <?php if ($rows == 25)
-        {
-            echo("disabled");
-        }
-        ?>
-        " href="/clients/index/<?= $cur_sort ?>/25/1/<?= $filter ?>">25</a><a class="btn btn-link
-        <?php if ($rows == 50)
-        {
-            echo("disabled");
-        }
-        ?>
-        " href="/clients/index/<?= $cur_sort ?>/50/1/<?= $filter ?>">50</a><a class="btn btn-link
-        <?php if ($rows == 100)
-        {
-            echo("disabled");
-        }
-        ?>
-        " href="/clients/index/<?= $cur_sort ?>/100/1/<?= $filter ?>">100</a>
-    </div>
 
+    <div class="row">
+        <div class="col-lg-1 btn">
+            Page:
+        </div>
+        <div class="col-lg-7">
+            <?= $pager->makeLinks(1, 1, $count, 'bootstrap_full', 5) ?>
+        </div>
+        <div class="col-lg-2 btn  text-right">
+            Rows per page:
+        </div>
+        <div class="col-lg-2">
+        <a class="btn btn-link
+            <?php if ($rows == 25)
+            {
+                echo("disabled");
+            }
+            ?>
+            " href="/clients/index/<?= $cur_sort ?>/25/<?= $pager->getCurrentPage() ?>/<?= $filter ?>">25</a><a class="btn btn-link
+            <?php if ($rows == 50)
+            {
+                echo("disabled");
+            }
+            ?>
+            " href="/clients/index/<?= $cur_sort ?>/50/<?= $pager->getCurrentPage() ?>/<?= $filter ?>">50</a><a class="btn btn-link
+            <?php if ($rows == 100)
+            {
+                echo("disabled");
+            }
+            ?>
+            " href="/clients/index/<?= $cur_sort ?>/100/<?= $pager->getCurrentPage() ?>/<?= $filter ?>">100</a>
+        </div>
+    </div>
 </div>

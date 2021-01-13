@@ -8,7 +8,7 @@ class ClientModel extends Model
     protected $primaryKey = "ClientID";
     protected $allowedFields = ["Clients"];
 
-    public function getClients($cur_sort = null, $filter = null, $limit = null, $offset = null)
+    public function getClients($cur_sort = null, $filter = null, $rows = 25, $page = 1)
     {
         // Determine which way  we are ordering
         if ($cur_sort == "id_asc") {
@@ -26,18 +26,19 @@ class ClientModel extends Model
             $clients = $clients->like('Client', $filter);
         }
 
-        // Determine if we are paging
-        if (is_null($limit)) {
-            $clients = $clients->findAll();
-        } else {
-            if (is_null($offset)) {
-                $clients = $clients->findAll($limit);
-            } else {
-                $clients = $clients->findAll($limit, $offset);
-            }
-        }
-
         // Return the clients
-        return $clients;
+        return $clients->paginate($rows, 'default', $page);
+    }
+
+    public function getCount($filter)
+    {
+        $db = \Config\Database::connect();
+        $builder = $db->table('Clients');
+        $builder->select('Client');
+        $builder->like('Client', $filter);
+        // $query = $builder->get();
+        // $row = $query->getRow();
+        // return $row->Client;
+        return $builder->countAllResults();
     }
 }

@@ -13,6 +13,7 @@ class Clients extends Controller
         // Parse the URI
         $cur_sort = $uri->getSegment(3);
         $rows = $uri->getSegment(4);
+        $rows = 1;
         $page = $uri->setSilent()->getSegment(5, 1);
         $filter = $uri->setSilent()->getSegment(6, '');
 
@@ -29,12 +30,14 @@ class Clients extends Controller
         // Populate the data going to the view
         //$offset = ((int)$rows * ($page - 1));
         $data = [
-            'clients' => $model->getClients($cur_sort, $filter, $rows, ((int)$rows * ($page - 1))),
+            // 'clients' => $model->getClients($cur_sort, $filter, $rows),
+            'clients' => $model->getClients($cur_sort, $filter, $rows, $page),
+            'pager' => $model->pager,
             'title' => 'Clients',
             'cur_sort' => $cur_sort,
             'rows' => $rows,
-            'page' => $page,
-            'filter' => $filter
+            'filter' => $filter,
+            'count' => $model->getCount($filter),
         ];
 
         // Generate the view
