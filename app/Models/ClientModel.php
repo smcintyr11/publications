@@ -32,13 +32,11 @@ class ClientModel extends Model
 
     public function getCount($filter)
     {
+        // Get the count of the filtered rows
         $db = \Config\Database::connect();
         $builder = $db->table('Clients');
         $builder->select('Client');
         $builder->like('Client', $filter);
-        // $query = $builder->get();
-        // $row = $query->getRow();
-        // return $row->Client;
         return $builder->countAllResults();
     }
 }

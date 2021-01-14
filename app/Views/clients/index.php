@@ -66,7 +66,7 @@
             Page:
         </div>
         <div class="col-lg-7">
-            <?= $pager->makeLinks(1, 1, $count, 'bootstrap_full', 5) ?>
+            <?= $pager->makeLinks($page, $rows, $count, 'bootstrap_full', 5) ?>
         </div>
         <div class="col-lg-2 btn  text-right">
             Rows per page:
