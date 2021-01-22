@@ -14,6 +14,9 @@
      <!-- Latest compiled JavaScript -->
      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+     <!-- Font Awesome -->
+     <script src="https://kit.fontawesome.com/dbe22d5793.js" crossorigin="anonymous"></script>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Publications - <?= esc($title); ?></title>

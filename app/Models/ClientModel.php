@@ -6,7 +6,7 @@ class ClientModel extends Model
 {
     protected $table = "Clients";
     protected $primaryKey = "ClientID";
-    protected $allowedFields = ["Clients"];
+    protected $allowedFields = ["Client"];
 
     public function getClients($cur_sort = null, $filter = null, $rows = 25, $page = 1)
     {
@@ -28,6 +28,18 @@ class ClientModel extends Model
 
         // Return the clients
         return $clients->paginate($rows, 'default', $page);
+    }
+
+    public function getClient($clientID)
+    {
+      // Return the client
+      return $this->find($clientID);
+    }
+
+    public function deleteClient($clientID)
+    {
+      // Try to delete the clients
+      $this->delete($clientID);
     }
 
     public function getCount($filter)

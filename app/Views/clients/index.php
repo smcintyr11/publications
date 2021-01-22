@@ -3,12 +3,13 @@
 
     <form class="form-inline" action="/clients/index/<?= $cur_sort ?>/<?= $rows ?>" method="post">
         <?= csrf_field() ?>
+
         <input class="form-control mr-sm-2" type="text" name="filter" placeholder="Search">
         <button class="btn btn-success m-1" type="submit">Search</button>
         <a class="btn btn-info m-1" href="/clients/index/id_asc/<?= $rows ?>">Reset</a>
     </form>
 
-    <a class="btn btn-primary my-3" href="/clients/new">Create Client</a>
+    <a class="btn btn-primary my-3" href="/clients/new/<?= $cur_sort ?>/<?= $rows ?>/<?= $page ?>/<?= $filter ?>">Create Client</a>
 
     <div class="table-responsive-lg">
         <table class="table table-striped table-bordered">
@@ -29,9 +30,9 @@
                     <a class="btn btn-link" href="/clients/index/<?= $id_sort_param ?>/<?= $rows ?>/1/<?= $filter ?>">Client ID</a>
                     <?php
                         if ($cur_sort == "id_asc") {
-                            echo ("^");
+                          echo("<i class=\"fas fa-sort-up\"></i>");
                         } elseif ($cur_sort == "id_desc") {
-                            echo ("V");
+                          echo ("<i class=\"fas fa-sort-down\"></i>");
                         }
                     ?>
                 </th>
@@ -39,9 +40,9 @@
                     <a class="btn btn-link" href="/clients/index/<?= $client_sort_param ?>/<?= $rows ?>/1/<?= $filter ?>">Client</a>
                     <?php
                         if ($cur_sort == "client_asc") {
-                            echo ("^");
+                          echo("<i class=\"fas fa-sort-up\"></i>");
                         } elseif ($cur_sort == "client_desc") {
-                            echo ("V");
+                          echo ("<i class=\"fas fa-sort-down\"></i>");
                         }
                     ?>
                 </th>
@@ -53,7 +54,7 @@
                         <tr>
                             <td><?= $client['ClientID']; ?></td>
                             <td><?= esc($client['Client']); ?></td>
-                            <td><a class="btn btn-link" href="/clients/edit/<?= $client['ClientID']; ?>">Edit</a>|<a class="btn btn-link" href="/clients/delete/<?= $client['ClientID']; ?>">Delete</a></td>
+                            <td><a class="btn btn-link" href="/clients/edit/<?= $client['ClientID']; ?>">Edit</a>|<a class="btn btn-link" href="/clients/delete/<?= $client['ClientID']; ?>/<?= $cur_sort ?>/<?= $rows ?>/1/<?= $filter ?>">Delete</a></td>
                         </tr>
                     <?php endforeach; ?>
                 <?php endif ?>
@@ -78,19 +79,19 @@
                 echo("disabled");
             }
             ?>
-            " href="/clients/index/<?= $cur_sort ?>/25/<?= $pager->getCurrentPage() ?>/<?= $filter ?>">25</a><a class="btn btn-link
+            " href="/clients/index/<?= $cur_sort ?>/25/<?= $page ?>/<?= $filter ?>">25</a><a class="btn btn-link
             <?php if ($rows == 50)
             {
                 echo("disabled");
             }
             ?>
-            " href="/clients/index/<?= $cur_sort ?>/50/<?= $pager->getCurrentPage() ?>/<?= $filter ?>">50</a><a class="btn btn-link
+            " href="/clients/index/<?= $cur_sort ?>/50/<?= $page ?>/<?= $filter ?>">50</a><a class="btn btn-link
             <?php if ($rows == 100)
             {
                 echo("disabled");
             }
             ?>
-            " href="/clients/index/<?= $cur_sort ?>/100/<?= $pager->getCurrentPage() ?>/<?= $filter ?>">100</a>
+            " href="/clients/index/<?= $cur_sort ?>/100/<?= $page ?>/<?= $filter ?>">100</a>
         </div>
     </div>
 </div>
