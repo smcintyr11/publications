@@ -84,7 +84,7 @@ class Clients extends Controller
 
     // Check for a post
     if ($this->request->getMethod() === "post") {
-        $filter = $this->request->getPost('filter');
+      $filter = $this->request->getPost('filter');
     }
 
     // Get the client model
@@ -92,14 +92,14 @@ class Clients extends Controller
 
     // Populate the data going to the view
     $data = [
-        'clients' => $model->getClients($cur_sort, $filter, $rows, $page),
-        'pager' => $model->pager,
-        'title' => 'Clients',
-        'cur_sort' => $cur_sort,
-        'page' => $page,
-        'rows' => $rows,
-        'filter' => $filter,
-        'count' => $model->getCount($filter),
+      'clients' => $model->getClients($cur_sort, $filter, $rows, $page),
+      'pager' => $model->pager,
+      'title' => 'Clients',
+      'cur_sort' => $cur_sort,
+      'page' => $page,
+      'rows' => $rows,
+      'filter' => $filter,
+      'count' => $model->getCount($filter),
     ];
 
     // Generate the view

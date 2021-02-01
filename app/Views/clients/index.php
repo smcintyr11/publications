@@ -6,7 +6,7 @@
 
         <input class="form-control mr-sm-2" type="text" name="filter" placeholder="Search">
         <button class="btn btn-success m-1" type="submit">Search</button>
-        <a class="btn btn-info m-1" href="/clients/index/id_asc/<?= $rows ?>">Reset</a>
+        <a class="btn btn-info m-1" href="/clients/index/<?= $cur_sort ?>/<?= $rows ?>">Reset</a>
     </form>
 
     <a class="btn btn-primary my-3" href="/clients/new/<?= $cur_sort ?>/<?= $rows ?>/<?= $page ?>/<?= $filter ?>">Create Client</a>
