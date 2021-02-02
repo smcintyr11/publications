@@ -156,4 +156,75 @@ class Clients extends Controller
       echo view('templates/footer.php', $data);
     }
   }
+
+  public function edit()
+  {
+    // Get the client model
+    $model = new ClientModel();
+
+    // Load helpers
+    helper(['url', 'form']);
+    $validation = \Config\Services::validation();
+
+    // Is this a post (saving)
+    if ($this->request->getMethod() === 'post') {
+      // Get the view data from the form
+      $cur_sort = $this->request->getPost('cur_sort');
+      $rows = $this->request->getPost('rows');
+      $page = $this->request->getPost('page');
+      $filter = $this->request->getPost('filter');
+
+      // Validate the data
+      $validation->setRule('client', 'Client', 'required|is_unique[Clients.Client,clientID,{clientID}]');
+      if ($validation->withRequest($this->request)->run()) {  // Valid
+        // Save
+        $model->save([
+          'ClientID' => $this->request->getPost('clientID'),
+          'Client' => $this->request->getPost('client'),
+        ]);
+
+        // Go back to index
+        return redirect()->to("index/".$cur_sort."/".$rows."/".$page."/".$filter);
+      } else {  // Invalid - Redisplay the form
+        // Generate the view
+        $data = [
+          'title' => 'Edit Client',
+          'client' => $model->getClient($this->request->getPost('clientID')),
+          'cur_sort' => $cur_sort,
+          'rows' => $rows,
+          'page' => $page,
+          'filter' => $filter,
+        ];
+        echo view('templates/header.php', $data);
+        echo view('templates/menu.php', $data);
+        echo view('clients/edit.php', $data);
+        echo view('templates/footer.php', $data);
+      }
+
+    } else {  // Load edit page
+      // Get the URI service
+      $uri = service('uri');
+
+      // Parse the URI
+      $client_id = $uri->getSegment(3);
+      $cur_sort = $uri->getSegment(4);
+      $rows = $uri->getSegment(5);
+      $page = $uri->setSilent()->getSegment(6, 1);
+      $filter = $uri->setSilent()->getSegment(7, '');
+
+      // Generate the delete view
+      $data = [
+        'title' => 'Edit Client',
+        'client' => $model->getClient($client_id),
+        'cur_sort' => $cur_sort,
+        'rows' => $rows,
+        'page' => $page,
+        'filter' => $filter,
+      ];
+      echo view('templates/header.php', $data);
+      echo view('templates/menu.php', $data);
+      echo view('clients/edit.php', $data);
+      echo view('templates/footer.php', $data);
+    }
+  }
 }

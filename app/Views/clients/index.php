@@ -54,7 +54,7 @@
                         <tr>
                             <td><?= $client['ClientID']; ?></td>
                             <td><?= esc($client['Client']); ?></td>
-                            <td><a class="btn btn-link" href="/clients/edit/<?= $client['ClientID']; ?>">Edit</a>|<a class="btn btn-link" href="/clients/delete/<?= $client['ClientID']; ?>/<?= $cur_sort ?>/<?= $rows ?>/1/<?= $filter ?>">Delete</a></td>
+                            <td><a class="btn btn-link" href="/clients/edit/<?= $client['ClientID']; ?>/<?= $cur_sort ?>/<?= $rows ?>/<?= $page ?>/<?= $filter ?>"">Edit</a>|<a class="btn btn-link" href="/clients/delete/<?= $client['ClientID']; ?>/<?= $cur_sort ?>/<?= $rows ?>/1/<?= $filter ?>">Delete</a></td>
                         </tr>
                     <?php endforeach; ?>
                 <?php endif ?>
