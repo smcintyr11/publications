@@ -2,8 +2,7 @@
 
 use CodeIgniter\Model;
 
-class CostCentreModel extends Model
-{
+class CostCentreModel extends Model {
   // Member variables
   protected $table = "CostCentres";
   protected $primaryKey = "CostCentreID";

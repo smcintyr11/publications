@@ -20,7 +20,7 @@ class CostCentres extends Controller
       $filter = $this->request->getPost('filter');
     }
 
-    // Get the client model
+    // Get the cost centre model
     $model = new CostCentreModel();
 
     // Populate the data going to the view
@@ -58,8 +58,8 @@ class CostCentres extends Controller
       $page = $this->request->getPost('page');
       $filter = $this->request->getPost('filter');
 
-      $validation->setRule('costCentre', 'Cost Centre', 'required|is_unique[CostCentres.CostCentre,costCentreID,{costCentreID}]');
-      $validation->setRule('description', 'Description', 'required');
+      $validation->setRule('costCentre', 'Cost Centre', 'required|max_length[64]|is_unique[CostCentres.CostCentre,costCentreID,{costCentreID}]');
+      $validation->setRule('description', 'Description', 'required|max_length[256]');
 
       if ($validation->withRequest($this->request)->run()) {
           // Save
@@ -173,8 +173,8 @@ class CostCentres extends Controller
       $filter = $this->request->getPost('filter');
 
       // Validate the data
-      $validation->setRule('costCentre', 'Cost Centre', 'required|is_unique[CostCentres.CostCentre,costCentreID,{costCentreID}]');
-      $validation->setRule('description', 'Description', 'required');
+      $validation->setRule('costCentre', 'Cost Centre', 'required|max_length[64]|is_unique[CostCentres.CostCentre,costCentreID,{costCentreID}]');
+      $validation->setRule('description', 'Description', 'required|max_length[256]');
       if ($validation->withRequest($this->request)->run()) {  // Valid
         // Save
         $model->save([
