@@ -21,7 +21,7 @@
     <label for="costCentre">Cost Centre</label>
     <input class="form-control" type="input" name="costCentre" id="costCentre" value="<?= set_value('costCentre', $costCentre['CostCentre']) ?>"/><br />
 
-    <label for="description">Cost Centre</label>
+    <label for="description">Description</label>
     <input class="form-control" type="input" name="description" id="description" value="<?= set_value('description', $costCentre['Description']) ?>"/><br />
 
     <button class="btn btn-success m-1" type="submit" name="submit">Save Cost Centre</button>

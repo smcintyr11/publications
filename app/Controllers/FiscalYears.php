@@ -1,10 +1,9 @@
 <?php namespace App\Controllers;
 
-use App\Models\CostCentreModel;
+use App\Models\FiscalYearModel;
 use CodeIgniter\Controller;
 
-class CostCentres extends Controller
-{
+class FiscalYears extends Controller {
   public function index() {
     // Get the URI service
     $uri = service('uri');
@@ -20,14 +19,14 @@ class CostCentres extends Controller
       $filter = $this->request->getPost('filter');
     }
 
-    // Get the client model
-    $model = new CostCentreModel();
+    // Get the fiscal year model
+    $model = new FiscalYearModel();
 
     // Populate the data going to the view
     $data = [
-      'costCentres' => $model->getCostCentres($cur_sort, $filter, $rows, $page),
+      'fiscalYears' => $model->getFiscalYears($cur_sort, $filter, $rows, $page),
       'pager' => $model->pager,
-      'title' => 'Cost Centres',
+      'title' => 'Fiscal Years',
       'cur_sort' => $cur_sort,
       'page' => $page,
       'rows' => $rows,
@@ -38,13 +37,13 @@ class CostCentres extends Controller
     // Generate the view
     echo view('templates/header.php', $data);
 		echo view('templates/menu.php', $data);
-		echo view('costCentres/index.php', $data);
+		echo view('fiscalYears/index.php', $data);
 		echo view('templates/footer.php', $data);
   }
 
   public function new() {
     // Create a new Model
-    $model = new CostCentreModel();
+    $model = new FiscalYearModel();
 
     // Load helpers
     helper(['url', 'form']);
@@ -58,34 +57,31 @@ class CostCentres extends Controller
       $page = $this->request->getPost('page');
       $filter = $this->request->getPost('filter');
 
-      $validation->setRule('costCentre', 'Cost Centre', 'required|is_unique[CostCentres.CostCentre,costCentreID,{costCentreID}]');
-      $validation->setRule('description', 'Description', 'required');
+      $validation->setRule('fiscalYear', 'Fiscal Year', 'required|max_length[11]|is_unique[FiscalYears.FiscalYear,fiscalYearID,{fiscalYearID}]');
 
       if ($validation->withRequest($this->request)->run()) {
-          // Save
-          $model->save([
-            'CostCentre' => $this->request->getPost('costCentre'),
-            'Description' => $this->request->getPost('description'),
-          ]);
+        // Save
+        $model->save([
+          'FiscalYear' => $this->request->getPost('fiscalYear'),
+        ]);
 
-          // Go back to index
-          return redirect()->to("index/".$cur_sort."/".$rows."/".$page."/".$filter);
-        } else {  // Invalid - Redisplay the form
-          // Generate the create view
-          $data = [
-            'title' => 'Create New Cost Centre',
-            'cur_sort' => $cur_sort,
-            'rows' => $rows,
-            'page' => $page,
-            'filter' => $filter,
-          ];
+        // Go back to index
+        return redirect()->to("index/".$cur_sort."/".$rows."/".$page."/".$filter);
+      } else {  // Invalid - Redisplay the form
+        // Generate the create view
+        $data = [
+          'title' => 'Create New Fiscal Year',
+          'cur_sort' => $cur_sort,
+          'rows' => $rows,
+          'page' => $page,
+          'filter' => $filter,
+        ];
 
-          echo view('templates/header.php', $data);
-          echo view('templates/menu.php', $data);
-          echo view('costCentres/new.php', $data);
-          echo view('templates/footer.php', $data);
-        }
-
+        echo view('templates/header.php', $data);
+        echo view('templates/menu.php', $data);
+        echo view('fiscalYears/new.php', $data);
+        echo view('templates/footer.php', $data);
+      }
     } else {  // HTTP GET request
       // Get the URI service
       $uri = service('uri');
@@ -98,7 +94,7 @@ class CostCentres extends Controller
 
       // Generate the create view
       $data = [
-        'title' => 'Create New Cost Centre',
+        'title' => 'Create New Fiscal Year',
         'cur_sort' => $cur_sort,
         'rows' => $rows,
         'page' => $page,
@@ -107,19 +103,19 @@ class CostCentres extends Controller
 
       echo view('templates/header.php', $data);
       echo view('templates/menu.php', $data);
-      echo view('costCentres/new.php', $data);
+      echo view('fiscalYears/new.php', $data);
       echo view('templates/footer.php', $data);
     }
   }
 
   public function delete() {
-    // Get the cost centre model
-    $model = new CostCentreModel();
+    // Get the fiscal year model
+    $model = new FiscalYearModel();
 
     // Is this a post (deleting)
     if ($this->request->getMethod() === 'post') {
-      // Delete the cost centre
-      $model->deleteCostCentre($this->request->getPost('CostCentreID'));
+      // Delete the fiscal year
+      $model->deleteFiscalYear($this->request->getPost('FiscalYearID'));
 
       // Get the view data from the form
       $cur_sort = $this->request->getPost('cur_sort');
@@ -134,7 +130,7 @@ class CostCentres extends Controller
       $uri = service('uri');
 
       // Parse the URI
-      $costCentreID = $uri->getSegment(3);
+      $fiscalYearID = $uri->getSegment(3);
       $cur_sort = $uri->getSegment(4);
       $rows = $uri->getSegment(5);
       $page = $uri->setSilent()->getSegment(6, 1);
@@ -142,8 +138,8 @@ class CostCentres extends Controller
 
       // Generate the delete view
       $data = [
-        'title' => 'Delete Cost Centre',
-        'costCentre' => $model->getCostCentre($costCentreID),
+        'title' => 'Delete Fiscal Year',
+        'fiscalYear' => $model->getFiscalYear($fiscalYearID),
         'cur_sort' => $cur_sort,
         'rows' => $rows,
         'page' => $page,
@@ -151,14 +147,16 @@ class CostCentres extends Controller
       ];
       echo view('templates/header.php', $data);
       echo view('templates/menu.php', $data);
-      echo view('costCentres/delete.php', $data);
+      echo view('fiscalYears
+
+      /delete.php', $data);
       echo view('templates/footer.php', $data);
     }
   }
 
   public function edit() {
     // Create a new Model
-    $model = new CostCentreModel();
+    $model = new FiscalYearModel();
 
     // Load helpers
     helper(['url', 'form']);
@@ -173,14 +171,12 @@ class CostCentres extends Controller
       $filter = $this->request->getPost('filter');
 
       // Validate the data
-      $validation->setRule('costCentre', 'Cost Centre', 'required|is_unique[CostCentres.CostCentre,costCentreID,{costCentreID}]');
-      $validation->setRule('description', 'Description', 'required');
+      $validation->setRule('fiscalYear', 'Fiscal Year', 'required|max_length[11]|is_unique[FiscalYears.FiscalYear,fiscalYearID,{fiscalYearID}]');
       if ($validation->withRequest($this->request)->run()) {  // Valid
         // Save
         $model->save([
-          'CostCentreID' => $this->request->getPost('costCentreID'),
-          'CostCentre' => $this->request->getPost('costCentre'),
-          'Description' => $this->request->getPost('description'),
+          'FiscalYearID' => $this->request->getPost('fiscalYearID'),
+          'FiscalYear' => $this->request->getPost('fiscalYear'),
         ]);
 
         // Go back to index
@@ -188,8 +184,8 @@ class CostCentres extends Controller
       } else  {  // Invalid - Redisplay the form
         // Generate the view
         $data = [
-          'title' => 'Edit Cost Centre',
-          'costCentre' => $model->getCostCentre($this->request->getPost('costCentreID')),
+          'title' => 'Edit Fiscal Year',
+          'fiscalYear' => $model->getFiscalYear($this->request->getPost('fiscalYearID')),
           'cur_sort' => $cur_sort,
           'rows' => $rows,
           'page' => $page,
@@ -197,7 +193,7 @@ class CostCentres extends Controller
         ];
         echo view('templates/header.php', $data);
         echo view('templates/menu.php', $data);
-        echo view('costCentres/edit.php', $data);
+        echo view('fiscalYears/edit.php', $data);
         echo view('templates/footer.php', $data);
       }
     } else {  // Load edit page
@@ -205,7 +201,7 @@ class CostCentres extends Controller
       $uri = service('uri');
 
       // Parse the URI
-      $costCentreID = $uri->getSegment(3);
+      $fiscalYearID = $uri->getSegment(3);
       $cur_sort = $uri->getSegment(4);
       $rows = $uri->getSegment(5);
       $page = $uri->setSilent()->getSegment(6, 1);
@@ -213,8 +209,8 @@ class CostCentres extends Controller
 
       // Generate the delete view
       $data = [
-        'title' => 'Edit Cost Centre',
-        'costCentre' => $model->getCostCentre($costCentreID),
+        'title' => 'Edit Fiscal Year',
+        'fiscalYear' => $model->getFiscalYear($fiscalYearID),
         'cur_sort' => $cur_sort,
         'rows' => $rows,
         'page' => $page,
@@ -222,7 +218,7 @@ class CostCentres extends Controller
       ];
       echo view('templates/header.php', $data);
       echo view('templates/menu.php', $data);
-      echo view('costCentres/edit.php', $data);
+      echo view('fiscalYears/edit.php', $data);
       echo view('templates/footer.php', $data);
     }
   }

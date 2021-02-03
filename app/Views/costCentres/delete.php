@@ -29,7 +29,7 @@
     </div>
 
     <div class="form-group row">
-      <label>Are you sure you wish to delete this client?</label>
+      <label>Are you sure you wish to delete this cost centre?</label>
     </div>
 
     <div class="form-group row">

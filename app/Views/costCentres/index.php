@@ -71,7 +71,9 @@
               <td><?= $costCentre['CostCentreID']; ?></td>
               <td><?= $costCentre['CostCentre']; ?></td>
               <td><?= $costCentre['Description']; ?></td>
-              <td><a class="btn btn-link" href="/costCentres/edit/<?= $costCentre['CostCentreID']; ?>/<?= $cur_sort ?>/<?= $rows ?>/<?= $page ?>/<?= $filter ?>">Edit</a>|<a class="btn btn-link" href="/costCentres/delete/<?= $costCentre['CostCentreID']; ?>/<?= $cur_sort ?>/<?= $rows ?>/1/<?= $filter ?>">Delete</a></td>
+              <td><a class="btn btn-link" href="/costCentres/edit/<?= $costCentre['CostCentreID'] ?>/<?= $cur_sort ?>/<?= $rows ?>/<?= $page ?>/<?= $filter ?>">Edit</a>
+                |<a class="btn btn-link" href="/costCentres/delete/<?= $costCentre['CostCentreID'] ?>/<?= $cur_sort ?>/<?= $rows ?>/1/<?= $filter ?>">Delete</a>
+              </td>
             </tr>
           <?php endforeach; ?>
         <?php endif ?>
