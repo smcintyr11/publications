@@ -205,7 +205,7 @@ class Clients extends Controller {
       $page = $uri->setSilent()->getSegment(6, 1);
       $filter = $uri->setSilent()->getSegment(7, '');
 
-      // Generate the delete view
+      // Generate the edit view
       $data = [
         'title' => 'Edit Client',
         'client' => $model->getClient($clientID),

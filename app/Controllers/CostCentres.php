@@ -211,7 +211,7 @@ class CostCentres extends Controller
       $page = $uri->setSilent()->getSegment(6, 1);
       $filter = $uri->setSilent()->getSegment(7, '');
 
-      // Generate the delete view
+      // Generate the edit view
       $data = [
         'title' => 'Edit Cost Centre',
         'costCentre' => $model->getCostCentre($costCentreID),
