@@ -12,9 +12,9 @@
     <input type="hidden" name="filter" value="<?= $filter ?>">
 
     <div class="form-group row">
-    <label for="Client" class="col-sm-2 col-form-label font-weight-bold">Client:</label>
+    <label for="client" class="col-sm-2 col-form-label font-weight-bold">Client:</label>
     <div class="col-sm-10">
-      <input class="form-control" type="input" name="client" /><br />
+      <input class="form-control" type="input" name="client" value="<?= set_value('client') ?>"/><br />
     </div>
     </div>
 
