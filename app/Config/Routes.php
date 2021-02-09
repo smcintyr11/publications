@@ -1,4 +1,6 @@
-<?php namespace Config;
+<?php
+
+namespace Config;
 
 // Create a new instance of our RouteCollection class.
 $routes = Services::routes();
@@ -22,7 +24,7 @@ $routes->setTranslateURIDashes(false);
 $routes->set404Override();
 $routes->setAutoRoute(true);
 
-/**
+/*
  * --------------------------------------------------------------------
  * Route Definitions
  * --------------------------------------------------------------------
@@ -30,13 +32,9 @@ $routes->setAutoRoute(true);
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
-/* $routes->get('/journals', 'Journals::index');
-$routes->get('/fiscalYears', 'FiscalYears::index');
-$routes->get('/costCentres', 'CostCentres::index');
-$routes->get('/clients', 'Clients::index'); */
 $routes->get('/', 'Home::index');
 
-/**
+/*
  * --------------------------------------------------------------------
  * Additional Routing
  * --------------------------------------------------------------------
