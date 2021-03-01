@@ -17,6 +17,11 @@
      <!-- Font Awesome -->
      <script src="https://kit.fontawesome.com/dbe22d5793.js" crossorigin="anonymous"></script>
 
+     <!-- Jquery and Jquery UI -->
+     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Publications - <?= esc($title); ?></title>
