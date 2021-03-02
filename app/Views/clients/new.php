@@ -12,10 +12,10 @@
     <input type="hidden" name="filter" value="<?= $filter ?>">
 
     <div class="form-group row">
-    <label for="client" class="col-sm-2 col-form-label font-weight-bold">Client:</label>
-    <div class="col-sm-10">
-      <input class="form-control" type="input" name="client" value="<?= set_value('client') ?>"/><br />
-    </div>
+      <label for="client" class="col-sm-2 col-form-label font-weight-bold">Client:</label>
+      <div class="col-sm-10">
+        <input class="form-control" type="input" name="client" value="<?= set_value('client') ?>"/><br />
+      </div>
     </div>
 
     <button class="btn btn-success m-1" type="submit" name="submit">Create Client</button>

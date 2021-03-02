@@ -1,9 +1,9 @@
 <?php namespace App\Controllers;
 
-use App\Models\ClientModel;
+use App\Models\ReportTypeModel;
 use CodeIgniter\Controller;
 
-class Clients extends Controller {
+class ReportTypes extends Controller {
   public function index() {
     // Get the URI service
     $uri = service('uri');
@@ -19,14 +19,14 @@ class Clients extends Controller {
       $filter = $this->request->getPost('filter');
     }
 
-    // Get the model
-    $model = new ClientModel();
+    // Get the report type model
+    $model = new ReportTypeModel();
 
     // Populate the data going to the view
     $data = [
-      'clients' => $model->getClients($cur_sort, $filter, $rows, $page),
+      'reportTypes' => $model->getReportTypes($cur_sort, $filter, $rows, $page),
       'pager' => $model->pager,
-      'title' => 'Clients',
+      'title' => 'Report Types',
       'cur_sort' => $cur_sort,
       'page' => $page,
       'rows' => $rows,
@@ -37,13 +37,13 @@ class Clients extends Controller {
     // Generate the view
     echo view('templates/header.php', $data);
 		echo view('templates/menu.php', $data);
-		echo view('clients/index.php', $data);
+		echo view('reportTypes/index.php', $data);
 		echo view('templates/footer.php', $data);
   }
 
   public function new() {
     // Create a new Model
-    $model = new ClientModel();
+    $model = new ReportTypeModel();
 
     // Load helpers
     helper(['url', 'form']);
@@ -57,12 +57,14 @@ class Clients extends Controller {
       $page = $this->request->getPost('page');
       $filter = $this->request->getPost('filter');
 
-      $validation->setRule('client', 'Client', 'required|max_length[128]|is_unique[Clients.Client,clientID,{clientID}]');
+      $validation->setRule('reportType', 'ReportType', 'required|max_length[64]|is_unique[ReportTypes.ReportType,reportTypeID,{reportTypeID}]');
+      $validation->setRule('abbreviation', 'Abbreviation', 'required|max_length[16]|is_unique[ReportTypes.Abbreviation,reportTypeID,{reportTypeID}]');
 
       if ($validation->withRequest($this->request)->run()) {
         // Save
         $model->save([
-          'Client' => $this->request->getPost('client'),
+          'ReportType' => $this->request->getPost('reportType'),
+          'Abbreviation' => $this->request->getPost('abbreviation'),
         ]);
 
         // Go back to index
@@ -70,7 +72,7 @@ class Clients extends Controller {
       } else {  // Invalid - Redisplay the form
         // Generate the create view
         $data = [
-          'title' => 'Create New Client',
+          'title' => 'Create New Report Type',
           'cur_sort' => $cur_sort,
           'rows' => $rows,
           'page' => $page,
@@ -79,7 +81,7 @@ class Clients extends Controller {
 
         echo view('templates/header.php', $data);
         echo view('templates/menu.php', $data);
-        echo view('clients/new.php', $data);
+        echo view('reportTypes/new.php', $data);
         echo view('templates/footer.php', $data);
       }
     } else {  // HTTP GET request
@@ -94,7 +96,7 @@ class Clients extends Controller {
 
       // Generate the create view
       $data = [
-        'title' => 'Create New Client',
+        'title' => 'Create New Report Type',
         'cur_sort' => $cur_sort,
         'rows' => $rows,
         'page' => $page,
@@ -103,19 +105,19 @@ class Clients extends Controller {
 
       echo view('templates/header.php', $data);
       echo view('templates/menu.php', $data);
-      echo view('clients/new.php', $data);
+      echo view('reportTypes/new.php', $data);
       echo view('templates/footer.php', $data);
     }
   }
 
   public function delete() {
-    // Get the model
-    $model = new ClientModel();
+    // Get the report type model
+    $model = new ReportTypeModel();
 
     // Is this a post (deleting)
     if ($this->request->getMethod() === 'post') {
-      // Delete the client
-      $model->deleteClient($this->request->getPost('ClientID'));
+      // Delete the report type
+      $model->deleteReportType($this->request->getPost('ReportTypeID'));
 
       // Get the view data from the form
       $cur_sort = $this->request->getPost('cur_sort');
@@ -130,7 +132,7 @@ class Clients extends Controller {
       $uri = service('uri');
 
       // Parse the URI
-      $clientID = $uri->getSegment(3);
+      $reportTypeID = $uri->getSegment(3);
       $cur_sort = $uri->getSegment(4);
       $rows = $uri->getSegment(5);
       $page = $uri->setSilent()->getSegment(6, 1);
@@ -138,8 +140,8 @@ class Clients extends Controller {
 
       // Generate the delete view
       $data = [
-        'title' => 'Delete Client',
-        'client' => $model->getClient($clientID),
+        'title' => 'Delete Report Type',
+        'reportType' => $model->getReportType($reportTypeID),
         'cur_sort' => $cur_sort,
         'rows' => $rows,
         'page' => $page,
@@ -147,14 +149,14 @@ class Clients extends Controller {
       ];
       echo view('templates/header.php', $data);
       echo view('templates/menu.php', $data);
-      echo view('clients/delete.php', $data);
+      echo view('reportTypes/delete.php', $data);
       echo view('templates/footer.php', $data);
     }
   }
 
   public function edit() {
     // Create a new Model
-    $model = new ClientModel();
+    $model = new ReportTypeModel();
 
     // Load helpers
     helper(['url', 'form']);
@@ -169,12 +171,14 @@ class Clients extends Controller {
       $filter = $this->request->getPost('filter');
 
       // Validate the data
-      $validation->setRule('client', 'Client', 'required|max_length[128]|is_unique[Clients.Client,clientID,{clientID}]');
+      $validation->setRule('reportType', 'ReportType', 'required|max_length[64]|is_unique[ReportTypes.ReportType,reportTypeID,{reportTypeID}]');
+      $validation->setRule('abbreviation', 'Abbreviation', 'required|max_length[16]|is_unique[ReportTypes.Abbreviation,reportTypeID,{reportTypeID}]');
       if ($validation->withRequest($this->request)->run()) {  // Valid
         // Save
         $model->save([
-          'ClientID' => $this->request->getPost('clientID'),
-          'Client' => $this->request->getPost('client'),
+          'ReportTypeID' => $this->request->getPost('reportTypeID'),
+          'ReportType' => $this->request->getPost('reportType'),
+          'Abbreviation' => $this->request->getPost('abbreviation'),
         ]);
 
         // Go back to index
@@ -182,8 +186,8 @@ class Clients extends Controller {
       } else  {  // Invalid - Redisplay the form
         // Generate the view
         $data = [
-          'title' => 'Edit Client',
-          'client' => $model->getClient($this->request->getPost('clientID')),
+          'title' => 'Edit Report Type',
+          'reportType' => $model->getReportType($this->request->getPost('reportTypeID')),
           'cur_sort' => $cur_sort,
           'rows' => $rows,
           'page' => $page,
@@ -191,7 +195,7 @@ class Clients extends Controller {
         ];
         echo view('templates/header.php', $data);
         echo view('templates/menu.php', $data);
-        echo view('clients/edit.php', $data);
+        echo view('reportTypes/edit.php', $data);
         echo view('templates/footer.php', $data);
       }
     } else {  // Load edit page
@@ -199,7 +203,7 @@ class Clients extends Controller {
       $uri = service('uri');
 
       // Parse the URI
-      $clientID = $uri->getSegment(3);
+      $reportTypeID = $uri->getSegment(3);
       $cur_sort = $uri->getSegment(4);
       $rows = $uri->getSegment(5);
       $page = $uri->setSilent()->getSegment(6, 1);
@@ -207,8 +211,8 @@ class Clients extends Controller {
 
       // Generate the edit view
       $data = [
-        'title' => 'Edit Client',
-        'client' => $model->getClient($clientID),
+        'title' => 'Edit Report Type',
+        'reportType' => $model->getReportType($reportTypeID),
         'cur_sort' => $cur_sort,
         'rows' => $rows,
         'page' => $page,
@@ -216,7 +220,7 @@ class Clients extends Controller {
       ];
       echo view('templates/header.php', $data);
       echo view('templates/menu.php', $data);
-      echo view('clients/edit.php', $data);
+      echo view('reportTypes/edit.php', $data);
       echo view('templates/footer.php', $data);
     }
   }
