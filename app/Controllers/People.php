@@ -1,39 +1,187 @@
 <?php namespace App\Controllers;
 
 use App\Models\PersonModel;
+use App\Libraries\MyPager;
 use CodeIgniter\Controller;
 
 class People extends Controller {
+  /**
+	 * Name: generateIndexQB
+	 * Purpose: Generates a query builder object for the index page using the filter
+   *          provided.
+   *          If $detailed == false then the QB object will only grab the personID
+   *          which is useful for row counts.  Otherwise is will return all columns
+	 *
+	 * Parameters:
+   *  string $filter - A string that will be used to filter columns
+   *  bool $detailed - Should only the PersonID be returned or all the columns
+   *  string $sorting - A string that represents the type of sorting on the query
+	 *
+	 * Returns: QueryBuilder object
+	 */
+  public function generateIndexQB(string $filter, bool $detailed = false, string $sorting = '') {
+    // Load the query builder
+    $db = \Config\Database::connect();
+    $builder = $db->table('People');
+
+    // Generate the builder object
+    if ($detailed) {
+      $builder->select("PersonID, LastName, FirstName, DisplayName, Organization");
+    } else {
+      $builder->select('People.PersonID');
+    }
+    $builder->join('Organizations', 'People.OrganizationID = Organizations.OrganizationID', 'left');
+
+    // Are we filtering
+    if ($filter != '') {
+      $builder->like('People.Lastname', $filter);
+      $builder->orLike('People.Firstname', $filter);
+      $builder->orLike('People.DisplayName', $filter);
+      $builder->orLike('Organizations.Organization', $filter);
+    }
+
+    // Are we sorting
+    if ($detailed and $sorting != '') {
+      if ($sorting == "id_desc") {
+        $builder->orderBy("PersonID", "DESC");
+      } elseif ($sorting == "lname_asc") {
+        $builder->orderBy("LastName", "ASC");
+      } elseif ($sorting == "lname_desc") {
+        $builder->orderBy("LastName", "DESC");
+      } elseif ($sorting == "fname_asc") {
+        $builder->orderBy("FirstName", "ASC");
+      } elseif ($sorting == "fname_desc") {
+        $builder->orderBy("FirstName", "DESC");
+      } elseif ($sorting == "dname_asc") {
+        $builder->orderBy("DisplayName", "ASC");
+      } elseif ($sorting == "dname_desc") {
+        $builder->orderBy("DisplayName", "DESC");
+      } elseif ($sorting == "org_asc") {
+        $builder->orderBy("Organization", "ASC");
+      } elseif ($sorting == "org_desc") {
+        $builder->orderBy("Organization", "DESC");
+      } else {
+        $builder->orderBy("PersonID", "ASC");
+      }
+    }
+
+    // return the object
+    return $builder;
+  }
+
+  /**
+   * Name: getMaxRows
+   * Purpose: Gets the maximum number of rows in the table or the maximum number
+   *  of filtered rows in the table.
+   *
+   * Parameters:
+   *  string $filter - A string that will be used to filter columns
+   *
+   * Returns: int - The number of rows
+   */
+  public function getMaxRows(string $filter = '') {
+    // Get the maximum number of rows
+    return $this->generateIndexQB($filter)->get()->getNumRows();
+  }
+
+  /**
+	 * Name: processIndexSession
+	 * Purpose: Processes the session data populating any mission session settings.
+	 *
+	 * Parameters:
+   *  session $session - Session object
+	 *
+	 * Returns: None
+	 */
+  public function processIndexSession($session) {
+    // Setup rows per page if it doesn't exist
+    if ($session->has('rowsPerPage') == false) {
+      $session->set('rowsPerPage', 25);
+    }
+
+    // Are we coming from a People page
+    if (substr($session->get('lastPage'), 0, 6) == 'People') {
+      // Current sort
+      if ($session->has('currentSort') == false) {
+        $session->set('currentSort', 'id_asc');
+      }
+      // Filter
+      if ($session->has('filter') == false) {
+        $session->set('filter', '');
+      }
+      // Max rows
+      if ($session->has('maxRows') == false) {
+          $session->set('maxRows', $this->getMaxRows($session->get('filter')));
+      }
+    } else {    // Not from index - setup variables
+      // Setup the filter and max rows
+      $session->set('maxRows', $this->getMaxRows(''));
+      $session->set('filter', '');
+      $session->set('currentSort', 'id_asc');
+    }
+
+    // Last Page
+    $session->set('lastPage', 'People::index');
+  }
+
+  /**
+   * Name: index
+   * Purpose: Generates the index page
+   *
+   * Parameters: None
+   *
+   * Returns: None
+   */
   public function index() {
-    // Get the URI service
+    // Get the services
     $uri = service('uri');
+    $session = session();
+
+    // Process the session data
+    $sessionData = $this->processIndexSession($session);
 
     // Parse the URI
-    $cur_sort = $uri->getSegment(3);
-    $rows = $uri->getSegment(4);
-    $page = $uri->setSilent()->getSegment(5, 1);
-    $filter = $uri->setSilent()->getSegment(6, '');
+    $page = $uri->setSilent()->getSegment(3, 1);
+    $qrySort = $uri->getQuery(['sort']);
+    if ($qrySort != '') {
+      // We need to vet the sort parameter
+      $qrySort = substr($qrySort, 5);
+      $session->set('currentSort', $qrySort);
+      $page = 1;
+    }
+    $filter = $uri->getQuery(['filter']);
+    if ($filter != '') {
+      $filter = substr($filter, 7);
+      if ($filter == '') {
+        $session->set('filter', '');
+      }
+    }
 
     // Check for a post
     if ($this->request->getMethod() === "post") {
-      $filter = $this->request->getPost('filter');
+
+      $session->set('filter', $this->request->getPost('filter'));
+      if ($this->request->getPost('rowsPerPage') != $session->get('rowsPerPage')) {
+        $session->set('rowsPerPage', $this->request->getPost('rowsPerPage'));
+      }
     }
+
+    // Generate the pager object
+    $builder = $this-> generateIndexQB($session->get('filter'), true, $qrySort);
+    $this->pager = new \App\Libraries\MyPager(current_url(true), $builder->getCompiledSelect(), $session->get('rowsPerPage'), $session->get('maxRows'), $page);
 
     // Get the person model
     $model = new PersonModel();
 
     // Populate the data going to the view
     $data = [
-      'people' => $model->getPeopleOnPage($cur_sort, $filter, $rows, $page),
-      'pagerPeople' => $model->getPeople($cur_sort, $filter, $rows, $page),
-      'pager' => $model->pager,
+      'people' => $this->pager->getCurrentRows(),
+      'links' => $this->pager->createLinks(),
       'title' => 'People',
-      'cur_sort' => $cur_sort,
       'page' => $page,
-      'rows' => $rows,
-      'filter' => $filter,
-      'count' => $model->getCount($filter),
+      'rowsPerPage' => $session->get('rowsPerPage'),
     ];
+
 
     // Generate the view
     echo view('templates/header.php', $data);
@@ -42,6 +190,14 @@ class People extends Controller {
 		echo view('templates/footer.php', $data);
   }
 
+  /**
+   * Name: new
+   * Purpose: Generates the new page
+   *
+   * Parameters: None
+   *
+   * Returns: None
+   */
   public function new() {
     // Create a new Model
     $model = new PersonModel();
@@ -50,13 +206,14 @@ class People extends Controller {
     helper(['url', 'form']);
     $validation = \Config\Services::validation();
 
+    // Set the session last page
+    $session = session();
+    $session->set('lastPage', 'People::new');
+
     // If this is a post and valid save it and go back to index
     if ($this->request->getMethod() === 'post') {
       // Get the view data from the form
-      $cur_sort = $this->request->getPost('cur_sort');
-      $rows = $this->request->getPost('rows');
       $page = $this->request->getPost('page');
-      $filter = $this->request->getPost('filter');
 
       // Set validation rules
       $validation->setRule('displayName', 'Display Name', 'required|max_length[128]');
@@ -73,15 +230,12 @@ class People extends Controller {
         ]);
 
         // Go back to index
-        return redirect()->to("index/".$cur_sort."/".$rows."/".$page."/".$filter);
+        return redirect()->to("index/".$page);
       } else {  // Invalid - Redisplay the form
         // Generate the create view
         $data = [
           'title' => 'Create New Person',
-          'cur_sort' => $cur_sort,
-          'rows' => $rows,
           'page' => $page,
-          'filter' => $filter,
         ];
 
         echo view('templates/header.php', $data);
@@ -94,18 +248,12 @@ class People extends Controller {
       $uri = service('uri');
 
       // Parse the URI
-      $cur_sort = $uri->getSegment(3, 'id_asc');
-      $rows = $uri->getSegment(4, 25);
-      $page = $uri->setSilent()->getSegment(5, 1);
-      $filter = $uri->setSilent()->getSegment(6, '');
+      $page = $uri->setSilent()->getSegment(3, 1);
 
       // Generate the create view
       $data = [
         'title' => 'Create New Person',
-        'cur_sort' => $cur_sort,
-        'rows' => $rows,
         'page' => $page,
-        'filter' => $filter,
       ];
 
       //echo view('templates/minimalHeader.php', $data);
@@ -116,6 +264,14 @@ class People extends Controller {
     }
   }
 
+  /**
+   * Name: delete
+   * Purpose: Generates the delete page
+   *
+   * Parameters: None
+   *
+   * Returns: None
+   */
   public function delete() {
     // Get the person model
     $model = new PersonModel();
@@ -126,32 +282,23 @@ class People extends Controller {
       $model->deletePerson($this->request->getPost('PersonID'));
 
       // Get the view data from the form
-      $cur_sort = $this->request->getPost('cur_sort');
-      $rows = $this->request->getPost('rows');
       $page = $this->request->getPost('page');
-      $filter = $this->request->getPost('filter');
 
       // Go back to index
-       return redirect()->to("index/".$cur_sort."/".$rows."/".$page."/".$filter);
+       return redirect()->to("index");
     } else {  // // Not post - show delete form
       // Get the URI service
       $uri = service('uri');
 
       // Parse the URI
-      $personID = $uri->getSegment(3);
-      $cur_sort = $uri->getSegment(4);
-      $rows = $uri->getSegment(5);
-      $page = $uri->setSilent()->getSegment(6, 1);
-      $filter = $uri->setSilent()->getSegment(7, '');
+      $page = $uri->setSilent()->getSegment(3, 1);
+      $personID = $uri->getSegment(4);
 
       // Generate the delete view
       $data = [
         'title' => 'Delete Person',
         'person' => $model->getPerson($personID),
-        'cur_sort' => $cur_sort,
-        'rows' => $rows,
         'page' => $page,
-        'filter' => $filter,
       ];
       echo view('templates/header.php', $data);
       echo view('templates/menu.php', $data);
@@ -160,6 +307,14 @@ class People extends Controller {
     }
   }
 
+  /**
+   * Name: edit
+   * Purpose: Generates the edit page
+   *
+   * Parameters: None
+   *
+   * Returns: None
+   */
   public function edit() {
     // Create a new Model
     $model = new PersonModel();
@@ -168,13 +323,14 @@ class People extends Controller {
     helper(['url', 'form']);
     $validation = \Config\Services::validation();
 
+    // Set the session last page
+    $session = session();
+    $session->set('lastPage', 'People::edit');
+
     // Is this a post (saving)
     if ($this->request->getMethod() === 'post') {
       // Get the view data from the form
-      $cur_sort = $this->request->getPost('cur_sort');
-      $rows = $this->request->getPost('rows');
       $page = $this->request->getPost('page');
-      $filter = $this->request->getPost('filter');
 
       // Validate the data
       $validation->setRule('displayName', 'Display Name', 'required|max_length[128]');
@@ -192,16 +348,13 @@ class People extends Controller {
         ]);
 
         // Go back to index
-        return redirect()->to("index/".$cur_sort."/".$rows."/".$page."/".$filter);
+        return redirect()->to("index/".$page);
       } else  {  // Invalid - Redisplay the form
         // Generate the view
         $data = [
           'title' => 'Edit Person',
           'person' => $model->getPerson($this->request->getPost('personID')),
-          'cur_sort' => $cur_sort,
-          'rows' => $rows,
           'page' => $page,
-          'filter' => $filter,
         ];
         echo view('templates/header.php', $data);
         echo view('templates/menu.php', $data);
@@ -213,20 +366,14 @@ class People extends Controller {
       $uri = service('uri');
 
       // Parse the URI
-      $personID = $uri->getSegment(3);
-      $cur_sort = $uri->getSegment(4);
-      $rows = $uri->getSegment(5);
-      $page = $uri->setSilent()->getSegment(6, 1);
-      $filter = $uri->setSilent()->getSegment(7, '');
+      $page = $uri->setSilent()->getSegment(3, 1);
+      $personID = $uri->getSegment(4);
 
       // Generate the edit view
       $data = [
         'title' => 'Edit Person',
         'person' => $model->getPerson($personID),
-        'cur_sort' => $cur_sort,
-        'rows' => $rows,
         'page' => $page,
-        'filter' => $filter,
       ];
       echo view('templates/header.php', $data);
       echo view('templates/menu.php', $data);
