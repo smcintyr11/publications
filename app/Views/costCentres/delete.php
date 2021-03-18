@@ -2,10 +2,9 @@
   <h1><?= esc($title); ?></h1>
 
   <form class="form-group" action="/costCentres/delete" method="post">
-    <input type="hidden" name="cur_sort" value="<?= $cur_sort ?>">
-    <input type="hidden" name="rows" value="<?= $rows ?>">
+    <?= csrf_field() ?>
+
     <input type="hidden" name="page" value="<?= $page ?>">
-    <input type="hidden" name="filter" value="<?= $filter ?>">
 
     <div class="form-group row">
       <label for="CostCentreID" class="col-sm-2 col-form-label font-weight-bold">Cost Centre ID:</label>
@@ -34,7 +33,7 @@
 
     <div class="form-group row">
       <button class="btn btn-success m-1" type="submit" name="submit">Yes</button>
-      <a class="btn btn-danger m-1" href="/costCentres/index/<?= $cur_sort ?>/<?= $rows ?>/<?= $page ?>/<?= $filter ?>">No</a>
+      <a class="btn btn-danger m-1" href="/costCentres/index/<?= $page ?>">No</a>
     </div>
   </form>
 </div>

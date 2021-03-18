@@ -6,10 +6,7 @@
   <form class="form-group" action="/costCentres/new" method="post">
     <?= csrf_field() ?>
 
-    <input type="hidden" name="cur_sort" value="<?= $cur_sort ?>">
-    <input type="hidden" name="rows" value="<?= $rows ?>">
     <input type="hidden" name="page" value="<?= $page ?>">
-    <input type="hidden" name="filter" value="<?= $filter ?>">
 
     <div class="form-group row">
     <label for="costCentre" class="col-sm-2 col-form-label font-weight-bold">Cost Centre:</label>
@@ -26,6 +23,6 @@
     </div>
 
     <button class="btn btn-success m-1" type="submit" name="submit">Create Cost Centre</button>
-    <a class="btn btn-info m-1" href="/costCentres/index/<?= $cur_sort ?>/<?= $rows ?>/<?= $page ?>/<?= $filter ?>">Back to Cost Centres</a>
+    <a class="btn btn-info m-1" href="/costCentres/index/<?= $page ?>">Back to Cost Centres</a>
   </form>
 </div>

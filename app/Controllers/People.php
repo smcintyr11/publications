@@ -179,7 +179,6 @@ class People extends Controller {
       'links' => $this->pager->createLinks(),
       'title' => 'People',
       'page' => $page,
-      'rowsPerPage' => $session->get('rowsPerPage'),
     ];
 
 

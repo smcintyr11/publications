@@ -163,7 +163,6 @@ class Clients extends Controller {
       'links' => $this->pager->createLinks(),
       'title' => 'Clients',
       'page' => $page,
-      'rowsPerPage' => $session->get('rowsPerPage'),
     ];
 
     // Generate the view
@@ -265,7 +264,7 @@ class Clients extends Controller {
       $page = $this->request->getPost('page');
 
       // Go back to index
-       return redirect()->to("index");
+      return redirect()->to("index");
     } else {  // // Not post - show delete form
       // Get the URI service
       $uri = service('uri');

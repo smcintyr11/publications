@@ -73,9 +73,9 @@
     <div class="col-lg-2 btn  text-right">Rows per page:</div>
     <div class="col-lg-2">
       <select class="form-control mr-sm-2" name="rowsPerPage" id="rowsPerPage" form="frmSearch" onchange="this.form.submit()">
-        <option value=25 <?= ($rowsPerPage == 25) ? ' selected' : '' ?> >25</option>
-        <option value=50 <?= ($rowsPerPage == 50) ? ' selected' : '' ?> >50</option>
-        <option value=100 <?= ($rowsPerPage == 100) ? ' selected' : '' ?> >100</option>
+        <option value=25 <?= ($_SESSION["rowsPerPage"] == 25) ? ' selected' : '' ?> >25</option>
+        <option value=50 <?= ($_SESSION["rowsPerPage"] == 50) ? ' selected' : '' ?> >50</option>
+        <option value=100 <?= ($_SESSION["rowsPerPage"] == 100) ? ' selected' : '' ?> >100</option>
       </select>
     </div>
   </div>
