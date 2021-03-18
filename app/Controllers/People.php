@@ -138,28 +138,28 @@ class People extends Controller {
     $session = session();
 
     // Process the session data
-    $sessionData = $this->processIndexSession($session);
+    $this->processIndexSession($session);
 
     // Parse the URI
     $page = $uri->setSilent()->getSegment(3, 1);
-    $qrySort = $uri->getQuery(['sort']);
-    if ($qrySort != '') {
-      // We need to vet the sort parameter
-      $qrySort = substr($qrySort, 5);
-      $session->set('currentSort', $qrySort);
+
+    // Get the sort parameter
+    $sort = $uri->getQuery(['only' => ['sort']]);
+    if ($sort != '') {
+      $sort = substr($sort, 5);
+      $session->set('currentSort', $sort);
       $page = 1;
     }
-    $filter = $uri->getQuery(['filter']);
+
+    // Get the filter parameter
+    $filter = $uri->getQuery(['only' => ['filter']]);
     if ($filter != '') {
       $filter = substr($filter, 7);
-      if ($filter == '') {
-        $session->set('filter', '');
-      }
+      $session->set('filter', $filter);
     }
 
     // Check for a post
     if ($this->request->getMethod() === "post") {
-
       $session->set('filter', $this->request->getPost('filter'));
       if ($this->request->getPost('rowsPerPage') != $session->get('rowsPerPage')) {
         $session->set('rowsPerPage', $this->request->getPost('rowsPerPage'));
@@ -167,7 +167,7 @@ class People extends Controller {
     }
 
     // Generate the pager object
-    $builder = $this-> generateIndexQB($session->get('filter'), true, $qrySort);
+    $builder = $this-> generateIndexQB($session->get('filter'), true, $session->get('currentSort'));
     $this->pager = new \App\Libraries\MyPager(current_url(true), $builder->getCompiledSelect(), $session->get('rowsPerPage'), $session->get('maxRows'), $page);
 
     // Get the person model
@@ -275,6 +275,10 @@ class People extends Controller {
   public function delete() {
     // Get the person model
     $model = new PersonModel();
+
+    // Set the session last page
+    $session = session();
+    $session->set('lastPage', 'People::delete');
 
     // Is this a post (deleting)
     if ($this->request->getMethod() === 'post') {
