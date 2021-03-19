@@ -4,10 +4,7 @@
   <form class="form-group" action="/organizations/delete" method="post">
     <?= csrf_field() ?>
 
-    <input type="hidden" name="cur_sort" value="<?= $cur_sort ?>">
-    <input type="hidden" name="rows" value="<?= $rows ?>">
     <input type="hidden" name="page" value="<?= $page ?>">
-    <input type="hidden" name="filter" value="<?= $filter ?>">
 
     <div class="form-group row">
       <label for="OrganizationID" class="col-sm-2 col-form-label font-weight-bold">Organization ID:</label>
@@ -26,7 +23,7 @@
     </div>
     <div class="form-group row">
       <button class="btn btn-success m-1" type="submit" name="submit">Yes</button>
-      <a class="btn btn-danger m-1" href="/organizations/index/<?= $cur_sort ?>/<?= $rows ?>/<?= $page ?>/<?= $filter ?>">No</a>
+      <a class="btn btn-danger m-1" href="/organizations/index/<?= $page ?>">No</a>
     </div>
   </form>
 
