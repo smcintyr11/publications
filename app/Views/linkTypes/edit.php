@@ -6,10 +6,7 @@
   <form class="form-group" action="/linkTypes/edit" method="post">
     <?= csrf_field() ?>
 
-    <input type="hidden" name="cur_sort" value="<?= $cur_sort ?>">
-    <input type="hidden" name="rows" value="<?= $rows ?>">
     <input type="hidden" name="page" value="<?= $page ?>">
-    <input type="hidden" name="filter" value="<?= $filter ?>">
 
     <div class="form-group row">
       <label for="linkTypeID" class="col-sm-2 col-form-label font-weight-bold">Link Type ID:</label>
@@ -26,6 +23,6 @@
     </div>
 
     <button class="btn btn-success m-1" type="submit" name="submit">Save Link Type</button>
-    <a class="btn btn-info m-1" href="/linkTypes/index/<?= $cur_sort ?>/<?= $rows ?>/<?= $page ?>/<?= $filter ?>">Back to Link Types</a>
+    <a class="btn btn-info m-1" href="/linkTypes/index/<?= $page ?>">Back to Link Types</a>
   </form>
 </div>

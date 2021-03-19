@@ -231,7 +231,7 @@ class Keywords extends Controller {
       $uri = service('uri');
 
       // Parse the URI
-      $page = $uri->setSilent()->getSegment(5, 1);
+      $page = $uri->setSilent()->getSegment(3, 1);
 
       // Generate the create view
       $data = [
