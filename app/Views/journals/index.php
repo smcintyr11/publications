@@ -18,11 +18,11 @@
 
       <?php
         $id_sort_param = "id_asc";
-        $journal_sort_param = "journal_asc";
+        $journal_sort_param = "jour_asc";
         if ($_SESSION["currentSort"] == "id_asc") {
           $id_sort_param = "id_desc";
-        } elseif ($_SESSION["currentSort"] == "journal_asc") {
-          $journal_sort_param = "journal_desc";
+        } elseif ($_SESSION["currentSort"] == "jour_asc") {
+          $journal_sort_param = "jour_desc";
         }
        ?>
 
@@ -40,9 +40,9 @@
         <th scope="col">
           <a class="btn btn-link" href="/journals/index/1?sort=<?= $journal_sort_param ?>">Journal</a>
           <?php
-            if ($_SESSION["currentSort"] == "journal_asc") {
+            if ($_SESSION["currentSort"] == "jour_asc") {
               echo("<i class=\"fas fa-sort-up\"></i>");
-            } elseif ($_SESSION["currentSort"] == "journal_desc") {
+            } elseif ($_SESSION["currentSort"] == "jour_desc") {
               echo ("<i class=\"fas fa-sort-down\"></i>");
             }
            ?>

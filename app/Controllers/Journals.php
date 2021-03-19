@@ -40,9 +40,9 @@ class Journals extends Controller {
     if ($detailed and $sorting != '') {
       if ($sorting == "id_desc") {
         $builder->orderBy("JournalID", "DESC");
-      } elseif ($sorting == "journal_asc") {
+      } elseif ($sorting == "jour_asc") {
         $builder->orderBy("Journal", "ASC");
-      } elseif ($sorting == "journal_desc") {
+      } elseif ($sorting == "jour_desc") {
         $builder->orderBy("Journal", "DESC");
       } else {
         $builder->orderBy("JournalID", "ASC");

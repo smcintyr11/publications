@@ -6,10 +6,7 @@
   <form class="form-group" action="/keywords/new" method="post">
     <?= csrf_field() ?>
 
-    <input type="hidden" name="cur_sort" value="<?= $cur_sort ?>">
-    <input type="hidden" name="rows" value="<?= $rows ?>">
     <input type="hidden" name="page" value="<?= $page ?>">
-    <input type="hidden" name="filter" value="<?= $filter ?>">
 
     <div class="form-group row">
       <label for="keywordEnglish" class="col-sm-2 col-form-label font-weight-bold">Keyword English:</label>
@@ -26,7 +23,7 @@
     </div>
 
     <button class="btn btn-success m-1" type="submit" name="submit">Create Keyword</button>
-    <a class="btn btn-info m-1" href="/keywords/index/<?= $cur_sort ?>/<?= $rows ?>/<?= $page ?>/<?= $filter ?>">Back to Keywords</a>
+    <a class="btn btn-info m-1" href="/keywords/index/<?= $page ?>">Back to Keywords</a>
   </form>
 
 </div>
