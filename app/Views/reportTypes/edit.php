@@ -6,10 +6,7 @@
   <form class="form-group" action="/reportTypes/edit" method="post">
     <?= csrf_field() ?>
 
-    <input type="hidden" name="cur_sort" value="<?= $cur_sort ?>">
-    <input type="hidden" name="rows" value="<?= $rows ?>">
     <input type="hidden" name="page" value="<?= $page ?>">
-    <input type="hidden" name="filter" value="<?= $filter ?>">
 
     <div class="form-group row">
       <label for="reportTypeID" class="col-sm-2 col-form-label font-weight-bold">Report Type ID:</label>
@@ -31,6 +28,6 @@
     </div>
 
     <button class="btn btn-success m-1" type="submit" name="submit">Save Report Type</button>
-    <a class="btn btn-info m-1" href="/reportTypes/index/<?= $cur_sort ?>/<?= $rows ?>/<?= $page ?>/<?= $filter ?>">Back to Report Types</a>
+    <a class="btn btn-info m-1" href="/reportTypes/index/<?= $page ?>">Back to Report Types</a>
   </form>
 </div>
