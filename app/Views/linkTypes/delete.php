@@ -7,14 +7,14 @@
     <input type="hidden" name="page" value="<?= $page ?>">
 
     <div class="form-group row">
-      <label for="LinkTypeID" class="col-sm-2 col-form-label font-weight-bold">Link Type ID:</label>
-      <div class="col-sm-10">
+      <label for="LinkTypeID" class="col-2 col-form-label font-weight-bold">Link Type ID:</label>
+      <div class="col-10">
         <input type="text" readonly class="form-control-plaintext" name="LinkTypeID" id="LinkTypeID" value="<?= $linkType['LinkTypeID'] ?>">
       </div>
     </div>
     <div class="form-group row">
-      <label for="LinkType" class="col-sm-2 col-form-label font-weight-bold">Link Type:</label>
-      <div class="col-sm-10">
+      <label for="LinkType" class="col-2 col-form-label font-weight-bold">Link Type:</label>
+      <div class="col-10">
         <input type="text" readonly class="form-control-plaintext" id="LinkType" value="<?= $linkType['LinkType'] ?>">
       </div>
     </div>

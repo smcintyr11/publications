@@ -9,8 +9,8 @@
     <input type="hidden" name="page" value="<?= $page ?>">
 
     <div class="form-group row">
-      <label for="client" class="col-sm-2 col-form-label font-weight-bold">Client:</label>
-      <div class="col-sm-10">
+      <label for="client" class="col-2 col-form-label font-weight-bold">Client:</label>
+      <div class="col-10">
         <input class="form-control" type="input" name="client" value="<?= set_value('client') ?>"/><br />
       </div>
     </div>

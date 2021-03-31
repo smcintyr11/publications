@@ -7,14 +7,14 @@
     <input type="hidden" name="page" value="<?= $page ?>">
 
     <div class="form-group row">
-      <label for="JournalID" class="col-sm-2 col-form-label font-weight-bold">Journal ID:</label>
-      <div class="col-sm-10">
+      <label for="JournalID" class="col-2 col-form-label font-weight-bold">Journal ID:</label>
+      <div class="col-10">
         <input type="text" readonly class="form-control-plaintext" name="JournalID" id="JournalID" value="<?= $journal['JournalID'] ?>">
       </div>
     </div>
     <div class="form-group row">
-      <label for="Journal" class="col-sm-2 col-form-label font-weight-bold">Journal:</label>
-      <div class="col-sm-10">
+      <label for="Journal" class="col-2 col-form-label font-weight-bold">Journal:</label>
+      <div class="col-10">
         <input type="text" readonly class="form-control-plaintext" id="Journal" value="<?= $journal['Journal'] ?>">
       </div>
     </div>

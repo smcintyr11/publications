@@ -9,15 +9,15 @@
     <input type="hidden" name="page" value="<?= $page ?>">
 
     <div class="form-group row">
-      <label for="journalID" class="col-sm-2 col-form-label font-weight-bold">Journal ID:</label>
-      <div class="col-sm-10">
+      <label for="journalID" class="col-2 col-form-label font-weight-bold">Journal ID:</label>
+      <div class="col-10">
         <input type="text" readonly class="form-control-plaintext" name="journalID" id="journalID" value="<?= $journal['JournalID'] ?>">
       </div>
     </div>
 
     <div class="form-group row">
-      <label for="journal" class="col-sm-2 col-form-label font-weight-bold">Journal:</label>
-      <div class="col-sm-10">
+      <label for="journal" class="col-2 col-form-label font-weight-bold">Journal:</label>
+      <div class="col-10">
         <input class="form-control" type="input" name="journal" id="journal" value="<?= set_value('journal', $journal['Journal']) ?>"/><br />
       </div>
     </div>

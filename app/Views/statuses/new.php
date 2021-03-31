@@ -9,14 +9,14 @@
     <input type="hidden" name="page" value="<?= $page ?>">
 
     <div class="form-group row">
-      <label for="status" class="col-sm-2 col-form-label font-weight-bold">Status:</label>
-      <div class="col-sm-10">
+      <label for="status" class="col-2 col-form-label font-weight-bold">Status:</label>
+      <div class="col-10">
         <input class="form-control" type="input" name="status" value="<?= set_value('status') ?>"/><br />
       </div>
     </div>
     <div class="form-group row">
-      <label for="expectedDuration" class="col-sm-2 col-form-label font-weight-bold">Expected Duration:</label>
-      <div class="col-sm-10">
+      <label for="expectedDuration" class="col-2 col-form-label font-weight-bold">Expected Duration:</label>
+      <div class="col-10">
         <input class="form-control" type="number" name="expectedDuration" value="<?= set_value('expectedDuration') ?>"/><br />
       </div>
     </div>

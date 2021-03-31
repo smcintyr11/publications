@@ -3,7 +3,7 @@
 
   <form class="form-inline" action="/linkTypes/index/1" method="post" id="frmSearch">
     <?= csrf_field() ?>
-    <input class="form-control mr-sm-2" type="text" name="filter" placeholder="Search">
+    <input class="form-control mr-2" type="text" name="filter" placeholder="Search">
     <button class="btn btn-success m-1" type="submit">Search</button>
     <a class="btn btn-info m-1" href="/linkTypes/index/1?filter=">Reset</a>
   </form>
@@ -67,11 +67,11 @@
   </div>
 
   <div class="row">
-    <div class="col-lg-1 btn">Page:</div>
-    <div class="col-lg-7"><?= $links ?></div>
-    <div class="col-lg-2 btn  text-right">Rows per page:</div>
-    <div class="col-lg-2">
-      <select class="form-control mr-sm-2" name="rowsPerPage" id="rowsPerPage" form="frmSearch" onchange="this.form.submit()">
+    <div class="col-1 btn">Page:</div>
+    <div class="col-7"><?= $links ?></div>
+    <div class="col-2 btn  text-right">Rows per page:</div>
+    <div class="col-2">
+      <select class="form-control mr-2" name="rowsPerPage" id="rowsPerPage" form="frmSearch" onchange="this.form.submit()">
         <option value=25 <?= ($_SESSION["rowsPerPage"] == 25) ? ' selected' : '' ?> >25</option>
         <option value=50 <?= ($_SESSION["rowsPerPage"] == 50) ? ' selected' : '' ?> >50</option>
         <option value=100 <?= ($_SESSION["rowsPerPage"] == 100) ? ' selected' : '' ?> >100</option>

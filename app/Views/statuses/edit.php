@@ -9,22 +9,22 @@
     <input type="hidden" name="page" value="<?= $page ?>">
 
     <div class="form-group row">
-      <label for="statusID" class="col-sm-2 col-form-label font-weight-bold">Status ID:</label>
-      <div class="col-sm-10">
+      <label for="statusID" class="col-2 col-form-label font-weight-bold">Status ID:</label>
+      <div class="col-10">
         <input type="text" readonly class="form-control-plaintext" name="statusID" id="statusID" value="<?= $status['StatusID'] ?>">
       </div>
     </div>
 
     <div class="form-group row">
-      <label for="status" class="col-sm-2 col-form-label font-weight-bold">Status:</label>
-      <div class="col-sm-10">
+      <label for="status" class="col-2 col-form-label font-weight-bold">Status:</label>
+      <div class="col-10">
         <input class="form-control" type="input" name="status" id="status" value="<?= set_value('status', $status['Status']) ?>"/><br />
       </div>
     </div>
 
     <div class="form-group row">
-      <label for="expectedDuration" class="col-sm-2 col-form-label font-weight-bold">Expected Duration:</label>
-      <div class="col-sm-10">
+      <label for="expectedDuration" class="col-2 col-form-label font-weight-bold">Expected Duration:</label>
+      <div class="col-10">
         <input class="form-control" type="number" name="expectedDuration" id="expectedDuration" value="<?= set_value('expectedDuration', $status['ExpectedDuration']) ?>"/><br />
       </div>
     </div>

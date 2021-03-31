@@ -9,15 +9,15 @@
     <input type="hidden" name="page" value="<?= $page ?>">
 
     <div class="form-group row">
-      <label for="organizationID" class="col-sm-2 col-form-label font-weight-bold">Organization ID:</label>
-      <div class="col-sm-10">
+      <label for="organizationID" class="col-2 col-form-label font-weight-bold">Organization ID:</label>
+      <div class="col-10">
         <input type="text" readonly class="form-control-plaintext" name="organizationID" id="organizationID" value="<?= $organization['OrganizationID'] ?>">
       </div>
     </div>
 
     <div class="form-group row">
-      <label for="organization" class="col-sm-2 col-form-label font-weight-bold">Organization:</label>
-      <div class="col-sm-10">
+      <label for="organization" class="col-2 col-form-label font-weight-bold">Organization:</label>
+      <div class="col-10">
         <input class="form-control" type="input" name="organization" id="client" value="<?= set_value('organization', $organization['Organization']) ?>"/><br />
       </div>
     </div>

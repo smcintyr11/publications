@@ -9,20 +9,20 @@
     <input type="hidden" name="page" value="<?= $page ?>">
 
     <div class="form-group row">
-      <label for="reportTypeID" class="col-sm-2 col-form-label font-weight-bold">Report Type ID:</label>
-      <div class="col-sm-10">
+      <label for="reportTypeID" class="col-2 col-form-label font-weight-bold">Report Type ID:</label>
+      <div class="col-10">
         <input type="text" readonly class="form-control-plaintext" name="reportTypeID" id="reportTypeID" value="<?= $reportType['ReportTypeID'] ?>">
       </div>
     </div>
     <div class="form-group row">
-      <label for="reportType" class="col-sm-2 col-form-label font-weight-bold">Report Type:</label>
-      <div class="col-sm-10">
+      <label for="reportType" class="col-2 col-form-label font-weight-bold">Report Type:</label>
+      <div class="col-10">
         <input class="form-control" type="input" name="reportType" value="<?= set_value('reportType', $reportType['ReportType']) ?>"/><br />
       </div>
     </div>
     <div class="form-group row">
-      <label for="abbreviation" class="col-sm-2 col-form-label font-weight-bold">Abbreviation:</label>
-      <div class="col-sm-10">
+      <label for="abbreviation" class="col-2 col-form-label font-weight-bold">Abbreviation:</label>
+      <div class="col-10">
         <input class="form-control" type="input" name="abbreviation" value="<?= set_value('abbreviation', $reportType['Abbreviation']) ?>"/><br />
       </div>
     </div>

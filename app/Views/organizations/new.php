@@ -9,8 +9,8 @@
     <input type="hidden" name="page" value="<?= $page ?>">
 
     <div class="form-group row">
-    <label for="organization" class="col-sm-2 col-form-label font-weight-bold">Organization:</label>
-    <div class="col-sm-10">
+    <label for="organization" class="col-2 col-form-label font-weight-bold">Organization:</label>
+    <div class="col-10">
       <input class="form-control" type="input" name="organization" value="<?= set_value('organization') ?>"/><br />
     </div>
     </div>

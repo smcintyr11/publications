@@ -7,20 +7,20 @@
     <input type="hidden" name="page" value="<?= $page ?>">
 
     <div class="form-group row">
-      <label for="StatusID" class="col-sm-2 col-form-label font-weight-bold">Status ID:</label>
-      <div class="col-sm-10">
+      <label for="StatusID" class="col-2 col-form-label font-weight-bold">Status ID:</label>
+      <div class="col-10">
         <input type="text" readonly class="form-control-plaintext" name="StatusID" id="StatusID" value="<?= $status['StatusID'] ?>">
       </div>
     </div>
     <div class="form-group row">
-      <label for="Status" class="col-sm-2 col-form-label font-weight-bold">Status:</label>
-      <div class="col-sm-10">
+      <label for="Status" class="col-2 col-form-label font-weight-bold">Status:</label>
+      <div class="col-10">
         <input type="text" readonly class="form-control-plaintext" id="Status" value="<?= $status['Status'] ?>">
       </div>
     </div>
     <div class="form-group row">
-      <label for="ExpectedDuration" class="col-sm-2 col-form-label font-weight-bold">Expected Duration:</label>
-      <div class="col-sm-10">
+      <label for="ExpectedDuration" class="col-2 col-form-label font-weight-bold">Expected Duration:</label>
+      <div class="col-10">
         <input type="text" readonly class="form-control-plaintext" id="ExpectedDuration" value="<?= $status['ExpectedDuration'] ?>">
       </div>
     </div>

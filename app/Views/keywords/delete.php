@@ -7,20 +7,20 @@
     <input type="hidden" name="page" value="<?= $page ?>">
 
     <div class="form-group row">
-      <label for="KeywordID" class="col-sm-2 col-form-label font-weight-bold">Keyword ID:</label>
-      <div class="col-sm-10">
+      <label for="KeywordID" class="col-2 col-form-label font-weight-bold">Keyword ID:</label>
+      <div class="col-10">
         <input type="text" readonly class="form-control-plaintext" name="KeywordID" id="KeywordID" value="<?= $keyword['KeywordID'] ?>">
       </div>
     </div>
     <div class="form-group row">
-      <label for="KeywordEnglish" class="col-sm-2 col-form-label font-weight-bold">Keyword English:</label>
-      <div class="col-sm-10">
+      <label for="KeywordEnglish" class="col-2 col-form-label font-weight-bold">Keyword English:</label>
+      <div class="col-10">
         <input type="text" readonly class="form-control-plaintext" id="Client" value="<?= $keyword['KeywordEnglish'] ?>">
       </div>
     </div>
     <div class="form-group row">
-      <label for="KeywordFrench" class="col-sm-2 col-form-label font-weight-bold">Keyword French:</label>
-      <div class="col-sm-10">
+      <label for="KeywordFrench" class="col-2 col-form-label font-weight-bold">Keyword French:</label>
+      <div class="col-10">
         <input type="text" readonly class="form-control-plaintext" id="Client" value="<?= $keyword['KeywordFrench'] ?>">
       </div>
     </div>

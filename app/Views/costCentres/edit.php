@@ -9,22 +9,22 @@
     <input type="hidden" name="page" value="<?= $page ?>">
 
     <div class="form-group row">
-      <label for="costCentreID" class="col-sm-2 col-form-label font-weight-bold">Cost Centre ID:</label>
-      <div class="col-sm-10">
+      <label for="costCentreID" class="col-2 col-form-label font-weight-bold">Cost Centre ID:</label>
+      <div class="col-10">
         <input type="text" readonly class="form-control-plaintext" name="costCentreID" id="costCentreID" value="<?= $costCentre['CostCentreID'] ?>">
       </div>
     </div>
 
     <div class="form-group row">
-      <label for="costCentre" class="col-sm-2 col-form-label font-weight-bold">Cost Centre:</label>
-      <div class="col-sm-10">
+      <label for="costCentre" class="col-2 col-form-label font-weight-bold">Cost Centre:</label>
+      <div class="col-10">
         <input class="form-control" type="input" name="costCentre" id="costCentre" value="<?= set_value('costCentre', $costCentre['CostCentre']) ?>"/><br />
       </div>
     </div>
 
     <div class="form-group row">
-      <label for="description" class="col-sm-2 col-form-label font-weight-bold">Description:</label>
-      <div class="col-sm-10">
+      <label for="description" class="col-2 col-form-label font-weight-bold">Description:</label>
+      <div class="col-10">
         <input class="form-control" type="input" name="description" id="description" value="<?= set_value('description', $costCentre['Description']) ?>"/><br />
       </div>
     </div>

@@ -7,14 +7,14 @@
     <input type="hidden" name="page" value="<?= $page ?>">
 
     <div class="form-group row">
-      <label for="ClientID" class="col-sm-2 col-form-label font-weight-bold">Client ID:</label>
-      <div class="col-sm-10">
+      <label for="ClientID" class="col-2 col-form-label font-weight-bold">Client ID:</label>
+      <div class="col-10">
         <input type="text" readonly class="form-control-plaintext" name="ClientID" id="ClientID" value="<?= $client['ClientID'] ?>">
       </div>
     </div>
     <div class="form-group row">
-      <label for="Client" class="col-sm-2 col-form-label font-weight-bold">Client:</label>
-      <div class="col-sm-10">
+      <label for="Client" class="col-2 col-form-label font-weight-bold">Client:</label>
+      <div class="col-10">
         <input type="text" readonly class="form-control-plaintext" id="Client" value="<?= $client['Client'] ?>">
       </div>
     </div>

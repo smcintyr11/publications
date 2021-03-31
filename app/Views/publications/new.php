@@ -17,14 +17,14 @@
     <input type="hidden" name="page" value="<?= $page ?>">
 
     <div class="form-group row">
-      <label for="primaryTitle" class="col-sm-2 col-form-label font-weight-bold">Primary Title:</label>
-      <div class="col-sm-10">
+      <label for="primaryTitle" class="col-2 col-form-label font-weight-bold">Primary Title:</label>
+      <div class="col-10">
         <input class="form-control" type="input" name="primaryTitle" value="<?= set_value('primaryTitle') ?>"/><br />
       </div>
     </div>
     <div class="form-group row">
-      <label for="reportTypeID" class="col-sm-2 col-form-label font-weight-bold">Report Type:</label>
-      <div class="col-sm-10">
+      <label for="reportTypeID" class="col-2 col-form-label font-weight-bold">Report Type:</label>
+      <div class="col-10">
         <select class="form-control" id="reportTypeID" name="reportTypeID" value="<?= set_value('reportTypeID') ?>">
           <option value=''>-- Select a report type --</option>
           <?php
@@ -40,8 +40,8 @@
       </div>
     </div>
     <div class="form-group row">
-      <label for="statusID" class="col-sm-2 col-form-label font-weight-bold">Status:</label>
-      <div class="col-sm-10">
+      <label for="statusID" class="col-2 col-form-label font-weight-bold">Status:</label>
+      <div class="col-10">
         <select class="form-control" id="statusID" name="statusID" value="<?= set_value('statusID') ?>">
           <option value=''>-- Select a status --</option>
           <?php

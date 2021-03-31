@@ -41,20 +41,20 @@
     <div id="tbGeneral" class="tabcontent" style="display: block;">
 			<br />
       <div class="form-group row">
-        <label for="publicationID" class="col-sm-2 col-form-label font-weight-bold">Publication ID:</label>
-        <div class="col-sm-10">
+        <label for="publicationID" class="col-2 col-form-label font-weight-bold">Publication ID:</label>
+        <div class="col-10">
           <input type="text" readonly class="form-control-plaintext" name="publicationID" id="publicationID" value="<?= $publication['PublicationID'] ?>"><br />
         </div>
       </div>
       <div class="form-group row">
-        <label for="primaryTitle" class="col-sm-2 col-form-label font-weight-bold">Primary Title:</label>
-        <div class="col-sm-10">
+        <label for="primaryTitle" class="col-2 col-form-label font-weight-bold">Primary Title:</label>
+        <div class="col-10">
           <input class="form-control" type="input" name="primaryTitle" value="<?= set_value('primaryTitle', $publication['PrimaryTitle']) ?>"/><br />
         </div>
       </div>
       <div class="form-group row">
-        <label for="secondaryTitle" class="col-sm-2 col-form-label font-weight-bold">Secondary Title:</label>
-        <div class="col-sm-10">
+        <label for="secondaryTitle" class="col-2 col-form-label font-weight-bold">Secondary Title:</label>
+        <div class="col-10">
           <input class="form-control" type="input" name="secondaryTitle" value="<?= set_value('secondaryTitle', $publication['SecondaryTitle']) ?>"/><br />
         </div>
       </div>
@@ -64,8 +64,8 @@
     <div id="tbStatus" class="tabcontent" style="display: none;">
 			<br />
       <div class="form-group row">
-        <label for="statusID" class="col-sm-2 col-form-label font-weight-bold">Status:</label>
-        <div class="col-sm-10">
+        <label for="statusID" class="col-2 col-form-label font-weight-bold">Status:</label>
+        <div class="col-10">
           <select class="form-control" id="statusID" name="statusID" value="<?= set_value('statusID', $publication['StatusID']) ?>">
             <option value=''>-- Select a status --</option>
             <?php
@@ -92,8 +92,8 @@
         <input type="hidden" id="statusPersonID" name="statusPersonID" value="<?= set_value('statusPersonID', $publication['StatusPersonID']) ?>">
       </div>
       <div class="form-group row">
-        <label for="statusEstimatedCompletionDate" class="col-sm-2 col-form-label font-weight-bold">Estimated Completion:</label>
-        <div class="col-sm-10">
+        <label for="statusEstimatedCompletionDate" class="col-2 col-form-label font-weight-bold">Estimated Completion:</label>
+        <div class="col-10">
           <input class="form-control" type="input" name="statusEstimatedCompletionDate" value="<?= set_value('statusEstimatedCompletionDate', $publication['StatusEstimatedCompletionDate']) ?>"/><br />
         </div>
       </div>
@@ -135,14 +135,14 @@
 		<br />
     <div id="tbDates" class="tabcontent" style="display: none;">
       <div class="form-group row">
-        <label for="publicationDate" class="col-sm-2 col-form-label font-weight-bold">Publication Date:</label>
-        <div class="col-sm-10">
+        <label for="publicationDate" class="col-2 col-form-label font-weight-bold">Publication Date:</label>
+        <div class="col-10">
           <input class="form-control" type="input" name="publicationDate" value="<?= set_value('publicationDate', $publication['PublicationDate']) ?>"/><br />
         </div>
       </div>
       <div class="form-group row">
-        <label for="webPublicationDate" class="col-sm-2 col-form-label font-weight-bold">Web Publication Date:</label>
-        <div class="col-sm-10">
+        <label for="webPublicationDate" class="col-2 col-form-label font-weight-bold">Web Publication Date:</label>
+        <div class="col-10">
           <input class="form-control" type="input" name="webPublicationDate" value="<?= set_value('webPublicationDate', $publication['WebPublicationDate']) ?>"/><br />
         </div>
       </div>

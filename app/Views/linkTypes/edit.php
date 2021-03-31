@@ -9,15 +9,15 @@
     <input type="hidden" name="page" value="<?= $page ?>">
 
     <div class="form-group row">
-      <label for="linkTypeID" class="col-sm-2 col-form-label font-weight-bold">Link Type ID:</label>
-      <div class="col-sm-10">
+      <label for="linkTypeID" class="col-2 col-form-label font-weight-bold">Link Type ID:</label>
+      <div class="col-10">
         <input type="text" readonly class="form-control-plaintext" name="linkTypeID" id="linkTypeID" value="<?= $linkType['LinkTypeID'] ?>">
       </div>
     </div>
 
     <div class="form-group row">
-      <label for="linkType" class="col-sm-2 col-form-label font-weight-bold">Link Type:</label>
-      <div class="col-sm-10">
+      <label for="linkType" class="col-2 col-form-label font-weight-bold">Link Type:</label>
+      <div class="col-10">
         <input class="form-control" type="input" name="linkType" id="linkType" value="<?= set_value('linkType', $linkType['LinkType']) ?>"/><br />
       </div>
     </div>

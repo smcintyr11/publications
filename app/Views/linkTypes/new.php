@@ -9,8 +9,8 @@
     <input type="hidden" name="page" value="<?= $page ?>">
 
     <div class="form-group row">
-    <label for="linkType" class="col-sm-2 col-form-label font-weight-bold">Link Type:</label>
-    <div class="col-sm-10">
+    <label for="linkType" class="col-2 col-form-label font-weight-bold">Link Type:</label>
+    <div class="col-10">
       <input class="form-control" type="input" name="linkType" value="<?= set_value('linkType') ?>"/><br />
     </div>
     </div>

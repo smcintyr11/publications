@@ -9,15 +9,15 @@
     <input type="hidden" name="page" value="<?= $page ?>">
 
     <div class="form-group row">
-      <label for="keywordEnglish" class="col-sm-2 col-form-label font-weight-bold">Keyword English:</label>
-      <div class="col-sm-10">
+      <label for="keywordEnglish" class="col-2 col-form-label font-weight-bold">Keyword English:</label>
+      <div class="col-10">
         <input class="form-control" type="input" name="keywordEnglish" value="<?= set_value('keywordEnglish') ?>" /><br />
       </div>
     </div>
 
     <div class="form-group row">
-      <label for="keywordFrench" class="col-sm-2 col-form-label font-weight-bold">Keyword French:</label>
-      <div class="col-sm-10">
+      <label for="keywordFrench" class="col-2 col-form-label font-weight-bold">Keyword French:</label>
+      <div class="col-10">
         <input class="form-control" type="input" name="keywordFrench" value="<?= set_value('keywordFrench') ?>"/><br />
       </div>
     </div>

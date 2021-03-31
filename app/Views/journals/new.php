@@ -9,8 +9,8 @@
     <input type="hidden" name="page" value="<?= $page ?>">
 
     <div class="form-group row">
-    <label for="journal" class="col-sm-2 col-form-label font-weight-bold">Journal:</label>
-    <div class="col-sm-10">
+    <label for="journal" class="col-2 col-form-label font-weight-bold">Journal:</label>
+    <div class="col-10">
       <input class="form-control" type="input" name="journal" /><br />
     </div>
     </div>
