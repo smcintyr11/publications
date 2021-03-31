@@ -376,4 +376,40 @@ class Statuses extends Controller {
       echo view('templates/footer.php', $data);
     }
   }
+
+  /**
+   * Name: searchStatus
+   * Purpose: Uses a query variable passed to the URL to search for an organization
+   *  name that is like the search term.
+   *
+   * Parameters: None
+   *
+   * Returns: Outputs JSON - An array of data
+   */
+  public function searchStatus() {
+    // Varoable declaration
+    $autoComplete = array();
+
+    // Build the query
+    $searchString = $this->request->getVar('term');
+    $db = \Config\Database::connect();
+    $builder = $db->table('Statuses');
+    $builder->like('Status', $searchString);
+
+    // Run the query and compile an array of organization data
+    $autoComplete = array();
+    $query = $builder->get();
+    foreach ($query->getResult() as $row)
+    {
+      $item = array(
+      'id'=>$row->StatusID,
+      'label'=>$row->Status,
+      'value'=>$row->Status,
+      );
+      array_push($autoComplete,$item);
+    }
+
+    // Output JSON response
+    echo json_encode($autoComplete);
+  }
 }

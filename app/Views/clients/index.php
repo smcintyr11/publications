@@ -1,4 +1,4 @@
-<div class="container-lg my-3 py-3">
+<div class="container my-3 py-3">
   <h1><?= esc($title); ?></h1>
 
   <form class="form-inline" action="/clients/index/1" method="post" id="frmSearch">

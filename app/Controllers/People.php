@@ -384,4 +384,42 @@ class People extends Controller {
       echo view('templates/footer.php', $data);
     }
   }
+
+  /**
+   * Name: searchPerson
+   * Purpose: Uses a query variable passed to the URL to search for an organization
+   *  name that is like the search term.
+   *
+   * Parameters: None
+   *
+   * Returns: Outputs JSON - An array of data
+   */
+  public function searchPerson() {
+    // Varoable declaration
+    $autoComplete = array();
+
+    // Build the query
+    $searchString = $this->request->getVar('term');
+    $db = \Config\Database::connect();
+    $builder = $db->table('People');
+    $builder->like('DisplayName', $searchString);
+    $builder->orLike('FirstName', $searchString);
+    $builder->orLike('LastName', $searchString);
+
+    // Run the query and compile an array of organization data
+    $autoComplete = array();
+    $query = $builder->get();
+    foreach ($query->getResult() as $row)
+    {
+      $item = array(
+      'id'=>$row->PersonID,
+      'label'=>$row->DisplayName,
+      'value'=>$row->DisplayName,
+      );
+      array_push($autoComplete,$item);
+    }
+
+    // Output JSON response
+    echo json_encode($autoComplete);
+  }
 }

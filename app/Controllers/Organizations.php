@@ -356,15 +356,15 @@ class Organizations extends Controller {
   }
 
   /**
-   * Name: searchLocation
+   * Name: searchOrganization
    * Purpose: Uses a query variable passed to the URL to search for an organization
    *  name that is like the search term.
    *
    * Parameters: None
    *
-   * Returns: Outputs JSON - An array of organization data
+   * Returns: Outputs JSON - An array of data
    */
-  public function searchLocation() {
+  public function searchOrganization() {
     // Varoable declaration
     $autoComplete = array();
 

@@ -1,4 +1,4 @@
-<div class="container-lg my-3 py-3">
+<div class="container my-3 py-3">
   <h1><?= esc($title); ?></h1>
 
   <?= \Config\Services::validation()->listErrors(); ?>
@@ -45,7 +45,7 @@ $(document).ready(function(){
     minLength: 1,
     source: function(request, response) {
       $.ajax({
-        url: location.protocol + "//" + location.host + "/organizations/searchLocation",
+        url: location.protocol + "//" + location.host + "/organizations/searchOrganization",
         datatype: "json",
         data: {
           term: request.term,

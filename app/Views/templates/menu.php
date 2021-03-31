@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
     <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-            <a class="nav-link" href="/">Publications</a>
+            <a class="nav-link" href="/publications/index">Publications</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="#">Reports</a>
