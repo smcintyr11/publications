@@ -380,48 +380,47 @@ class Publications extends Controller {
        if ($validation->withRequest($this->request)->run()) {  // Valid
          // Save
          $model->save([
-           'PublicationID' => $this->request->getPost('publicationID'),
-           'PrimaryTitle' => $this->request->getPost('primaryTitle'),
-           'SecondaryTitle' => $this->request->getPost('secondaryTitle'),
-           'PublicationDate' => $this->request->getPost('publicationDate'),
-           //'FiscalYearID' => $this->request->getPost('fiscalYearID'),
+           'PublicationID' => $this->request->getPost('publicationID'), // **
+           'PrimaryTitle' => $this->request->getPost('primaryTitle'), // **
+           'SecondaryTitle' => $this->request->getPost('secondaryTitle') == "" ? null : $this->request->getPost('secondaryTitle'),
+           'PublicationDate' => $this->request->getPost('publicationDate') == "" ? null : $this->request->getPost('publicationDate'),
            'FiscalYearID' => $this->request->getPost('fiscalYearID') == "" ? null : $this->request->getPost('fiscalYearID'),
-           'Volume' => $this->request->getPost('volume'),
-           'StartPage' => $this->request->getPost('startPage'),
-           'EndPage' => $this->request->getPost('endPage'),
-           'ClientID' => $this->request->getPost('clientID'),
+           'Volume' => $this->request->getPost('volume') == "" ? null : $this->request->getPost('volume'),
+           'StartPage' => $this->request->getPost('startPage') == "" ? null : $this->request->getPost('startPage'),
+           'EndPage' => $this->request->getPost('endPage') == "" ? null : $this->request->getPost('endPage'),
+           'ClientID' => $this->request->getPost('clientID') == "" ? null : $this->request->getPost('clientID'),
            'OrganizationID' => $this->request->getPost('organizationID') == "" ? null : $this->request->getPost('organizationID'),
-           'AbstractEnglish' => $this->request->getPost('abstractEnglish'),
-           'AbstractFrench' => $this->request->getPost('abstractFrench'),
-           'PLSEnglish' => $this->request->getPost('plsEnglish'),
-           'PLSFrench' => $this->request->getPost('plsFrench'),
-           'PRSEnglish' => $this->request->getPost('prsEnglish'),
-           'PRSFrench' => $this->request->getPost('prsFrench'),
-           'ISBN' => $this->request->getPost('isbn'),
-           'AgreementNumber' => $this->request->getPost('agreementNumber'),
-           'IPDNumber' => $this->request->getPost('ipdNumber'),
-           'CrossReferenceNumber' => $this->request->getPost('crossReferenceNumber'),
-           'ProjectCode' => $this->request->getPost('projectCode'),
-           'ReportNumber' => $this->request->getPost('reportNumber'),
-           'ManuscriptNumber' => $this->request->getPost('manuscriptNumber'),
-           'CostCentreID' => $this->request->getPost('costCentreID'),
-           'JournalID' => $this->request->getPost('journalID'),
-           'ReportTypeID' => $this->request->getPost('reportTypeID'),
-           'StatusID' => $this->request->getPost('statusID'),
-           'StatusPersonID' => $this->request->getPost('statusPersonID'),
-           'StatusEstimatedCompletionDate' => $this->request->getPost('statusEstimatedCompletionDate'),
-           'DOI' => $this->request->getPost('doi'),
-           'JournalSubmissionDate' => $this->request->getPost('journalSubmissionDate'),
-           'JournalAcceptanceDate' => $this->request->getPost('journalAcceptanceDate'),
-           'ConferenceSubmissionDate' => $this->request->getPost('conferenceSubmissionDate'),
-           'ConferenceAcceptanceDate' => $this->request->getPost('conferenceAcceptanceDate'),
-           'EmbargoPeriod' => $this->request->getPost('embargoPeriod'),
-           'EmbargoEndDate' => $this->request->getPost('embargoEndDate'),
-           'WebPublicationDate' => $this->request->getPost('webPublicationDate'),
-           'SentToClient' => $this->request->getPost('sentToClient'),
-           'SentToClientDate' => $this->request->getPost('sentToClientDate'),
-           'ReportFormatted' => $this->request->getPost('reportFormatted'),
-           'RecordNumber' => $this->request->getPost('recordNumber'),
+           'AbstractEnglish' => $this->request->getPost('abstractEnglish') == "" ? null : $this->request->getPost('abstractEnglish'),
+           'AbstractFrench' => $this->request->getPost('abstractFrench') == "" ? null : $this->request->getPost('abstractFrench'),
+           'PLSEnglish' => $this->request->getPost('plsEnglish') == "" ? null : $this->request->getPost('plsEnglish'),
+           'PLSFrench' => $this->request->getPost('plsFrench') == "" ? null : $this->request->getPost('plsFrench'),
+           'PRSEnglish' => $this->request->getPost('prsEnglish') == "" ? null : $this->request->getPost('prsEnglish'),
+           'PRSFrench' => $this->request->getPost('prsFrench') == "" ? null : $this->request->getPost('prsFrench'),
+           'ISBN' => $this->request->getPost('isbn') == "" ? null : $this->request->getPost('isbn'),
+           'AgreementNumber' => $this->request->getPost('agreementNumber') == "" ? null : $this->request->getPost('agreementNumber'),
+           'IPDNumber' => $this->request->getPost('ipdNumber') == "" ? null : $this->request->getPost('ipdNumber'),
+           'CrossReferenceNumber' => $this->request->getPost('crossReferenceNumber') == "" ? null : $this->request->getPost('crossReferenceNumber'),
+           'ProjectCode' => $this->request->getPost('projectCode') == "" ? null : $this->request->getPost('projectCode'),
+           'ReportNumber' => $this->request->getPost('reportNumber') == "" ? null : $this->request->getPost('reportNumber'),
+           'ManuscriptNumber' => $this->request->getPost('manuscriptNumber') == "" ? null : $this->request->getPost('manuscriptNumber'),
+           'CostCentreID' => $this->request->getPost('costCentreID') == "" ? null : $this->request->getPost('costCentreID'),
+           'JournalID' => $this->request->getPost('journalID') == "" ? null : $this->request->getPost('journalID'),
+           'ReportTypeID' => $this->request->getPost('reportTypeID'), // **
+           'StatusID' => $this->request->getPost('statusID'), // **
+           'StatusPersonID' => $this->request->getPost('statusPersonID') == "" ? null : $this->request->getPost('statusPersonID'),
+           'StatusEstimatedCompletionDate' => $this->request->getPost('statusEstimatedCompletionDate') == "" ? null : $this->request->getPost('statusEstimatedCompletionDate'),
+           'DOI' => $this->request->getPost('doi') == "" ? null : $this->request->getPost('doi'),
+           'JournalSubmissionDate' => $this->request->getPost('journalSubmissionDate') == "" ? null : $this->request->getPost('journalSubmissionDate'),
+           'JournalAcceptanceDate' => $this->request->getPost('journalAcceptanceDate') == "" ? null : $this->request->getPost('journalAcceptanceDate'),
+           'ConferenceSubmissionDate' => $this->request->getPost('conferenceSubmissionDate') == "" ? null : $this->request->getPost('conferenceSubmissionDate'),
+           'ConferenceAcceptanceDate' => $this->request->getPost('conferenceAcceptanceDate') == "" ? null : $this->request->getPost('conferenceAcceptanceDate'),
+           'EmbargoPeriod' => $this->request->getPost('embargoPeriod') == "" ? null : $this->request->getPost('embargoPeriod'),
+           'EmbargoEndDate' => $this->request->getPost('embargoEndDate') == "" ? null : $this->request->getPost('embargoEndDate'),
+           'WebPublicationDate' => $this->request->getPost('webPublicationDate') == "" ? null : $this->request->getPost('webPublicationDate'),
+           'SentToClient' => $this->request->getPost('sentToClient') == "" ? null : $this->request->getPost('sentToClient'),
+           'SentToClientDate' => $this->request->getPost('sentToClientDate') == "" ? null : $this->request->getPost('sentToClientDate'),
+           'ReportFormatted' => $this->request->getPost('reportFormatted') == "" ? null : $this->request->getPost('reportFormatted'),
+           'RecordNumber' => $this->request->getPost('recordNumber') == "" ? null : $this->request->getPost('recordNumber'),
          ]);
 
          // Go back to index
@@ -534,7 +533,7 @@ class Publications extends Controller {
 
      // Generate the query
      $builder = $db->table('CostCentres');
-     $builder->select("*");
+     $builder->select("CostCentreID, CONCAT(CostCentre, ' (', Description, ')') AS CostCentre");
      $builder->orderBy("CostCentre");
 
      // Return the result

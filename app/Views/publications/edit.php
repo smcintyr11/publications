@@ -1,3 +1,7 @@
+<?php
+  use App\Libraries\MyFormGeneration;
+ ?>
+
 <!-- Load Table Sorter -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.widgets.min.js"></script>
@@ -40,129 +44,101 @@
     <!-- Tab content -->
     <!-- General Tab -->
     <div id="tbGeneral" class="tabcontent" style="display: block;">
-			<br />
-      <div class="form-group row">
-        <label for="publicationID" class="col-2 col-form-label font-weight-bold">Publication ID:</label>
-        <div class="col-10">
-          <input type="text" readonly class="form-control-plaintext" name="publicationID" id="publicationID" value="<?= $publication['PublicationID'] ?>"><br />
-        </div>
-      </div>
-      <div class="form-group row">
-        <label for="primaryTitle" class="col-2 col-form-label font-weight-bold">Primary Title:</label>
-        <div class="col-10">
-          <input class="form-control" type="input" name="primaryTitle" value="<?= set_value('primaryTitle', $publication['PrimaryTitle']) ?>"/><br />
-        </div>
-      </div>
-      <div class="form-group row">
-        <label for="secondaryTitle" class="col-2 col-form-label font-weight-bold">Secondary Title:</label>
-        <div class="col-10">
-          <input class="form-control" type="input" name="secondaryTitle" value="<?= set_value('secondaryTitle', $publication['SecondaryTitle']) ?>"/><br />
-        </div>
-      </div>
-			<div class="form-group row">
-				<label for="reportType" class="col-2 col-form-label font-weight-bold">Report Type:</label>
-				<div class="col-8">
-					<input class="form-control" type="input" id="reportType" name="reportType" value="<?= set_value('reportType', $publication['ReportType']) ?>"  placeholder="-- Enter a report type --"/>
-					<br />
-				</div>
-				<div class="col-2">
-					<?php
-						$uri = current_url();
-						$t = parse_url($uri);
-						$newUrl = $t['scheme'] . "://" . $t['host'] . ':' . $t['port'] . '/reportTypes/new/1';
-						echo ('<button type="button" class="btn btn-success" onclick="window.open(\'' . $newUrl . '\', \'_blank\');">Add Report Type</button>');
-					 ?>
-				</div>
-				<input type="hidden" id="reportTypeID" name="reportTypeID" value="<?= set_value('reportTypeID', $publication['ReportTypeID']) ?>">
-			</div>
-			<div class="form-group row">
-        <label for="reportNumber" class="col-2 col-form-label font-weight-bold">Report Number:</label>
-        <div class="col-10">
-          <input class="form-control" type="input" name="reportNumber" value="<?= set_value('reportNumber', $publication['ReportNumber']) ?>" placeholder="-- Enter a report number --"/><br />
-        </div>
-      </div>
-			<div class="form-group row">
-        <label for="agreementNumber" class="col-2 col-form-label font-weight-bold">Agreement Number:</label>
-        <div class="col-10">
-          <input class="form-control" type="input" name="agreementNumber" value="<?= set_value('agreementNumber', $publication['AgreementNumber']) ?>" placeholder="-- Enter an agreement number --"/><br />
-        </div>
-      </div>
-			<div class="form-group row">
-				<label for="fiscalYear" class="col-2 col-form-label font-weight-bold">Fiscal Year:</label>
-				<div class="col-8">
-					<input class="form-control" type="input" id="fiscalYear" name="fiscalYear" value="<?= set_value('fiscalYear', $publication['FiscalYear']) ?>"  placeholder="-- Enter a fiscal year (e.g. 2021 / 2022) --"/>
-					<br />
-				</div>
-				<div class="col-2">
-					<?php
-						$uri = current_url();
-						$t = parse_url($uri);
-						$newUrl = $t['scheme'] . "://" . $t['host'] . ':' . $t['port'] . '/fiscalYears/new/1';
-						echo ('<button type="button" class="btn btn-success" onclick="window.open(\'' . $newUrl . '\', \'_blank\');">Add Fiscal Year</button>');
-					 ?>
-				</div>
-				<input type="hidden" id="fiscalYearID" name="fiscalYearID" value="<?= set_value('fiscalYearID', $publication['FiscalYearID']) ?>">
-			</div>
-      <div class="form-group row">
-				<label for="organization" class="col-2 col-form-label font-weight-bold">Organization:</label>
-				<div class="col-8">
-					<input class="form-control" type="input" id="organization" name="organization" value="<?= set_value('organization', $publication['Organization']) ?>"  placeholder="-- Enter a an organization name --"/>
-					<br />
-				</div>
-				<div class="col-2">
-					<?php
-						$uri = current_url();
-						$t = parse_url($uri);
-						$newUrl = $t['scheme'] . "://" . $t['host'] . ':' . $t['port'] . '/organizations/new/1';
-						echo ('<button type="button" class="btn btn-success" onclick="window.open(\'' . $newUrl . '\', \'_blank\');">Add Organization</button>');
-					 ?>
-				</div>
-				<input type="hidden" id="organizationID" name="organizationID" value="<?= set_value('organizationID', $publication['OrganizationID']) ?>">
-			</div>
+      <br />
+      <?= MyFormGeneration::generateIDTextBox("publicationID",
+        $publication['PublicationID'], "Publication ID"); ?>
+
+      <?= MyFormGeneration::generateTextBox("primaryTitle",
+        set_value('primaryTitle', $publication['PrimaryTitle']),
+        "-- Enter the primary title --", "Primary Title"); ?>
+
+      <?= MyFormGeneration::generateTextBox("secondaryTitle",
+        set_value('secondaryTitle', $publication['SecondaryTitle']),
+        "-- Enter the secondary title --", "Secondary Title"); ?>
+
+      <?= MyFormGeneration::generateLookupTextBox("reportType",
+        set_value('reportType', $publication['ReportType']),
+        "-- Enter a report type --", "Report Type",
+        MyFormGeneration::generateNewButtonURL(current_url(), "reportTypes"), "reportTypeID",
+        set_value('reportTypeID', $publication['ReportTypeID'])); ?>
+
+      <?= MyFormGeneration::generateTextBox("reportNumber",
+        set_value('reportNumber', $publication['ReportNumber']),
+        "-- Enter the report number --", "Report Number"); ?>
+
+      <?= MyFormGeneration::generateTextBox("agreementNumber",
+        set_value('agreementNumber', $publication['AgreementNumber']),
+        "-- Enter the agreement number --", "Agreement Number"); ?>
+
+      <?= MyFormGeneration::generateLookupTextBox("fiscalYear",
+        set_value('fiscalYear', $publication['FiscalYear']),
+        "-- Enter a fiscal year (e.g. 2020 / 2021) --", "Fiscal Year",
+        MyFormGeneration::generateNewButtonURL(current_url(), "fiscalYears"), "fiscalYearID",
+        set_value('fiscalYearID', $publication['FiscalYearID'])); ?>
+
+      <?= MyFormGeneration::generateLookupTextBox("organization",
+        set_value('organization', $publication['Organization']),
+        "-- Enter an organization --", "Organization",
+        MyFormGeneration::generateNewButtonURL(current_url(), "organizations"), "organizationID",
+        set_value('organizationID', $publication['OrganizationID'])); ?>
+
+      <?php
+        $optionList = '';
+        foreach ($costCentres as $costCentre) {
+          $optionList = $optionList . '<option value=' . $costCentre->CostCentreID . '"';
+          if ($costCentre->CostCentreID == set_value('costCentreID', $publication['CostCentreID'])) {
+            $optionList = $optionList . ' selected="selected"';
+          }
+          $optionList = $optionList . '>' . $costCentre->CostCentre . '</option>';
+        }
+
+        echo (MyFormGeneration::generateSelect("costCentreID",
+          set_value('costCentreID', $publication['CostCentreID']),
+          "-- Select a cost centre --", "Cost Centre", $optionList));
+      ?>
+
+      <?= MyFormGeneration::generateTextBox("projectCode",
+        set_value('projectCode', $publication['ProjectCode']),
+        "-- Enter the project code --", "Project Code"); ?>
+
+      <?= MyFormGeneration::generateTextBox("ipdNumber",
+        set_value('ipdNumber', $publication['IPDNumber']),
+        "-- Enter the ipd number --", "IPD Number"); ?>
+
+      <?= MyFormGeneration::generateTextBox("crossReferenceNumber",
+        set_value('crossReferenceNumber', $publication['CrossReferenceNumber']),
+        "-- Enter the cross reference number --", "Cross Reference Number"); ?>
     </div>
 
     <!-- Status Tab -->
     <div id="tbStatus" class="tabcontent" style="display: none;">
 			<br />
-      <div class="form-group row">
-        <label for="statusID" class="col-2 col-form-label font-weight-bold">Status:</label>
-        <div class="col-10">
-          <select class="form-control" id="statusID" name="statusID" value="<?= set_value('statusID', $publication['StatusID']) ?>">
-            <option value=''>-- Select a status --</option>
-            <?php
-              foreach ($statuses as $status) {
-                echo ('<option value="' . $status->StatusID . '"');
-                if ($status->StatusID == set_value('statusID', $publication['StatusID'])) {
-                  echo (' selected="selected"');
-                }
-                echo('>' . $status->Status . '</option>');
-              }
-            ?>
-          </select><br />
-        </div>
-      </div>
-      <div class="form-group row">
-        <label for="assignedTo" class="col-2 col-form-label font-weight-bold">Assigned To:</label>
-        <div class="col-8">
-          <input class="form-control" type="input" id="assignedTo" name="assignedTo" value="<?= set_value('assignedTo', $publication['StatusPerson']) ?>"  placeholder="-- Enter a name --"/>
-					<br />
-        </div>
-				<div class="col-2">
-					<?php
-						$uri = current_url();
-						$t = parse_url($uri);
-						$newUrl = $t['scheme'] . "://" . $t['host'] . ':' . $t['port'] . '/people/new/1';
-						echo ('<button type="button" class="btn btn-success" onclick="window.open(\'' . $newUrl . '\', \'_blank\');">Add Person</button>');
-					 ?>
-				</div>
-        <input type="hidden" id="statusPersonID" name="statusPersonID" value="<?= set_value('statusPersonID', $publication['StatusPersonID']) ?>">
-      </div>
-      <div class="form-group row">
-        <label for="statusEstimatedCompletionDate" class="col-2 col-form-label font-weight-bold">Estimated Completion:</label>
-        <div class="col-10">
-          <input class="form-control" type="input" name="statusEstimatedCompletionDate" value="<?= set_value('statusEstimatedCompletionDate', $publication['StatusEstimatedCompletionDate']) ?>"/><br />
-        </div>
-      </div>
+
+      <?php
+        $optionList = '';
+        foreach ($statuses as $status) {
+          $optionList = $optionList . '<option value=' . $status->StatusID . '"';
+          if ($status->StatusID == set_value('statusID', $publication['StatusID'])) {
+            $optionList = $optionList . ' selected="selected"';
+          }
+          $optionList = $optionList . '>' . $status->Status . '</option>';
+        }
+
+        echo (MyFormGeneration::generateSelect("statusID",
+          set_value('statusID', $publication['StatusID']),
+          "-- Select a status --", "Status", $optionList));
+      ?>
+
+      <?= MyFormGeneration::generateLookupTextBox("assignedTo",
+        set_value('assignedTo', $publication['StatusPerson']),
+        "-- Enter a person --", "Assigned To",
+        MyFormGeneration::generateNewButtonURL(current_url(), "people"), "statusPersonID",
+        set_value('statusPersonID', $publication['StatusPersonID'])); ?>
+
+      <?= MyFormGeneration::generateTextBox("statusEstimatedCompletionDate",
+          set_value('statusEstimatedCompletionDate', $publication['StatusEstimatedCompletionDate']),
+          "-- Enter the estimated completion date (e.g. 2021-01-29) --", "Estimated Completion"); ?>
+
       <div class="form-group row">
         <h3>Status Log</h3>
 			</div>
