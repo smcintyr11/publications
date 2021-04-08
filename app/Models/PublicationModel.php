@@ -29,7 +29,7 @@ class PublicationModel extends Model {
       p.Volume, p.StartPage, p.EndPage, p.ClientID, c.Client, p.OrganizationID, o.Organization, p.AbstractEnglish, p.AbstractFrench,
       p.PLSEnglish, p.PLSFrench, p.PRSEnglish, p.PRSFrench, p.ISBN, p.AgreementNumber, p.IPDNumber, p.CrossReferenceNumber,
       p.ProjectCode, p.ReportNumber, p.ManuscriptNumber, p.CostCentreID, cc.CostCentre, p.JournalID, j.Journal, p.ReportTypeID,
-      rt.ReportType, p.StatusID, s.Status, p.StatusPersonID, pe.DisplayName AS StatusPerson, p.StatusEstimatedCompletionDate, p.DOI,
+      CONCAT (rt.ReportType, " (", rt.Abbreviation, ")") AS ReportType, p.StatusID, s.Status, p.StatusPersonID, pe.DisplayName AS StatusPerson, p.StatusEstimatedCompletionDate, p.DOI,
       p.JournalSubmissionDate, p.JournalAcceptanceDate, p.ConferenceSubmissionDate, p.ConferenceAcceptanceDate, p.EmbargoPeriod,
       p.EmbargoEndDate, p.WebPublicationDate, p.SentToClient, p.SentToClientDate, p.ReportFormatted, p.RecordNumber
       FROM (((((((Publications AS p LEFT JOIN FiscalYears AS fy ON p.FiscalYearID = fy.FiscalYearID)
@@ -39,7 +39,7 @@ class PublicationModel extends Model {
       LEFT JOIN Journals AS j ON p.JournalID = j.JournalID)
       LEFT JOIN ReportTypes AS rt ON p.ReportTypeID = rt.ReportTypeID)
       LEFT JOIN Statuses AS s ON p.StatusID = s.StatusID)
-      LEFT JOIN People AS pe ON p.StatusPersonID = pe.PersonID
+      LEFT JOIN vPeopleDropDown AS pe ON p.StatusPersonID = pe.PersonID
       WHERE p.PublicationID = ' . $publicationID);
 
     // Create the result

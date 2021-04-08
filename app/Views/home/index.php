@@ -9,24 +9,16 @@
 </head>
 <body>
 
-<label for="autocomplete">Select a programming language: </label>
-<input id="autocomplete">
-<input type="text" id="languageID">
 
-<script>
-var tags = [ "c++", "java", "php", "coldfusion", "javascript", "asp", "ruby" ];
-$( "#autocomplete" ).autocomplete({
-  source: function( request, response ) {
-          var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( request.term ), "i" );
-          response( $.grep( tags, function( item ){
-              return matcher.test( item );
-          }) );
-      },
-  select: function(event, ui) {
-    $("#languageID").val(1);
-  }
-});
-</script>
+  <?php
+
+  $url = 'http://localhost:8080/publications/edit/1/1';
+  $t = parse_url($url);
+  print_r($t);
+  echo ("<br />");
+  $newUrl = $t['scheme'] . "://" . $t['host'] . ':' . $t['port'] . '/';
+  echo ($newUrl);
+  ?>
 
 </body>
 </html>

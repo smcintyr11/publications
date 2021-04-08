@@ -336,7 +336,9 @@ class Publications extends Controller {
        $validation->setRule('primaryTitle', 'Primary Title', 'required');
        $validation->setRule('reportTypeID', 'Report Type', 'required');
        $validation->setRule('statusID', 'Status', 'required');
-       $validation->setRule('publicationDate', 'Publication Date', 'valid_date');
+       if (!empty($this->request->getPost('publicationDate'))) {
+          $validation->setRule('publicationDate', 'Publication Date', 'valid_date');
+       }
        $validation->setRule('volume', 'Volume', 'max_length[16]');
        $validation->setRule('isbn', 'ISBN', 'max_length[64]');
        $validation->setRule('agreementNumber', 'Agreement Number', 'max_length[64]');
@@ -346,16 +348,34 @@ class Publications extends Controller {
        $validation->setRule('reportNumber', 'Report Number', 'max_length[64]');
        $validation->setRule('manuscriptNumber', 'Manuscript Number', 'max_length[64]');
        $validation->setRule('isbn', 'ISBN', 'max_length[64]');
-       $validation->setRule('statusEstimatedCompletionDate ', 'Status Estimated Completion Date ', 'valid_date');
+       if (!empty($this->request->getPost('statusEstimatedCompletionDate'))) {
+         $validation->setRule('statusEstimatedCompletionDate ', 'Status Estimated Completion Date ', 'valid_date');
+       }
        $validation->setRule('doi', 'DOI', 'max_length[64]');
-       $validation->setRule('journalSubmissionDate ', 'Journal Submission Date ', 'valid_date');
-       $validation->setRule('journalAcceptanceDate ', 'Journal Acceptance Date ', 'valid_date');
-       $validation->setRule('conferenceSubmissionDate', 'Conference Submission Date', 'valid_date');
-       $validation->setRule('conferenceAcceptanceDate', 'Conference Acceptance Date', 'valid_date');
-       $validation->setRule('embargoPeriod', 'Embargo Period', 'integer|greater_than[0]');
-       $validation->setRule('embargoEndDate ', 'Embargo End Date ', 'valid_date');
-       $validation->setRule('webPublicationDate', 'Web Publication Date', 'valid_date');
-       $validation->setRule('sentToClientDate', 'Sent To Client Date', 'valid_date');
+       if (!empty($this->request->getPost('journalSubmissionDate'))) {
+         $validation->setRule('journalSubmissionDate ', 'Journal Submission Date ', 'valid_date');
+       }
+       if (!empty($this->request->getPost('journalAcceptanceDate'))) {
+         $validation->setRule('journalAcceptanceDate ', 'Journal Acceptance Date ', 'valid_date');
+       }
+       if (!empty($this->request->getPost('conferenceSubmissionDate'))) {
+         $validation->setRule('conferenceSubmissionDate', 'Conference Submission Date', 'valid_date');
+       }
+       if (!empty($this->request->getPost('conferenceAcceptanceDate'))) {
+         $validation->setRule('conferenceAcceptanceDate', 'Conference Acceptance Date', 'valid_date');
+       }
+       if (!empty($this->request->getPost('embargoPeriod'))) {
+         $validation->setRule('embargoPeriod', 'Embargo Period', 'integer|greater_than[0]');
+       }
+       if (!empty($this->request->getPost('embargoEndDate'))) {
+         $validation->setRule('embargoEndDate ', 'Embargo End Date ', 'valid_date');
+       }
+       if (!empty($this->request->getPost('webPublicationDate'))) {
+         $validation->setRule('webPublicationDate', 'Web Publication Date', 'valid_date');
+       }
+       if (!empty($this->request->getPost('sentToClientDate'))) {
+         $validation->setRule('sentToClientDate', 'Sent To Client Date', 'valid_date');
+       }
        $validation->setRule('recordNumber', 'Record Number', 'max_length[64]');
        if ($validation->withRequest($this->request)->run()) {  // Valid
          // Save
@@ -364,12 +384,13 @@ class Publications extends Controller {
            'PrimaryTitle' => $this->request->getPost('primaryTitle'),
            'SecondaryTitle' => $this->request->getPost('secondaryTitle'),
            'PublicationDate' => $this->request->getPost('publicationDate'),
-           'FiscalYearID' => $this->request->getPost('fiscalYearID'),
+           //'FiscalYearID' => $this->request->getPost('fiscalYearID'),
+           'FiscalYearID' => $this->request->getPost('fiscalYearID') == "" ? null : $this->request->getPost('fiscalYearID'),
            'Volume' => $this->request->getPost('volume'),
            'StartPage' => $this->request->getPost('startPage'),
            'EndPage' => $this->request->getPost('endPage'),
            'ClientID' => $this->request->getPost('clientID'),
-           'OrganizationID' => $this->request->getPost('organizationID'),
+           'OrganizationID' => $this->request->getPost('organizationID') == "" ? null : $this->request->getPost('organizationID'),
            'AbstractEnglish' => $this->request->getPost('abstractEnglish'),
            'AbstractFrench' => $this->request->getPost('abstractFrench'),
            'PLSEnglish' => $this->request->getPost('plsEnglish'),
@@ -538,7 +559,7 @@ class Publications extends Controller {
      $builder = $db->table('PublicationsStatuses');
      $builder->select("PublicationsStatusesID, DateModified, Status, DisplayName, EstimatedCompletionDate, CompletionDate");
      $builder->join('Statuses', 'PublicationsStatuses.StatusID = Statuses.StatusID', 'left');
-     $builder->join('People', 'PublicationsStatuses.StatusPersonID = People.PersonID', 'left');
+     $builder->join('vPeopleDropDown', 'PublicationsStatuses.StatusPersonID = vPeopleDropDown.PersonID', 'left');
      $builder->where('PublicationID', $publicationID);
 
      // How are we sorting

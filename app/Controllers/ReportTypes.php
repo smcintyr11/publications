@@ -363,4 +363,43 @@ class ReportTypes extends Controller {
       echo view('templates/footer.php', $data);
     }
   }
+
+  /**
+   * Name: searchReportType
+   * Purpose: Uses a query variable passed to the URL to search for a report type
+   *  that is like the search term.
+   *
+   * Parameters: None
+   *
+   * Returns: Outputs JSON - An array of data
+   */
+  public function searchReportType() {
+    // Varoable declaration
+    $autoComplete = array();
+
+    // Build the query
+    $searchString = $this->request->getVar('term');
+    $db = \Config\Database::connect();
+    $builder = $db->table('ReportTypes');
+    $builder->like('ReportType', $searchString);
+    $builder->orLike('Abbreviation', $searchString);
+    $builder->select('ReportTypeID,CONCAT (ReportType, " (", Abbreviation, ")") AS DDValue');
+
+
+    // Run the query and compile an array of organization data
+    $autoComplete = array();
+    $query = $builder->get();
+    foreach ($query->getResult() as $row)
+    {
+      $item = array(
+      'id'=>$row->ReportTypeID,
+      'label'=>$row->DDValue,
+      'value'=>$row->DDValue,
+      );
+      array_push($autoComplete,$item);
+    }
+
+    // Output JSON response
+    echo json_encode($autoComplete);
+  }
 }

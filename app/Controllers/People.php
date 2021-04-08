@@ -387,8 +387,8 @@ class People extends Controller {
 
   /**
    * Name: searchPerson
-   * Purpose: Uses a query variable passed to the URL to search for an organization
-   *  name that is like the search term.
+   * Purpose: Uses a query variable passed to the URL to search for a person
+   *  that is like the search term.
    *
    * Parameters: None
    *
@@ -402,7 +402,9 @@ class People extends Controller {
     $searchString = $this->request->getVar('term');
     $db = \Config\Database::connect();
     $builder = $db->table('People');
-    $builder->like('DisplayName', $searchString);
+    $builder->join('vPeopleDropDown', 'People.PersonID = vPeopleDropDown.PersonID', 'left');
+    $builder->select('People.PersonID, vPeopleDropDown.DisplayName');
+    $builder->like('People.DisplayName', $searchString);
     $builder->orLike('FirstName', $searchString);
     $builder->orLike('LastName', $searchString);
 

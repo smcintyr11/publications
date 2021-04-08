@@ -1,9 +1,10 @@
 <!-- Load Table Sorter -->
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.min.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.widgets.min.js"></script>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/css/theme.bootstrap_4.min.css" integrity="sha512-2C6AmJKgt4B+bQc08/TwUeFKkq8CsBNlTaNcNgUmsDJSU1Fg+R6azDbho+ZzuxEkJnCjLZQMozSq3y97ZmgwjA==" crossorigin="anonymous" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.widgets.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/css/theme.bootstrap_4.min.css" integrity="sha512-2C6AmJKgt4B+bQc08/TwUeFKkq8CsBNlTaNcNgUmsDJSU1Fg+R6azDbho+ZzuxEkJnCjLZQMozSq3y97ZmgwjA==" crossorigin="anonymous" />
 
 
+<!-- Main Form -->
 <div class="container my-3 py-3">
   <h1><?= esc($title); ?></h1>
 
@@ -58,6 +59,66 @@
           <input class="form-control" type="input" name="secondaryTitle" value="<?= set_value('secondaryTitle', $publication['SecondaryTitle']) ?>"/><br />
         </div>
       </div>
+			<div class="form-group row">
+				<label for="reportType" class="col-2 col-form-label font-weight-bold">Report Type:</label>
+				<div class="col-8">
+					<input class="form-control" type="input" id="reportType" name="reportType" value="<?= set_value('reportType', $publication['ReportType']) ?>"  placeholder="-- Enter a report type --"/>
+					<br />
+				</div>
+				<div class="col-2">
+					<?php
+						$uri = current_url();
+						$t = parse_url($uri);
+						$newUrl = $t['scheme'] . "://" . $t['host'] . ':' . $t['port'] . '/reportTypes/new/1';
+						echo ('<button type="button" class="btn btn-success" onclick="window.open(\'' . $newUrl . '\', \'_blank\');">Add Report Type</button>');
+					 ?>
+				</div>
+				<input type="hidden" id="reportTypeID" name="reportTypeID" value="<?= set_value('reportTypeID', $publication['ReportTypeID']) ?>">
+			</div>
+			<div class="form-group row">
+        <label for="reportNumber" class="col-2 col-form-label font-weight-bold">Report Number:</label>
+        <div class="col-10">
+          <input class="form-control" type="input" name="reportNumber" value="<?= set_value('reportNumber', $publication['ReportNumber']) ?>" placeholder="-- Enter a report number --"/><br />
+        </div>
+      </div>
+			<div class="form-group row">
+        <label for="agreementNumber" class="col-2 col-form-label font-weight-bold">Agreement Number:</label>
+        <div class="col-10">
+          <input class="form-control" type="input" name="agreementNumber" value="<?= set_value('agreementNumber', $publication['AgreementNumber']) ?>" placeholder="-- Enter an agreement number --"/><br />
+        </div>
+      </div>
+			<div class="form-group row">
+				<label for="fiscalYear" class="col-2 col-form-label font-weight-bold">Fiscal Year:</label>
+				<div class="col-8">
+					<input class="form-control" type="input" id="fiscalYear" name="fiscalYear" value="<?= set_value('fiscalYear', $publication['FiscalYear']) ?>"  placeholder="-- Enter a fiscal year (e.g. 2021 / 2022) --"/>
+					<br />
+				</div>
+				<div class="col-2">
+					<?php
+						$uri = current_url();
+						$t = parse_url($uri);
+						$newUrl = $t['scheme'] . "://" . $t['host'] . ':' . $t['port'] . '/fiscalYears/new/1';
+						echo ('<button type="button" class="btn btn-success" onclick="window.open(\'' . $newUrl . '\', \'_blank\');">Add Fiscal Year</button>');
+					 ?>
+				</div>
+				<input type="hidden" id="fiscalYearID" name="fiscalYearID" value="<?= set_value('fiscalYearID', $publication['FiscalYearID']) ?>">
+			</div>
+      <div class="form-group row">
+				<label for="organization" class="col-2 col-form-label font-weight-bold">Organization:</label>
+				<div class="col-8">
+					<input class="form-control" type="input" id="organization" name="organization" value="<?= set_value('organization', $publication['Organization']) ?>"  placeholder="-- Enter a an organization name --"/>
+					<br />
+				</div>
+				<div class="col-2">
+					<?php
+						$uri = current_url();
+						$t = parse_url($uri);
+						$newUrl = $t['scheme'] . "://" . $t['host'] . ':' . $t['port'] . '/organizations/new/1';
+						echo ('<button type="button" class="btn btn-success" onclick="window.open(\'' . $newUrl . '\', \'_blank\');">Add Organization</button>');
+					 ?>
+				</div>
+				<input type="hidden" id="organizationID" name="organizationID" value="<?= set_value('organizationID', $publication['OrganizationID']) ?>">
+			</div>
     </div>
 
     <!-- Status Tab -->
@@ -87,7 +148,12 @@
 					<br />
         </div>
 				<div class="col-2">
-					<button type="button" id="btnAddPerson" class="btn btn-success">Add Person</button>
+					<?php
+						$uri = current_url();
+						$t = parse_url($uri);
+						$newUrl = $t['scheme'] . "://" . $t['host'] . ':' . $t['port'] . '/people/new/1';
+						echo ('<button type="button" class="btn btn-success" onclick="window.open(\'' . $newUrl . '\', \'_blank\');">Add Person</button>');
+					 ?>
 				</div>
         <input type="hidden" id="statusPersonID" name="statusPersonID" value="<?= set_value('statusPersonID', $publication['StatusPersonID']) ?>">
       </div>
@@ -200,6 +266,81 @@ $(document).ready(function(){
     }
   });
 
+	// Report Type autocomplete
+	$("#reportType").autocomplete({
+		minLength: 1,
+		source: function(request, response) {
+			$.ajax({
+				url: location.protocol + "//" + location.host + "/reportTypes/searchReportType",
+				datatype: "json",
+				data: {
+					term: request.term,
+				},
+				success: function(data) {
+					data = $.parseJSON(data);
+					response(data);
+				},
+			});
+		},
+		select: function(event, ui) {
+			$("#reportTypeID").val(ui.item.id);
+		}
+	}).keyup(function(){
+		if (event.which != 13) {
+			$("#reportTypeID").val("");
+		}
+	});
+
+	// Fiscal Year autocomplete
+	$("#fiscalYear").autocomplete({
+		minLength: 1,
+		source: function(request, response) {
+			$.ajax({
+				url: location.protocol + "//" + location.host + "/fiscalYears/searchFiscalYear",
+				datatype: "json",
+				data: {
+					term: request.term,
+				},
+				success: function(data) {
+					data = $.parseJSON(data);
+					response(data);
+				},
+			});
+		},
+		select: function(event, ui) {
+			$("#fiscalYearID").val(ui.item.id);
+		}
+	}).keyup(function(){
+		if (event.which != 13) {
+			$("#fiscalYearID").val("");
+		}
+	});
+
+  // Organization autocomplete
+	$("#organization").autocomplete({
+		minLength: 1,
+		source: function(request, response) {
+			$.ajax({
+				url: location.protocol + "//" + location.host + "/organizations/searchOrganization",
+				datatype: "json",
+				data: {
+					term: request.term,
+				},
+				success: function(data) {
+					data = $.parseJSON(data);
+					response(data);
+				},
+			});
+		},
+		select: function(event, ui) {
+			$("#organizationID").val(ui.item.id);
+		}
+	}).keyup(function(){
+		if (event.which != 13) {
+			$("#organizationID").val("");
+		}
+	});
+
   // Select the General Tab
   $("#tbGeneralLink").className += " active";
 
@@ -209,5 +350,12 @@ $(document).ready(function(){
 	    theme : "bootstrap",
 	  });
 	});
+});
+</script>
+
+
+<script>
+$(document).ready(function() {
+
 });
 </script>
