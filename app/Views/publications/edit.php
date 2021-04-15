@@ -1,14 +1,13 @@
-<?php
-  use App\Libraries\MyFormGeneration;
- ?>
-
 <!-- Load Table Sorter -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.widgets.min.js"></script>
 <script type="text/javascript" src="/scripts/publicationEdit.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/css/theme.bootstrap_4.min.css" integrity="sha512-2C6AmJKgt4B+bQc08/TwUeFKkq8CsBNlTaNcNgUmsDJSU1Fg+R6azDbho+ZzuxEkJnCjLZQMozSq3y97ZmgwjA==" crossorigin="anonymous" />
 
-
+<?php
+  use App\Libraries\MyFormGeneration;
+ ?>
+ 
 <!-- Main Form -->
 <div class="container my-3 py-3">
   <h1><?= esc($title); ?></h1>
@@ -51,6 +50,9 @@
     </li>
     <li class="nav-item">
       <a class="nav-link tablink" onclick="openTab(event, 'tbPRS')">PRS</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link tablink" onclick="openTab(event, 'tbKeywords')">Keywords</a>
     </li>
     <li class="nav-item">
       <a class="nav-link tablink" onclick="openTab(event, 'tbDates')">Dates</a>
@@ -281,6 +283,44 @@
           set_value('prsFrench', $publication['PRSFrench']),
           "-- Enter the policy relevance statement --", "PRS (French)", 5); ?>
     </div>
+
+    <!-- Keywords Tab -->
+    <div id="tbKeywords" class="tabcontent" style="display: none;">
+
+      <?= MyFormGeneration::generateLookupTextBox("newKeyword",
+        null, "-- Enter a keyword --", "Keyword", null, "keywordID", null, "btnAddKeyword"); ?>
+
+      <div class="form-group row">
+      <h3>Keywords</h3>
+      </div>
+
+      <div class="form-group row">
+        <div class="table-responsive">
+          <table class="table table-striped table-bordered">
+             <thead class="thead-light">
+               <th scope="col">ID</th>
+               <th scope="col">Keyword (Enghlish)</th>
+               <th scope="col">Keyword (French)</th>
+               <th scope="col">Delete</th>
+             </thead>
+             <tbody id="tblKeywords">
+               <?php if (! empty($keywordsList) && is_array($keywordsList)) : ?>
+                 <?php foreach ($keywordsList as $kl): ?>
+                   <tr id="kl_<?= $kl->PublicationsKeywordsID ?>">
+                     <td><?= $kl->PublicationsKeywordsID; ?></td>
+                     <td><?= $kl->KeywordEnglish; ?></td>
+                     <td><?= $kl->KeywordFrench; ?></td>
+                     <td><button class="btn btn-danger m-1 fas fa-trash-alt" type="button" title="Delete Keyword" onclick="removeKeyword('kl_<?= $kl->PublicationsKeywordsID ?>', <?= $kl->PublicationsKeywordsID ?>)" /></td>
+                   </tr>
+                 <?php endforeach; ?>
+               <?php endif ?>
+             </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
 
     <!-- Dates Tab -->
     <div id="tbDates" class="tabcontent" style="display: none;">

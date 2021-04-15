@@ -625,7 +625,18 @@ class Publications extends Controller {
     * Returns: Array of objects representing the rows
     */
    private function getKeywords(string $publicationID) {
-     return "";
+     // Load the query builder
+     $db = \Config\Database::connect();
+
+     // Generate the query
+     $builder = $db->table('PublicationsKeywords');
+     $builder->select("PublicationsKeywordsID, KeywordEnglish, KeywordFrench");
+     $builder->join("Keywords", 'PublicationsKeywords.KeywordID = Keywords.KeywordID', 'left');
+     $builder->where('PublicationID', $publicationID);
+     $builder->orderBy("KeywordEnglish");
+
+     // Retturn the result
+     return $builder->get()->getResult();
    }
 
    /**

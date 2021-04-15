@@ -131,6 +131,28 @@ function toggleReviewer(cellID, prID, currentState, btnID) {
     });
 }
 
+function removeKeyword(rowID, pkID) {
+  $.ajax({
+      url: "/publicationsKeywords/remove",
+      type: "POST",
+      data: {
+        publicationsKeywordsID: pkID,
+      },
+      cache: false,
+      success: function(dataResult){
+        var dataResult = JSON.parse(dataResult);
+        if(dataResult.statusCode==200) {
+          // Success
+          $("#" + rowID).remove();
+          displaySuccessMessage("Keyword removed.");
+        }
+        else if(dataResult.statusCode==201) {  // Error
+          displayErrorMessage("Error occurred removing keyword");
+        }
+      }
+    });
+}
+
 $(document).ready(function(){
   // Assigned to autocomplete
   $("#assignedTo").autocomplete({
@@ -282,6 +304,31 @@ $(document).ready(function(){
     }
   });
 
+  // Keyword autocomplete
+  $("#newKeyword").autocomplete({
+    minLength: 1,
+    source: function(request, response) {
+      $.ajax({
+        url: location.protocol + "//" + location.host + "/keywords/searchKeyword",
+        datatype: "json",
+        data: {
+          term: request.term,
+        },
+        success: function(data) {
+          data = $.parseJSON(data);
+          response(data);
+        },
+      });
+    },
+    select: function(event, ui) {
+      $("#keywordID").val(ui.item.id);
+    }
+  }).keyup(function(){
+    if (event.which != 13) {
+      $("#keywordID").val("");
+    }
+  });
+
   // Add author function
   $("#btnAddAuthor").click(function(){
     var authorName = $("#newAuthor").val();
@@ -361,6 +408,47 @@ $(document).ready(function(){
           }
         });
       });
+
+      // Add keyword function
+      $("#btnAddKeyword").click(function(){
+        var keywordID = $('#keywordID').val();
+        var publicationID = $("#publicationID").val();
+        if (keywordID == "") {
+          alert("You must select a keyword first");
+          return;
+        }
+
+        $.ajax({
+    				url: "/PublicationsKeywords/add",
+    				type: "POST",
+    				data: {
+              publicationID: publicationID,
+              keywordID: keywordID,
+    				},
+    				cache: false,
+    				success: function(dataResult){
+    					var dataResult = JSON.parse(dataResult);
+    					if(dataResult.statusCode==200) {
+                // Get the new publicationsAuthorsID
+                var PublicationsKeywordsID = dataResult.publicationsKeywordsID;
+                var KeywordE = dataResult.keywordEnglish;
+                var KeywordF = dataResult.keywordFrench;
+
+                // Success
+                var html = '<tr id="kl_'+PublicationsKeywordsID+'"><td>'+PublicationsKeywordsID+'</td><td>'+KeywordE+'</td><td>'+KeywordF+'</td><td><button class="btn btn-danger m-1 fas fa-trash-alt" type="button" title="Delete Keyword" onclick="removeKeyword(\'kl_'+PublicationsKeywordsID+'\', '+PublicationsKeywordsID+')" /></td></tr>';
+                $("#tblKeywords").append(html);
+                displaySuccessMessage("Keyword Added");
+
+                // Clear the keyword boxes
+                $("#newKeyword").val("");
+                $("#keywordID").val("");
+    					}
+    					else if(dataResult.statusCode==201) {  // Error
+                displayErrorMessage("Error occurred adding keyword");
+    					}
+    				}
+    			});
+        });
 
   // Select the General Tab
   $("#tbGeneralLink").className += " active";
