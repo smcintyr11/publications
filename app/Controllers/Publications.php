@@ -546,11 +546,10 @@ class Publications extends Controller {
     *
     * Parameters:
     *   string $publicationID - The PublicationID we are filtering against
-    *   string $sort - How we are sorting the list
     *
     * Returns: Array of objects representing the rows
     */
-   private function getStatusLog(string $publicationID, string $sort = "date_asc") {
+   private function getStatusLog(string $publicationID) {
      // Load the query builder
      $db = \Config\Database::connect();
 
@@ -560,29 +559,7 @@ class Publications extends Controller {
      $builder->join('Statuses', 'PublicationsStatuses.StatusID = Statuses.StatusID', 'left');
      $builder->join('vPeopleDropDown', 'PublicationsStatuses.StatusPersonID = vPeopleDropDown.PersonID', 'left');
      $builder->where('PublicationID', $publicationID);
-
-     // How are we sorting
-     if ($sort == "date_asc") {
-       $builder->orderBy("DateModified", "ASC");
-     } elseif ($sort == "date_desc") {
-       $builder->orderBy("DateModified", "DESC");
-     } elseif ($sort == "status_asc") {
-       $builder->orderBy("Status", "ASC");
-     } elseif ($sort == "status_desc") {
-       $builder->orderBy("Status", "DESC");
-     } elseif ($sort == "at_asc") {
-       $builder->orderBy("DisplayName", "ASC");
-     } elseif ($sort == "at_desc") {
-       $builder->orderBy("DisplayName", "DESC");
-     } elseif ($sort == "ec_asc") {
-       $builder->orderBy("EstimatedCompletionDate", "ASC");
-     } elseif ($sort == "ec_desc") {
-       $builder->orderBy("EstimatedCompletionDate", "DESC");
-     } elseif ($sort == "cd_asc") {
-       $builder->orderBy("CompletionDate", "ASC");
-     } else {
-       $builder->orderBy("CompletionDate", "DESC");
-     }
+     $builder->orderBy("DateModified", "DESC");
 
      // Return the result
      return $builder->get()->getResult();
@@ -594,12 +571,23 @@ class Publications extends Controller {
     *
     * Parameters:
     *   string $publicationID - The PublicationID we are filtering against
-    *   string $sort - How we are sorting the list
     *
     * Returns: Array of objects representing the rows
     */
-   private function getAuthors(string $publicationID, string $sort = "date_asc") {
-     return "";
+   private function getAuthors(string $publicationID) {
+     // Load the query builder
+     $db = \Config\Database::connect();
+
+     // Generate the query
+     $builder = $db->table('PublicationsAuthors');
+     $builder->select("PublicationsAuthorsID, DisplayName, PrimaryAuthor");
+     $builder->join("vPeopleDropDown", 'PublicationsAuthors.PersonID = vPeopleDropDown.PersonID', 'left');
+     $builder->where('PublicationID', $publicationID);
+     $builder->orderBy("PrimaryAuthor", "DESC");
+     $builder->orderBy("vPeopleDropDown.DisplayName");
+
+     // Retturn the result
+     return $builder->get()->getResult();
    }
 
    /**
@@ -608,12 +596,23 @@ class Publications extends Controller {
     *
     * Parameters:
     *   string $publicationID - The PublicationID we are filtering against
-    *   string $sort - How we are sorting the list
     *
     * Returns: Array of objects representing the rows
     */
-   private function getReviewers(string $publicationID, string $sort = "date_asc") {
-     return "";
+   private function getReviewers(string $publicationID) {
+     // Load the query builder
+     $db = \Config\Database::connect();
+
+     // Generate the query
+     $builder = $db->table('PublicationsReviewers');
+     $builder->select("PublicationsReviewersID, DisplayName, LeadReviewer");
+     $builder->join("vPeopleDropDown", 'PublicationsReviewers.PersonID = vPeopleDropDown.PersonID', 'left');
+     $builder->where('PublicationID', $publicationID);
+     $builder->orderBy("LeadReviewer", "DESC");
+     $builder->orderBy("vPeopleDropDown.DisplayName");
+
+     // Retturn the result
+     return $builder->get()->getResult();
    }
 
    /**
@@ -622,11 +621,10 @@ class Publications extends Controller {
     *
     * Parameters:
     *   string $publicationID - The PublicationID we are filtering against
-    *   string $sort - How we are sorting the list
     *
     * Returns: Array of objects representing the rows
     */
-   private function getKeywords(string $publicationID, string $sort = "date_asc") {
+   private function getKeywords(string $publicationID) {
      return "";
    }
 
@@ -636,11 +634,10 @@ class Publications extends Controller {
     *
     * Parameters:
     *   string $publicationID - The PublicationID we are filtering against
-    *   string $sort - How we are sorting the list
     *
     * Returns: Array of objects representing the rows
     */
-   private function getLinks(string $publicationID, string $sort = "date_asc") {
+   private function getLinks(string $publicationID) {
      return "";
    }
 
@@ -650,11 +647,10 @@ class Publications extends Controller {
     *
     * Parameters:
     *   string $publicationID - The PublicationID we are filtering against
-    *   string $sort - How we are sorting the list
     *
     * Returns: Array of objects representing the rows
     */
-   private function getComments(string $publicationID, string $sort = "date_asc") {
+   private function getComments(string $publicationID) {
      return "";
    }
 }

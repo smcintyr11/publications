@@ -79,10 +79,11 @@ class MyFormGeneration {
     *  string $newButtonURL - The URL for the new button
     *  string $lookupID     - The ID for the lookup value
     *  string $lookupValue  - The value to populate the lookupID with
+    *  string $buttonID     - The ID for the button
     *
     * Returns: string - The HTML for these form elements
     */
-    public static function generateLookupTextBox(string $textboxID, ?string $textboxValue, string $placeholder, string $textboxLabel, string $newButtonURL, string $lookupID, ?string $lookupValue) {
+    public static function generateLookupTextBox(string $textboxID, ?string $textboxValue, string $placeholder, string $textboxLabel, ?string $newButtonURL, string $lookupID, ?string $lookupValue, ?string $buttonID = null) {
       // Generate the HTML
       $html = '<div class="form-group row">
         <label for="' . $textboxID . '" class="col-2 col-form-label font-weight-bold">' . $textboxLabel . ':</label>
@@ -91,11 +92,18 @@ class MyFormGeneration {
         <br />
         </div>
         <div class="col-2">
-        <button type="button" class="btn btn-success" onclick="window.open(\'' . $newButtonURL . '\', \'_blank\');">Add ' . $textboxLabel . '</button>
-        </div>
-        <input type="hidden" id="' . $lookupID . '" name="' . $lookupID . '" value="' . $lookupValue . '">
-        </div>
-      ';
+        <button type="button" class="btn btn-success" ';
+
+      if (is_null($newButtonURL) == false) {
+        $html = $html . 'onclick="window.open(\'' . $newButtonURL . '\', \'_blank\');" ';
+      }
+      if (is_null($buttonID) == false) {
+        $html = $html . 'id="' . $buttonID . '" ';
+      }
+      $html = $html . '>Add ' . $textboxLabel . '</button>
+      </div>
+      <input type="hidden" id="' . $lookupID . '" name="' . $lookupID . '" value="' . $lookupValue . '">
+      </div>';
 
       // Return the resultinng HTML
       return $html;
@@ -110,11 +118,14 @@ class MyFormGeneration {
      *  string $value       - The value to populate the select with
      *  string $placeholder - The placeholder text for the first option
      *  string $textboxLabel  - The text for the label
-     *  string $optionList  - HTML representation of the options
+     *  array $optionList  - The array of rows to be converted to options
      *
      * Returns: string - The HTML for these form elements
      */
-     public static function generateSelect(string $selectID, ?string $value, string $placeholder, string $selectLabel, string $optionList) {
+     public static function generateSelect(string $selectID, ?string $value, string $placeholder, string $selectLabel, array $options) {
+       // Convert the options to html
+       $optionList = MyFormGeneration::generateOptions($options, $value);
+
        // Generate the HTML
       $html = '<div class="form-group row">
         <label for="' . $selectID . '" class="col-2 col-form-label font-weight-bold">' . $selectLabel . ':</label>
@@ -125,5 +136,42 @@ class MyFormGeneration {
 
        // Return the resultinng HTML
        return $html;
+     }
+
+     /**
+      * Name: generateOptions
+      * Purpose: Converts an array of database rows to HTML options
+      *
+      * Parameters:
+      *  array $options   - The array of rows to be converted to options
+      *  string $value       - The selected ID
+      *
+      * Returns: string - The HTML for these form elements
+      */
+     private static function generateOptions (array $options, ?string $value) {
+       // Variable declaration
+       $optionList = '';
+
+       // Loop through the array (each row from the database is an array item (e.g. $options[0]....$options[n]))
+       foreach ($options as $option) {
+         // Convert the current from from stdClass to array
+         $t = json_decode(json_encode($option), true);
+
+         // Grab the ID and text from the array
+         $id = current($t);
+         $text = next($t);
+
+         // Generate the html for the option
+         $optionList = $optionList . '<option value=' . $id . '"';
+
+         // If the id == value then mark the option as selected
+         if ($id == $value) {
+           $optionList = $optionList . ' selected="selected"';
+         }
+         $optionList = $optionList . '>' . $text . '</option>';
+       }
+
+       // Return the html
+       return $optionList;
      }
 }
