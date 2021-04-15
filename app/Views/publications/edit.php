@@ -44,6 +44,15 @@
       <a class="nav-link tablink" onclick="openTab(event, 'tbReviewers')">Reviewers</a>
     </li>
     <li class="nav-item">
+      <a class="nav-link tablink" onclick="openTab(event, 'tbAbstract')">Abstract</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link tablink" onclick="openTab(event, 'tbPLS')">PLS</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link tablink" onclick="openTab(event, 'tbPRS')">PRS</a>
+    </li>
+    <li class="nav-item">
       <a class="nav-link tablink" onclick="openTab(event, 'tbDates')">Dates</a>
     </li>
   </ul>
@@ -53,10 +62,11 @@
     <?= csrf_field() ?>
     <input type="hidden" name="page" value="<?= $page ?>">
 
+    <br />
     <!-- Tab content -->
     <!-- General Tab -->
     <div id="tbGeneral" class="tabcontent" style="display: block;">
-      <br />
+
       <?= MyFormGeneration::generateIDTextBox("publicationID",
         $publication['PublicationID'], "Publication ID"); ?>
 
@@ -113,7 +123,6 @@
 
     <!-- Status Tab -->
     <div id="tbStatus" class="tabcontent" style="display: none;">
-			<br />
 
       <?= MyFormGeneration::generateSelect("statusID",
         set_value('statusID', $publication['StatusID']),
@@ -165,15 +174,14 @@
     </div>
 
     <!-- Authors Tab -->
-    <br />
     <div id="tbAuthors" class="tabcontent" style="display: none;">
+
+      <?= MyFormGeneration::generateLookupTextBox("newAuthor",
+        null, "-- Enter a person --", "Author", null, "authorID", null, "btnAddAuthor"); ?>
 
       <div class="form-group row">
       <h3>Authors</h3>
 			</div>
-
-      <?= MyFormGeneration::generateLookupTextBox("newAuthor",
-        null, "-- Enter a person --", "Author", null, "authorID", null, "btnAddAuthor"); ?>
 
       <div class="form-group row">
         <div class="table-responsive">
@@ -204,15 +212,14 @@
     </div>
 
     <!-- Reviewers Tab -->
-    <br />
     <div id="tbReviewers" class="tabcontent" style="display: none;">
+
+      <?= MyFormGeneration::generateLookupTextBox("newReviewer",
+        null, "-- Enter a person --", "Reviewer", null, "reviewerID", null, "btnAddReviewer"); ?>
 
       <div class="form-group row">
       <h3>Reviewers</h3>
 			</div>
-
-      <?= MyFormGeneration::generateLookupTextBox("newReviewer",
-        null, "-- Enter a person --", "Reviewer", null, "reviewerID", null, "btnAddReviewer"); ?>
 
       <div class="form-group row">
         <div class="table-responsive">
@@ -242,8 +249,40 @@
 
     </div>
 
+    <!-- Abstract Tab -->
+    <div id="tbAbstract" class="tabcontent" style="display: none;">
+      <?= MyFormGeneration::generateMultilineTextBox("abstractEnglish",
+          set_value('abstractEnglish', $publication['AbstractEnglish']),
+          "-- Enter the abstract --", "Abstract (English)", 5); ?>
+
+      <?= MyFormGeneration::generateMultilineTextBox("abstractFrench",
+          set_value('abstractFrench', $publication['AbstractFrench']),
+          "-- Enter the abstract --", "Abstract (French)", 5); ?>
+    </div>
+
+    <!-- PLS Tab -->
+    <div id="tbPLS" class="tabcontent" style="display: none;">
+      <?= MyFormGeneration::generateMultilineTextBox("plsEnglish",
+          set_value('plsEnglish', $publication['PLSEnglish']),
+          "-- Enter the plain language summary --", "PLS (English)", 5); ?>
+
+      <?= MyFormGeneration::generateMultilineTextBox("plsFrench",
+          set_value('plsFrench', $publication['PLSFrench']),
+          "-- Enter the plain language summary --", "PLS (French)", 5); ?>
+    </div>
+
+    <!-- PRS Tab -->
+    <div id="tbPRS" class="tabcontent" style="display: none;">
+      <?= MyFormGeneration::generateMultilineTextBox("prsEnglish",
+          set_value('prsEnglish', $publication['PRSEnglish']),
+          "-- Enter the policy relevance statement --", "PRS (English)", 5); ?>
+
+      <?= MyFormGeneration::generateMultilineTextBox("prsFrench",
+          set_value('prsFrench', $publication['PRSFrench']),
+          "-- Enter the policy relevance statement --", "PRS (French)", 5); ?>
+    </div>
+
     <!-- Dates Tab -->
-		<br />
     <div id="tbDates" class="tabcontent" style="display: none;">
 
       <?= MyFormGeneration::generateTextBox("publicationDate",

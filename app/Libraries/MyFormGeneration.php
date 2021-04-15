@@ -68,6 +68,31 @@ class MyFormGeneration {
    }
 
    /**
+    * Name: generateMultilineTextBox
+    * Purpose: Generates the label and textbox HTML
+    *
+    * Parameters:
+    *  string $textboxID   - The value to use for the input name field
+    *  string $value       - The value to populate the textbox with
+    *  string $placeholder - The placeholder text
+    *  string $textboxLabel  - The text for the label
+    *  int $rows            - The number of rows for the textbox
+    *
+    * Returns: string - The HTML for these form elements
+    */
+    public static function generateMultilineTextBox(string $textboxID, ?string $value, string $placeholder, string $textboxLabel, int $rows = 5) {
+      // Generate the HTML
+      $html = '<div class="form-group row">
+       <label for="' . $textboxID . '" class="col-2 col-form-label font-weight-bold">' . $textboxLabel . ':</label>
+       <div class="col-10">
+       <textarea class="form-control" rows="' . $rows . '" name="' . $textboxID . '" value="' . $value . '" placeholder="' . $placeholder . '" ></textarea>
+       <br /></div></div>';
+
+      // Return the resultinng HTML
+      return $html;
+    }
+
+   /**
     * Name: generateLookupTextBox
     * Purpose: Generates the label and textbox HTML
     *
