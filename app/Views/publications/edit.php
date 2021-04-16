@@ -7,7 +7,7 @@
 <?php
   use App\Libraries\MyFormGeneration;
  ?>
- 
+
 <!-- Main Form -->
 <div class="container my-3 py-3">
   <h1><?= esc($title); ?></h1>
@@ -53,6 +53,9 @@
     </li>
     <li class="nav-item">
       <a class="nav-link tablink" onclick="openTab(event, 'tbKeywords')">Keywords</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link tablink" onclick="openTab(event, 'tbPublishing')">Publishing</a>
     </li>
     <li class="nav-item">
       <a class="nav-link tablink" onclick="openTab(event, 'tbDates')">Dates</a>
@@ -321,6 +324,46 @@
 
     </div>
 
+    <!-- Publishing Tab -->
+    <div id="tbPublishing" class="tabcontent" style="display: none;">
+
+      <?= MyFormGeneration::generateLookupTextBox("client",
+        set_value('client', $publication['Client']),
+        "-- Enter a client / publisher --", "Client / Publisher",
+        MyFormGeneration::generateNewButtonURL(current_url(), "clients"), "clientID",
+        set_value('clientID', $publication['ClientID'])); ?>
+
+      <?= MyFormGeneration::generateLookupTextBox("journal",
+        set_value('journal', $publication['Journal']),
+        "-- Enter a journal --", "Journal",
+        MyFormGeneration::generateNewButtonURL(current_url(), "journals"), "journalID",
+        set_value('journalID', $publication['JournalID'])); ?>
+
+      <?= MyFormGeneration::generateTextBox("manuscriptNumber",
+          set_value('manuscriptNumber', $publication['ManuscriptNumber']),
+          "-- Enter the manuscript number --", "Manuscript Number"); ?>
+
+      <?= MyFormGeneration::generateTextBox("volume",
+          set_value('volume', $publication['Volume']),
+          "-- Enter the volume --", "Volume"); ?>
+
+      <?= MyFormGeneration::generateTextBox("startPage",
+          set_value('startPage', $publication['StartPage']),
+          "-- Enter the start page --", "Start Page"); ?>
+
+      <?= MyFormGeneration::generateTextBox("endPage",
+          set_value('endPage', $publication['EndPage']),
+          "-- Enter the end page --", "End Page"); ?>
+
+      <?= MyFormGeneration::generateTextBox("isbn",
+          set_value('isbn', $publication['ISBN']),
+          "-- Enter the ISBN or ISSN --", "ISBN / ISSN"); ?>
+
+      <?= MyFormGeneration::generateTextBox("doi",
+          set_value('doi', $publication['DOI']),
+          "-- Enter the DOI --", "DOI"); ?>
+
+    </div>
 
     <!-- Dates Tab -->
     <div id="tbDates" class="tabcontent" style="display: none;">
@@ -332,6 +375,41 @@
       <?= MyFormGeneration::generateTextBox("webPublicationDate",
           set_value('webPublicationDate', $publication['WebPublicationDate']),
           "-- Enter the web publication date (e.g. 2021-01-29) --", "Web Publication Date"); ?>
+
+      <?= MyFormGeneration::generateTextBox("journalSubmissionDate",
+          set_value('journalSubmissionDate', $publication['JournalSubmissionDate']),
+          "-- Enter the journal submission date (e.g. 2021-01-29) --", "Journal Submission Date"); ?>
+
+      <?= MyFormGeneration::generateTextBox("journalAcceptanceDate",
+          set_value('journalAcceptanceDate', $publication['JournalAcceptanceDate']),
+          "-- Enter the journal acceptance date (e.g. 2021-01-29) --", "Journal Acceptance Date"); ?>
+
+      <?= MyFormGeneration::generateTextBox("conferenceSubmissionDate",
+          set_value('conferenceSubmissionDate', $publication['ConferenceSubmissionDate']),
+          "-- Enter the conference submission date (e.g. 2021-01-29) --", "Conference Submission Date"); ?>
+
+      <?= MyFormGeneration::generateTextBox("conferenceAcceptanceDate",
+          set_value('conferenceAcceptanceDate', $publication['ConferenceAcceptanceDate']),
+          "-- Enter the conference acceptance date (e.g. 2021-01-29) --", "Conference Acceptance Date"); ?>
+
+      <?= MyFormGeneration::generateTextBox("embargoPeriod",
+          set_value('embargoPeriod', $publication['EmbargoPeriod']),
+          "-- Enter the embargo period in months --", "Embargo Period (Months)"); ?>
+
+      <?= MyFormGeneration::generateTextBox("embargoEndDate",
+          set_value('embargoEndDate', $publication['EmbargoEndDate']),
+          "-- Enter the embargo end date (e.g. 2021-01-29) --", "Embargo End Date"); ?>
+
+      <?= MyFormGeneration::generateCheckBox("sentToClient",
+          set_value('sentToClient', $publication['SentToClient']), "Sent To Client"); ?>
+
+      <?= MyFormGeneration::generateTextBox("sentToClientDate",
+          set_value('sentToClientDate', $publication['SentToClientDate']),
+          "-- Enter the date the publication was sent to the client (e.g. 2021-01-29) --", "Sent To Client Date"); ?>
+
+      <?= MyFormGeneration::generateCheckBox("reportFormatted",
+          set_value('reportFormatted', $publication['ReportFormatted']), "Report Formatted"); ?>
+      
     </div>
 
     <button class="btn btn-success m-1" type="submit" name="submit" value="save" >Save Publication</button>

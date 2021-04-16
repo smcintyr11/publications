@@ -329,6 +329,56 @@ $(document).ready(function(){
     }
   });
 
+  // Publisher autocomplete
+  $("#client").autocomplete({
+    minLength: 1,
+    source: function(request, response) {
+      $.ajax({
+        url: location.protocol + "//" + location.host + "/clients/searchClient",
+        datatype: "json",
+        data: {
+          term: request.term,
+        },
+        success: function(data) {
+          data = $.parseJSON(data);
+          response(data);
+        },
+      });
+    },
+    select: function(event, ui) {
+      $("#clientID").val(ui.item.id);
+    }
+  }).keyup(function(){
+    if (event.which != 13) {
+      $("#clientID").val("");
+    }
+  });
+
+  // Journal autocomplete
+  $("#journal").autocomplete({
+    minLength: 1,
+    source: function(request, response) {
+      $.ajax({
+        url: location.protocol + "//" + location.host + "/journals/searchJournal",
+        datatype: "json",
+        data: {
+          term: request.term,
+        },
+        success: function(data) {
+          data = $.parseJSON(data);
+          response(data);
+        },
+      });
+    },
+    select: function(event, ui) {
+      $("#journalID").val(ui.item.id);
+    }
+  }).keyup(function(){
+    if (event.which != 13) {
+      $("#journalID").val("");
+    }
+  });
+
   // Add author function
   $("#btnAddAuthor").click(function(){
     var authorName = $("#newAuthor").val();

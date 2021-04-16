@@ -354,4 +354,41 @@ class Journals extends Controller {
       echo view('templates/footer.php', $data);
     }
   }
+
+  /**
+   * Name: searchJournal
+   * Purpose: Uses a query variable passed to the URL to search for a Journal
+   *  that is like the search term.
+   *
+   * Parameters: None
+   *
+   * Returns: Outputs JSON - An array of data
+   */
+  public function searchJournal() {
+    // Varoable declaration
+    $autoComplete = array();
+
+    // Build the query
+    $searchString = $this->request->getVar('term');
+    $db = \Config\Database::connect();
+    $builder = $db->table('Journals');
+    $builder->select('*');
+    $builder->like('Journal', $searchString);
+
+    // Run the query and compile an array of organization data
+    $autoComplete = array();
+    $query = $builder->get();
+    foreach ($query->getResult() as $row)
+    {
+      $item = array(
+      'id'=>$row->JournalID,
+      'label'=>$row->Journal,
+      'value'=>$row->Journal,
+      );
+      array_push($autoComplete,$item);
+    }
+
+    // Output JSON response
+    echo json_encode($autoComplete);
+  }
 }

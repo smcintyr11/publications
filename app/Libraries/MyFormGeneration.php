@@ -199,4 +199,27 @@ class MyFormGeneration {
        // Return the html
        return $optionList;
      }
+
+     /**
+      * Name: generateCheckBox
+      * Purpose: Generates the label and checkbox HTML
+      *
+      * Parameters:
+      *  string $checkboxID   - The value to use for the checkbox
+      *  string $value       - The value to populate the checkbox with
+      *  string $checkboxLabel  - The text for the label
+      *
+      * Returns: string - The HTML for these form elements
+      */
+      public static function generateCheckBox(string $checkboxID, ?string $value, string $checkboxLabel) {
+        // Generate the HTML
+        $html = '<div class="form-group row">
+        <label for="' . $checkboxID . '" class="col-2 col-form-label font-weight-bold">' . $checkboxLabel . ':</label>
+        <div class="col-10">
+        <input class="custom-control custom-checkbox" type="checkbox" name="' . $checkboxID . '" value="' . $value . '" />
+        <br /></div></div>';
+
+        // Return the resultinng HTML
+        return $html;
+      }
 }
