@@ -36,6 +36,13 @@ class PublicationsKeywords extends Controller {
     // Make sure the variables are valid
     if (empty($publicationID) or empty($keywordID)) {
       echo json_encode(array("statusCode"=>201));
+      return;
+    }
+
+    // Does the keyword already exist?
+    if ($this->publicationsKeywordsCount($publicationID, $keywordID) > 0) {
+      echo json_encode(array("statusCode"=>202));
+      return;
     }
 
     // Do the insert
@@ -55,7 +62,7 @@ class PublicationsKeywords extends Controller {
     "publicationsKeywordsID"=>$publicationsKeywordsID,
     "keywordEnglish"=>$keyword['KeywordEnglish'],
     "keywordFrench"=>$keyword['KeywordFrench'],
-  ));
+    ));
   }
 
   /**
@@ -76,6 +83,7 @@ class PublicationsKeywords extends Controller {
     // Make sure the variables are valid
     if (empty($publicationsKeywordsID)) {
       echo json_encode(array("statusCode"=>201));
+      return;
     }
 
     // Do the delete
@@ -109,6 +117,32 @@ class PublicationsKeywords extends Controller {
 
     // Return the ID
     return $results->PublicationsKeywordsID;
+  }
+
+  /**
+   * Name: publicationsKeywordsCount
+   * Purpose: Searches for the number of PublicationsKeywordsIDs that has the matching
+   *  PublicationID and KeywordID
+   *
+   * Parameters:
+   *  $publicationID - The ID of the publication
+   *  $keywordID - The ID of the keyword
+   *
+   * Returns: The number of matching rows
+   */
+  private function publicationsKeywordsCount($publicationID, $keywordID) {
+    // Create the query builder object
+    $db = \Config\Database::connect();
+    $builder = $db->table('PublicationsKeywords');
+    $builder->select('PublicationsKeywordsID');
+    $builder->where('PublicationID', $publicationID);
+    $builder->where('KeywordID', $keywordID);
+
+    // Run the query
+    $results = $builder->get()->getNumRows();
+
+    // Return the whether rows exist
+    return $results;
   }
 
   /**

@@ -357,14 +357,16 @@ $(document).ready(function(){
             var html = '<tr id="al_'+PublicationsAuthorsID+'"><td>'+PublicationsAuthorsID+'</td><td>'+authorName+'</td><td id="al_pa_'+PublicationsAuthorsID+'">No</td><td><button class="btn btn-info m-1 fas fa-toggle-on" id="btnEA_'+PublicationsAuthorsID+'" type="button" title="Toggle Primary Author Flag" onClick="toggleAuthor(\'al_pa_'+PublicationsAuthorsID+'\', '+PublicationsAuthorsID+', 0)" /><button class="btn btn-danger m-1 fas fa-trash-alt" id="btnDA_'+PublicationsAuthorsID+'" type="button" title="Delete Author" onclick="removeAuthor(\'al_'+PublicationsAuthorsID+'\', '+PublicationsAuthorsID+')" /></td></tr>';
             $("#tblAuthors").append(html);
             displaySuccessMessage("Author Added");
-
-            // Clear the author boxes
-            $("#newAuthor").val("");
-            $("#authorID").val("");
 					}
 					else if(dataResult.statusCode==201) {  // Error
             displayErrorMessage("Error occurred adding author");
-					}
+					} else if(dataResult.statusCode==202) {  // Row already exists
+            displayErrorMessage("\""+$("#newAuthor").val()+"\" is already an author for this publication.");
+          }
+
+          // Clear the author boxes
+          $("#newAuthor").val("");
+          $("#authorID").val("");
 				}
 			});
     });
@@ -397,14 +399,16 @@ $(document).ready(function(){
               var html = '<tr id="rl_'+PublicationsReviewersID+'"><td>'+PublicationsReviewersID+'</td><td>'+reviewerName+'</td><td id="rl_lr_'+PublicationsReviewersID+'">No</td><td><button class="btn btn-info m-1 fas fa-toggle-on" id="btnER_'+PublicationsReviewersID+'" type="button" title="Toggle Lead Reviewer Flag" onClick="toggleReviewer(\'rl_lr_'+PublicationsReviewersID+'\', '+PublicationsReviewersID+', 0)" /><button class="btn btn-danger m-1 fas fa-trash-alt" id="btnDR_'+PublicationsReviewersID+'" type="button" title="Delete Reviewer" onclick="removeReviewer(\'rl_'+PublicationsReviewersID+'\', '+PublicationsReviewersID+')" /></td></tr>';
               $("#tblReviewers").append(html);
               displaySuccessMessage("Reviewer Added");
-
-              // Clear the author boxes
-              $("#newReviewer").val("");
-              $("#reviewerID").val("");
             }
             else if(dataResult.statusCode==201) {  // Error
               displayErrorMessage("Error occurred adding reviewer");
+            } else if(dataResult.statusCode==202) {  // Row already exists
+              displayErrorMessage("\""+$("#newReviewer").val()+"\" is already a reviewer for this publication.");
             }
+
+            // Clear the author boxes
+            $("#newReviewer").val("");
+            $("#reviewerID").val("");
           }
         });
       });
@@ -438,14 +442,16 @@ $(document).ready(function(){
                 var html = '<tr id="kl_'+PublicationsKeywordsID+'"><td>'+PublicationsKeywordsID+'</td><td>'+KeywordE+'</td><td>'+KeywordF+'</td><td><button class="btn btn-danger m-1 fas fa-trash-alt" type="button" title="Delete Keyword" onclick="removeKeyword(\'kl_'+PublicationsKeywordsID+'\', '+PublicationsKeywordsID+')" /></td></tr>';
                 $("#tblKeywords").append(html);
                 displaySuccessMessage("Keyword Added");
-
-                // Clear the keyword boxes
-                $("#newKeyword").val("");
-                $("#keywordID").val("");
     					}
     					else if(dataResult.statusCode==201) {  // Error
                 displayErrorMessage("Error occurred adding keyword");
-    					}
+    					} else if(dataResult.statusCode==202) {  // Row already exists
+                displayErrorMessage("\""+$("#newKeyword").val()+"\" already exists for this publication.");
+              }
+
+              // Clear the keyword boxes
+              $("#newKeyword").val("");
+              $("#keywordID").val("");
     				}
     			});
         });

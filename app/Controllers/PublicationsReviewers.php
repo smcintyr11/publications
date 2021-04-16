@@ -24,6 +24,13 @@ class PublicationsReviewers extends Controller {
     // Make sure the variables are valid
     if (empty($publicationID) or empty($personID)) {
       echo json_encode(array("statusCode"=>201));
+      return;
+    }
+
+    // Does the reviewer already exist?
+    if ($this->publicationsReviewersCount($publicationID, $personID) > 0) {
+      echo json_encode(array("statusCode"=>202));
+      return;
     }
 
     // Do the insert
@@ -58,6 +65,7 @@ class PublicationsReviewers extends Controller {
     // Make sure the variables are valid
     if (empty($publicationsReviewersID)) {
       echo json_encode(array("statusCode"=>201));
+      return;
     }
 
     // Do the delete
@@ -86,6 +94,7 @@ class PublicationsReviewers extends Controller {
     // Make sure the variables are valid
     if (empty($publicationsReviewersID) or is_null($leadReviewer)) {
       echo json_encode(array("statusCode"=>201));
+      return;
     }
 
     // Do the update
@@ -122,5 +131,31 @@ class PublicationsReviewers extends Controller {
 
     // Return the ID
     return $results->PublicationsReviewersID;
+  }
+
+  /**
+   * Name: publicationsReviewersCount
+   * Purpose: Searches for the number of PublicationsReviewersID that has the matching
+   *  PublicationID and PersonID
+   *
+   * Parameters:
+   *  $publicationID - The ID of the publication
+   *  $personID - The ID of the reviewer
+   *
+   * Returns: The number of matching rows
+   */
+  private function publicationsReviewersCount($publicationID, $personID) {
+    // Create the query builder object
+    $db = \Config\Database::connect();
+    $builder = $db->table('PublicationsReviewers');
+    $builder->select('PublicationsReviewersID');
+    $builder->where('PublicationID', $publicationID);
+    $builder->where('PersonID', $personID);
+
+    // Run the query
+    $results = $builder->get()->getNumRows();
+
+    // Return the whether rows exist
+    return $results;
   }
 }
