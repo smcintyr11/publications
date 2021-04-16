@@ -378,6 +378,7 @@ class Publications extends Controller {
        }
        $validation->setRule('recordNumber', 'Record Number', 'max_length[64]');
        if ($validation->withRequest($this->request)->run()) {  // Valid
+
          // Save
          $model->save([
            'PublicationID' => $this->request->getPost('publicationID'), // **
@@ -417,9 +418,9 @@ class Publications extends Controller {
            'EmbargoPeriod' => $this->request->getPost('embargoPeriod') == "" ? null : $this->request->getPost('embargoPeriod'),
            'EmbargoEndDate' => $this->request->getPost('embargoEndDate') == "" ? null : $this->request->getPost('embargoEndDate'),
            'WebPublicationDate' => $this->request->getPost('webPublicationDate') == "" ? null : $this->request->getPost('webPublicationDate'),
-           'SentToClient' => $this->request->getPost('sentToClient') == "" ? null : $this->request->getPost('sentToClient'),
+           'SentToClient' => $this->request->getPost("sentToClient") == "on" ? 1 : 0,
            'SentToClientDate' => $this->request->getPost('sentToClientDate') == "" ? null : $this->request->getPost('sentToClientDate'),
-           'ReportFormatted' => $this->request->getPost('reportFormatted') == "" ? null : $this->request->getPost('reportFormatted'),
+           'ReportFormatted' => $this->request->getPost('reportFormatted') == "on" ? 1 : 0,
            'RecordNumber' => $this->request->getPost('recordNumber') == "" ? null : $this->request->getPost('recordNumber'),
          ]);
 
