@@ -11,7 +11,7 @@
                 Lookup Tables
             </a>
             <div class="dropdown-menu">
-                <a class="dropdown-item" href="/clients/index">Clients</a>
+                <a class="dropdown-item" href="/clients/index">Clients / Publishers</a>
                 <a class="dropdown-item" href="/costCentres/index">Cost Centres</a>
                 <a class="dropdown-item" href="/fiscalYears/index">Fiscal Years</a>
                 <a class="dropdown-item" href="/journals/index">Journals</a>

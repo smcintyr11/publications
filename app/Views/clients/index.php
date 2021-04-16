@@ -1,3 +1,7 @@
+<?php
+  use App\Libraries\MyFormGeneration;
+ ?>
+
 <div class="container my-3 py-3">
   <h1><?= esc($title); ?></h1>
 
@@ -8,12 +12,12 @@
     <a class="btn btn-info m-1" href="/clients/index/1?filter=">Reset</a>
   </form>
 
-  <a class="btn btn-primary my-3" href="/clients/new/<?= $page ?>">Create Client</a>
+  <a class="btn btn-primary my-3" href="/clients/new/<?= $page ?>">Create Client / Publisher</a>
 
   <div class="table-responsive-lg">
     <table class="table table-striped table-bordered">
-      <col style="width: 15%">
-      <col style="width: 70%">
+      <col style="width: 20%">
+      <col style="width: 65%">
       <col style="width: 15%">
 
       <?php
@@ -28,7 +32,7 @@
 
       <thead class="thead-light">
         <th scope="col">
-          <a class="btn btn-link" href="/clients/index/1?sort=<?= $id_sort_param ?>">Client ID</a>
+          <a class="btn btn-link" href="/clients/index/1?sort=<?= $id_sort_param ?>">Client / Publisher ID</a>
           <?php
             if ($_SESSION["currentSort"] == "id_asc") {
               echo("<i class=\"fas fa-sort-up\"></i>");
@@ -38,7 +42,7 @@
            ?>
         </th>
         <th scope="col">
-          <a class="btn btn-link" href="/clients/index/1?sort=<?= $client_sort_param ?>">Client</a>
+          <a class="btn btn-link" href="/clients/index/1?sort=<?= $client_sort_param ?>">Client / Publisher</a>
           <?php
             if ($_SESSION["currentSort"] == "client_asc") {
               echo("<i class=\"fas fa-sort-up\"></i>");

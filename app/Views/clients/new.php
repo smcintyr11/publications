@@ -1,22 +1,24 @@
+<?php
+  use App\Libraries\MyFormGeneration;
+ ?>
+
 <div class="container my-3 py-3">
   <h1><?= esc($title); ?></h1>
 
   <?= \Config\Services::validation()->listErrors(); ?>
 
   <form class="form-group" action="/clients/new" method="post">
+    <br />
     <?= csrf_field() ?>
 
     <input type="hidden" name="page" value="<?= $page ?>">
 
-    <div class="form-group row">
-      <label for="client" class="col-2 col-form-label font-weight-bold">Client:</label>
-      <div class="col-10">
-        <input class="form-control" type="input" name="client" value="<?= set_value('client') ?>"/><br />
-      </div>
-    </div>
+    <?= MyFormGeneration::generateTextBox("client",
+      set_value('client'),
+      "-- Enter the client or publisher name --", "Client / Publisher"); ?>
 
-    <button class="btn btn-success m-1" type="submit" name="submit">Create Client</button>
-    <a class="btn btn-info m-1" href="/clients/index/<?= $page ?>">Back to Clients</a>
+    <button class="btn btn-success m-1" type="submit" name="submit">Create Client / Publisher</button>
+    <a class="btn btn-info m-1" href="/clients/index/<?= $page ?>">Back to Clients / Publishers</a>
   </form>
 
 </div>

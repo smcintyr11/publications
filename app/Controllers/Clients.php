@@ -161,7 +161,7 @@ class Clients extends Controller {
     $data = [
       'clients' => $this->pager->getCurrentRows(),
       'links' => $this->pager->createLinks(),
-      'title' => 'Clients',
+      'title' => 'Clients / Publishers',
       'page' => $page,
     ];
 
@@ -198,7 +198,7 @@ class Clients extends Controller {
       $page = $this->request->getPost('page');
 
       // Set validation rules
-      $validation->setRule('client', 'Client', 'required|max_length[128]|is_unique[Clients.Client,clientID,{clientID}]');
+      $validation->setRule('client', 'Client / Publisher', 'required|max_length[128]|is_unique[Clients.Client,clientID,{clientID}]');
       if ($validation->withRequest($this->request)->run()) {
         // Save
         $model->save([
@@ -210,7 +210,7 @@ class Clients extends Controller {
       } else {  // Invalid - Redisplay the form
         // Generate the create view
         $data = [
-          'title' => 'Create New Client',
+          'title' => 'Create New Client / Publisher',
           'page' => $page,
         ];
 
@@ -228,7 +228,7 @@ class Clients extends Controller {
 
       // Generate the create view
       $data = [
-        'title' => 'Create New Client',
+        'title' => 'Create New Client / Publisher',
         'page' => $page,
       ];
 
@@ -275,7 +275,7 @@ class Clients extends Controller {
 
       // Generate the delete view
       $data = [
-        'title' => 'Delete Client',
+        'title' => 'Delete Client / Publisher',
         'client' => $model->getClient($clientID),
         'page' => $page,
       ];
@@ -312,7 +312,7 @@ class Clients extends Controller {
       $page = $this->request->getPost('page');
 
       // Validate the data
-      $validation->setRule('client', 'Client', 'required|max_length[128]|is_unique[Clients.Client,clientID,{clientID}]');
+      $validation->setRule('client', 'Client / Publisher', 'required|max_length[128]|is_unique[Clients.Client,clientID,{clientID}]');
       if ($validation->withRequest($this->request)->run()) {  // Valid
         // Save
         $model->save([
@@ -325,7 +325,7 @@ class Clients extends Controller {
       } else  {  // Invalid - Redisplay the form
         // Generate the view
         $data = [
-          'title' => 'Edit Client',
+          'title' => 'Edit Client / Publisher',
           'client' => $model->getClient($this->request->getPost('clientID')),
           'page' => $page,
         ];
@@ -344,7 +344,7 @@ class Clients extends Controller {
 
       // Generate the edit view
       $data = [
-        'title' => 'Edit Client',
+        'title' => 'Edit Client / Publisher',
         'client' => $model->getClient($clientID),
         'page' => $page,
       ];
@@ -353,5 +353,42 @@ class Clients extends Controller {
       echo view('clients/edit.php', $data);
       echo view('templates/footer.php', $data);
     }
+  }
+
+  /**
+   * Name: searchClient
+   * Purpose: Uses a query variable passed to the URL to search for a client
+   *  that is like the search term.
+   *
+   * Parameters: None
+   *
+   * Returns: Outputs JSON - An array of data
+   */
+  public function searchClient() {
+    // Varoable declaration
+    $autoComplete = array();
+
+    // Build the query
+    $searchString = $this->request->getVar('term');
+    $db = \Config\Database::connect();
+    $builder = $db->table('Clients');
+    $builder->select('*');
+    $builder->like('Client', $searchString);
+
+    // Run the query and compile an array of organization data
+    $autoComplete = array();
+    $query = $builder->get();
+    foreach ($query->getResult() as $row)
+    {
+      $item = array(
+      'id'=>$row->ClientID,
+      'label'=>$row->Client,
+      'value'=>$row->Client,
+      );
+      array_push($autoComplete,$item);
+    }
+
+    // Output JSON response
+    echo json_encode($autoComplete);
   }
 }
