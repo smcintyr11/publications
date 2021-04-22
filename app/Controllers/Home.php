@@ -17,7 +17,7 @@ class Home extends BaseController
 		$session->destroy();
 		$session->set('lastPage', 'Home::index');
 
-		$data['title'] = "Index";
+		$data['title'] = "Test Page";
 		echo view('templates/header.php', $data);
 		echo view('templates/menu.php', $data);
 		echo view('home/index.php', $data);

@@ -1,12 +1,48 @@
 <!-- Load Table Sorter -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.widgets.min.js"></script>
-<script type="text/javascript" src="/scripts/publicationEdit.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/css/theme.bootstrap_4.min.css" integrity="sha512-2C6AmJKgt4B+bQc08/TwUeFKkq8CsBNlTaNcNgUmsDJSU1Fg+R6azDbho+ZzuxEkJnCjLZQMozSq3y97ZmgwjA==" crossorigin="anonymous" />
+<script type="text/javascript" src="/scripts/publicationEdit.js"></script>
+
 
 <?php
   use App\Libraries\MyFormGeneration;
  ?>
+
+<!-- Edit Link Modal -->
+ <div class="modal fade" id="linkModal" tabindex="-1" role="dialog">
+   <div class="modal-dialog modal-lg" role="document">
+     <div class="modal-content">
+       <div class="modal-header">
+         <h5 class="modal-title">Edit Link</h5>
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+           <span aria-hidden="true">&times;</span>
+         </button>
+       </div>
+       <div class="modal-body">
+         <form>
+           <div class="form-group">
+             <?= MyFormGeneration::generateIDTextBox("editPublicationsLinksID",
+               null, "ID"); ?>
+           </div>
+           <div class="form-group">
+             <?= MyFormGeneration::generateSelect("editLinkTypeID",
+               null, "-- Select a link type --", "Link Type", $linkTypes); ?>
+          </div>
+           <div class="form-group">
+             <?= MyFormGeneration::generateTextBox("editLink",
+               null, "-- Enter the link --", "Link"); ?>
+           </div>
+         </form>
+       </div>
+       <div class="modal-footer">
+         <button type="button" id="btnEditLinkSave" class="btn btn-success" onclick="editLink()">Save</button>
+         <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+       </div>
+     </div>
+   </div>
+ </div>
 
 <!-- Main Form -->
 <div class="container my-3 py-3">
@@ -26,7 +62,6 @@
   <!-- Alert section -->
   <div id="alertFail"></div>
   <div id="alertSuccess"></div>
-
 
   <!-- Tab links -->
   <ul class="nav nav-tabs">
@@ -59,6 +94,9 @@
     </li>
     <li class="nav-item">
       <a class="nav-link tablink" onclick="openTab(event, 'tbDates')">Dates</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link tablink" onclick="openTab(event, 'tbLinks')">Links</a>
     </li>
   </ul>
 
@@ -409,7 +447,57 @@
 
       <?= MyFormGeneration::generateCheckBox("reportFormatted",
           set_value('reportFormatted', $publication['ReportFormatted']), "Report Formatted"); ?>
-      
+
+    </div>
+
+    <!-- Links Tab -->
+    <div id="tbLinks" class="tabcontent" style="display: none;">
+
+      <?= MyFormGeneration::generateSelect("newLinkTypeID",
+        null, "-- Select a link type --", "Link Type", $linkTypes); ?>
+
+      <div class="form-group row">
+        <label for="newLink" class="col-2 col-form-label font-weight-bold">Link:</label>
+        <div class="col-8">
+          <input class="form-control" type="input" name="newLink" placeholder="-- Enter the link --" id="newLink" />
+          <br />
+        </div>
+        <div class="col-2">
+          <button type="button" class="btn btn-success" id="btnAddLink">Add Link</button>
+        </div>
+      </div>
+
+      <div class="form-group row">
+      <h3>Links</h3>
+      </div>
+
+      <div class="form-group row">
+        <div class="table-responsive">
+          <table class="table table-striped table-bordered">
+             <thead class="thead-light">
+               <th scope="col">ID</th>
+               <th scope="col">Link</th>
+               <th scope="col">Link Type</th>
+               <th scope="col">Edit / Delete</th>
+             </thead>
+             <tbody id="tblLinks">
+               <?php if (! empty($linksList) && is_array($linksList)) : ?>
+                 <?php foreach ($linksList as $ll): ?>
+                   <tr id="ll_<?= $ll->PublicationsLinksID ?>">
+                     <td><?= $ll->PublicationsLinksID; ?></td>
+                     <td id="ll_l_<?= $ll->PublicationsLinksID ?>"><?= $ll->Link; ?></td>
+                     <td id="ll_lt_<?= $ll->PublicationsLinksID ?>"><?= $ll->LinkType; ?></td>
+                     <td>
+                       <button class="btn btn-info m-1 fas fa-edit" id="btnEL_<?= $ll->PublicationsLinksID ?>" type="button" title="Edit Link" data-toggle="modal" data-target="#linkModal" data-id="<?= $ll->PublicationsLinksID ?>" />
+                       <button class="btn btn-danger m-1 fas fa-trash-alt" type="button" title="Delete Link" onclick="removeLink('ll_<?= $ll->PublicationsLinksID ?>', <?= $ll->PublicationsLinksID ?>)" />
+                    </td>
+                   </tr>
+                 <?php endforeach; ?>
+               <?php endif ?>
+             </tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
     <button class="btn btn-success m-1" type="submit" name="submit" value="save" >Save Publication</button>

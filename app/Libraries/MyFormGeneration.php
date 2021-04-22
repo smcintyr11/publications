@@ -60,7 +60,7 @@ class MyFormGeneration {
      $html = '<div class="form-group row">
       <label for="' . $textboxID . '" class="col-2 col-form-label font-weight-bold">' . $textboxLabel . ':</label>
       <div class="col-10">
-      <input class="form-control" type="input" name="' . $textboxID . '" value="' . $value . '" placeholder="' . $placeholder . '"  />
+      <input class="form-control" type="input" name="' . $textboxID . '" value="' . $value . '" placeholder="' . $placeholder . '" id="' . $textboxID . '"  />
       <br /></div></div>';
 
      // Return the resultinng HTML

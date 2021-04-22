@@ -322,6 +322,7 @@ class Publications extends Controller {
      $statuses = $this->getStatuses();
      $reportTypes = $this->getReportTypes();
      $costCentres = $this->getCostCentres();
+     $linkTypes = $this->getLinkTypes();
 
      // Set the session last page
      $session = session();
@@ -440,6 +441,7 @@ class Publications extends Controller {
            'authorsList' => $this->getAuthors($publicationID),
            'reviewersList' => $this->getReviewers($publicationID),
            'keywordsList' => $this->getKeywords($publicationID),
+           'linkTypes' => $linkTypes,
            'linksList' => $this->getLinks($publicationID),
            'commentsList'=> $this->getComments($publicationID),
          ];
@@ -468,6 +470,7 @@ class Publications extends Controller {
          'authorsList' => $this->getAuthors($publicationID),
          'reviewersList' => $this->getReviewers($publicationID),
          'keywordsList' => $this->getKeywords($publicationID),
+         'linkTypes' => $linkTypes,
          'linksList' => $this->getLinks($publicationID),
          'commentsList'=> $this->getComments($publicationID),
        ];
@@ -515,6 +518,27 @@ class Publications extends Controller {
      $builder = $db->table('ReportTypes');
      $builder->select("*");
      $builder->orderBy("ReportType");
+
+     // Return the result
+     return $builder->get()->getResult();
+   }
+
+   /**
+    * Name: getLinkTypes
+    * Purpose: Get a list of all link types in the database
+    *
+    * Parameters: None
+    *
+    * Returns: Array of objects representing the rows
+    */
+   private function getLinkTypes() {
+     // Load the query builder
+     $db = \Config\Database::connect();
+
+     // Generate the query
+     $builder = $db->table('LinkTypes');
+     $builder->select("LinkTypeID, LinkType");
+     $builder->orderBy("LinkType");
 
      // Return the result
      return $builder->get()->getResult();
@@ -650,7 +674,18 @@ class Publications extends Controller {
     * Returns: Array of objects representing the rows
     */
    private function getLinks(string $publicationID) {
-     return "";
+     // Load the query builder
+     $db = \Config\Database::connect();
+
+     // Generate the query
+     $builder = $db->table('PublicationsLinks');
+     $builder->select("PublicationsLinksID, Link, LinkType");
+     $builder->join("LinkTypes", 'PublicationsLinks.LinkTypeID = LinkTypes.LinkTypeID', 'left');
+     $builder->where('PublicationID', $publicationID);
+     $builder->orderBy("PublicationsLinksID");
+
+     // Retturn the result
+     return $builder->get()->getResult();
    }
 
    /**

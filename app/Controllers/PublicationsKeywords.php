@@ -4,18 +4,6 @@ use App\Models\PublicationsKeywordsModel;
 use CodeIgniter\Controller;
 
 class PublicationsKeywords extends Controller {
-  public function test() {
-    // Generate the delete view
-    $data = [
-      'title' => 'Test',
-    ];
-    echo view('templates/header.php', $data);
-    echo view('templates/menu.php', $data);
-    echo view('publicationsKeywords/test.php', $data);
-    echo view('templates/footer.php', $data);
-  }
-
-
   /**
    * Name: add
    * Purpose: Adds a row to the PublicationsKeywords table using variables from the POST

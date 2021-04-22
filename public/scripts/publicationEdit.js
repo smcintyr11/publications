@@ -153,6 +153,63 @@ function removeKeyword(rowID, pkID) {
     });
 }
 
+function editLink() {
+  // Get data from the from
+  var plID = $("#editPublicationsLinksID").val();
+  var newLTID = $("#editLinkTypeID").val();
+  var newLT = $("#editLinkTypeID option:selected").text();
+  var newLink = $("#editLink").val();
+
+  // Update the link
+  $.ajax({
+      url: "/publicationsLinks/update",
+      type: "POST",
+      data: {
+        publicationsLinksID: plID,
+        linkTypeID: newLTID,
+        link: newLink
+      },
+      cache: false,
+      success: function(dataResult){
+        var dataResult = JSON.parse(dataResult);
+        if(dataResult.statusCode==200) {  // Success
+          // Update the table cells
+          $("#ll_lt_" + plID).html(newLT);
+          $("#ll_l_" + plID).html(newLink);
+          displaySuccessMessage("Link updated.");
+          $('#linkModal').modal('hide');
+        }
+        else {  // Error
+          displayErrorMessage("Error updating link");
+          $('#linkModal').modal('hide');
+        }
+      }
+    });
+
+}
+
+function removeLink(rowID, plID) {
+  $.ajax({
+      url: "/publicationsLinks/remove",
+      type: "POST",
+      data: {
+        publicationsLinksID: plID,
+      },
+      cache: false,
+      success: function(dataResult){
+        var dataResult = JSON.parse(dataResult);
+        if(dataResult.statusCode==200) {
+          // Success
+          $("#" + rowID).remove();
+          displaySuccessMessage("Link removed.");
+        }
+        else if(dataResult.statusCode==201) {  // Error
+          displayErrorMessage("Error occurred removing link");
+        }
+      }
+    });
+}
+
 $(document).ready(function(){
   // Assigned to autocomplete
   $("#assignedTo").autocomplete({
@@ -421,92 +478,141 @@ $(document).ready(function(){
 			});
     });
 
-    // Add reviewer function
-    $("#btnAddReviewer").click(function(){
-      var reviewerName = $("#newReviewer").val();
-      var reviewerID = $('#reviewerID').val();
-      var publicationID = $("#publicationID").val();
-      if (reviewerID == "") {
-        alert("You must select a reviewer first");
-        return;
-      }
+  // Add reviewer function
+  $("#btnAddReviewer").click(function(){
+    var reviewerName = $("#newReviewer").val();
+    var reviewerID = $('#reviewerID').val();
+    var publicationID = $("#publicationID").val();
+    if (reviewerID == "") {
+      alert("You must select a reviewer first");
+      return;
+    }
 
-      $.ajax({
-          url: "/publicationsReviewers/add",
-          type: "POST",
-          data: {
-            publicationID: publicationID,
-            reviewerID: reviewerID,
-          },
-          cache: false,
-          success: function(dataResult){
-            var dataResult = JSON.parse(dataResult);
-            if(dataResult.statusCode==200) {
-              // Get the new publicationsReviewersID
-              var PublicationsReviewersID = dataResult.publicationsReviewersID;
+    $.ajax({
+        url: "/publicationsReviewers/add",
+        type: "POST",
+        data: {
+          publicationID: publicationID,
+          reviewerID: reviewerID,
+        },
+        cache: false,
+        success: function(dataResult){
+          var dataResult = JSON.parse(dataResult);
+          if(dataResult.statusCode==200) {
+            // Get the new publicationsReviewersID
+            var PublicationsReviewersID = dataResult.publicationsReviewersID;
 
-              // Success
-              var html = '<tr id="rl_'+PublicationsReviewersID+'"><td>'+PublicationsReviewersID+'</td><td>'+reviewerName+'</td><td id="rl_lr_'+PublicationsReviewersID+'">No</td><td><button class="btn btn-info m-1 fas fa-toggle-on" id="btnER_'+PublicationsReviewersID+'" type="button" title="Toggle Lead Reviewer Flag" onClick="toggleReviewer(\'rl_lr_'+PublicationsReviewersID+'\', '+PublicationsReviewersID+', 0)" /><button class="btn btn-danger m-1 fas fa-trash-alt" id="btnDR_'+PublicationsReviewersID+'" type="button" title="Delete Reviewer" onclick="removeReviewer(\'rl_'+PublicationsReviewersID+'\', '+PublicationsReviewersID+')" /></td></tr>';
-              $("#tblReviewers").append(html);
-              displaySuccessMessage("Reviewer Added");
-            }
-            else if(dataResult.statusCode==201) {  // Error
-              displayErrorMessage("Error occurred adding reviewer");
-            } else if(dataResult.statusCode==202) {  // Row already exists
-              displayErrorMessage("\""+$("#newReviewer").val()+"\" is already a reviewer for this publication.");
-            }
-
-            // Clear the author boxes
-            $("#newReviewer").val("");
-            $("#reviewerID").val("");
+            // Success
+            var html = '<tr id="rl_'+PublicationsReviewersID+'"><td>'+PublicationsReviewersID+'</td><td>'+reviewerName+'</td><td id="rl_lr_'+PublicationsReviewersID+'">No</td><td><button class="btn btn-info m-1 fas fa-toggle-on" id="btnER_'+PublicationsReviewersID+'" type="button" title="Toggle Lead Reviewer Flag" onClick="toggleReviewer(\'rl_lr_'+PublicationsReviewersID+'\', '+PublicationsReviewersID+', 0)" /><button class="btn btn-danger m-1 fas fa-trash-alt" id="btnDR_'+PublicationsReviewersID+'" type="button" title="Delete Reviewer" onclick="removeReviewer(\'rl_'+PublicationsReviewersID+'\', '+PublicationsReviewersID+')" /></td></tr>';
+            $("#tblReviewers").append(html);
+            displaySuccessMessage("Reviewer Added");
           }
-        });
-      });
+          else if(dataResult.statusCode==201) {  // Error
+            displayErrorMessage("Error occurred adding reviewer");
+          } else if(dataResult.statusCode==202) {  // Row already exists
+            displayErrorMessage("\""+$("#newReviewer").val()+"\" is already a reviewer for this publication.");
+          }
 
-      // Add keyword function
-      $("#btnAddKeyword").click(function(){
-        var keywordID = $('#keywordID').val();
-        var publicationID = $("#publicationID").val();
-        if (keywordID == "") {
-          alert("You must select a keyword first");
-          return;
+          // Clear the author boxes
+          $("#newReviewer").val("");
+          $("#reviewerID").val("");
         }
+      });
+    });
 
-        $.ajax({
-    				url: "/PublicationsKeywords/add",
-    				type: "POST",
-    				data: {
-              publicationID: publicationID,
-              keywordID: keywordID,
-    				},
-    				cache: false,
-    				success: function(dataResult){
-    					var dataResult = JSON.parse(dataResult);
-    					if(dataResult.statusCode==200) {
-                // Get the new publicationsAuthorsID
-                var PublicationsKeywordsID = dataResult.publicationsKeywordsID;
-                var KeywordE = dataResult.keywordEnglish;
-                var KeywordF = dataResult.keywordFrench;
+  // Add keyword function
+  $("#btnAddKeyword").click(function(){
+    var keywordID = $('#keywordID').val();
+    var publicationID = $("#publicationID").val();
+    if (keywordID == "") {
+      alert("You must select a keyword first");
+      return;
+    }
 
-                // Success
-                var html = '<tr id="kl_'+PublicationsKeywordsID+'"><td>'+PublicationsKeywordsID+'</td><td>'+KeywordE+'</td><td>'+KeywordF+'</td><td><button class="btn btn-danger m-1 fas fa-trash-alt" type="button" title="Delete Keyword" onclick="removeKeyword(\'kl_'+PublicationsKeywordsID+'\', '+PublicationsKeywordsID+')" /></td></tr>';
-                $("#tblKeywords").append(html);
-                displaySuccessMessage("Keyword Added");
-    					}
-    					else if(dataResult.statusCode==201) {  // Error
-                displayErrorMessage("Error occurred adding keyword");
-    					} else if(dataResult.statusCode==202) {  // Row already exists
-                displayErrorMessage("\""+$("#newKeyword").val()+"\" already exists for this publication.");
-              }
+    $.ajax({
+				url: "/PublicationsKeywords/add",
+				type: "POST",
+				data: {
+          publicationID: publicationID,
+          keywordID: keywordID,
+				},
+				cache: false,
+				success: function(dataResult){
+					var dataResult = JSON.parse(dataResult);
+					if(dataResult.statusCode==200) {
+            // Get the new publicationsAuthorsID
+            var PublicationsKeywordsID = dataResult.publicationsKeywordsID;
+            var KeywordE = dataResult.keywordEnglish;
+            var KeywordF = dataResult.keywordFrench;
 
-              // Clear the keyword boxes
-              $("#newKeyword").val("");
-              $("#keywordID").val("");
-    				}
-    			});
-        });
+            // Success
+            var html = '<tr id="kl_'+PublicationsKeywordsID+'"><td>'+PublicationsKeywordsID+'</td><td>'+KeywordE+'</td><td>'+KeywordF+'</td><td><button class="btn btn-danger m-1 fas fa-trash-alt" type="button" title="Delete Keyword" onclick="removeKeyword(\'kl_'+PublicationsKeywordsID+'\', '+PublicationsKeywordsID+')" /></td></tr>';
+            $("#tblKeywords").append(html);
+            displaySuccessMessage("Keyword Added");
+					}
+					else if(dataResult.statusCode==201) {  // Error
+            displayErrorMessage("Error occurred adding keyword");
+					} else if(dataResult.statusCode==202) {  // Row already exists
+            displayErrorMessage("\""+$("#newKeyword").val()+"\" already exists for this publication.");
+          }
 
-  // Select the General Tab
+          // Clear the keyword boxes
+          $("#newKeyword").val("");
+          $("#keywordID").val("");
+				}
+			});
+    });
+
+  $("#btnAddLink").click(function(){
+    // Get the form variables
+    var publicationID = $("#publicationID").val();
+    var linkTypeID = $("#newLinkTypeID").val();
+    var linkType = $("#newLinkTypeID").find('option[value="'+linkTypeID+'"]').attr("selected",true).text();
+    var link = $("#newLink").val();
+
+    // Check that everything is filled in
+    if (linkTypeID == "") {
+      alert("You must select a link type first");
+      return;
+    }
+    if (link == "") {
+      alert("You must enter a link first");
+      return;
+    }
+
+    // Do the insert
+    $.ajax({
+        url: "/PublicationsLinks/add",
+        type: "POST",
+        data: {
+          publicationID: publicationID,
+          linkTypeID: linkTypeID,
+          link: link,
+        },
+        cache: false,
+        success: function(dataResult){
+          var dataResult = JSON.parse(dataResult);
+          if(dataResult.statusCode==200) {
+            // Get the new publicationsAuthorsID
+            var PublicationsLinksID = dataResult.publicationsLinksID;
+
+            // Success
+            var html = '<tr id="ll_'+PublicationsLinksID+'"><td>'+PublicationsLinksID+'</td><td id="ll_l_'+PublicationsLinksID+'">'+link+'</td><td id="ll_lt_'+PublicationsLinksID+'">'+linkType+'</td><td><button class="btn btn-info m-1 fas fa-edit" id="btnEL_'+PublicationsLinksID+'" type="button" title="Edit Link" data-toggle="modal" data-target="#linkModal" data-id="'+PublicationsLinksID+'" /><button class="btn btn-danger m-1 fas fa-trash-alt" type="button" title="Delete Link" onclick="removeLink(\'ll_'+PublicationsLinksID+'\', '+PublicationsLinksID+'" /></td></tr>';
+            $("#tblLinks").append(html);
+            displaySuccessMessage("Link Added");
+          }
+          else {  // Error
+            displayErrorMessage("Error occurred adding link");
+          }
+
+          // Clear the link boxes
+          $('#newLinkTypeID').val(null).trigger('change');
+          $("#newLink").val("");
+        }
+      });
+  });
+
+    // Select the General Tab
   $("#tbGeneralLink").className += " active";
 
   // Add sorting to the various internal tables
@@ -519,5 +625,40 @@ $(document).ready(function(){
   // Turn on tooltips
   $(function () {
     $('[data-toggle="tooltip"]').tooltip()
+  });
+
+  // Edit link modal loading
+  $('#linkModal').on('shown.bs.modal', function (event) {
+    // Variable declaration
+    var button = $(event.relatedTarget);
+    var id = button.data('id'); // Extract info from data-* attributes
+
+    // Get link data
+    $.ajax({
+        url: "/PublicationsLinks/get",
+        type: "POST",
+        data: {
+          publicationsLinksID: id,
+        },
+        cache: false,
+        success: function(dataResult){
+          var dataResult = JSON.parse(dataResult);
+          if(dataResult.statusCode==200) {
+            // Get the other data items
+            var linkTypeID = dataResult.publicationLink.LinkTypeID
+            var link = dataResult.publicationLink.Link
+            // Populate the modal
+            $("#editLinkTypeID").find('option[value="'+linkTypeID+'"]').attr("selected",true);
+            $("#editLink").val(link)
+          }
+          else if(dataResult.statusCode==201) {  // Error
+            $('#linkModal').modal('hide');
+            displayErrorMessage("Error occurred adding keyword");
+          }
+        }
+      });
+
+    // Pre populate the form
+    $("#editPublicationsLinksID").val(id);
   });
 });
