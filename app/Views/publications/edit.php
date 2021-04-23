@@ -44,6 +44,39 @@
    </div>
  </div>
 
+ <!-- View Comment Modal -->
+  <div class="modal fade" id="commentModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">View Comment</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <?= MyFormGeneration::generateIDTextBox("viewPublicationsCommentsID",
+                null, "ID"); ?>
+            </div>
+            <div class="form-group">
+              <?= MyFormGeneration::generateIDTextBox("viewPublicationsCommentsDateEntered",
+                null, "Date Entered"); ?>
+            </div>
+            <div class="form-group">
+              <?= MyFormGeneration::generateMultilineTextBox("viewPublicationsCommentsComment",
+                null, "-- Comment --", "Comment"); ?>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 <!-- Main Form -->
 <div class="container my-3 py-3">
   <h1><?= esc($title); ?></h1>
@@ -97,6 +130,9 @@
     </li>
     <li class="nav-item">
       <a class="nav-link tablink" onclick="openTab(event, 'tbLinks')">Links</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link tablink" onclick="openTab(event, 'tbComments')">Comments</a>
     </li>
   </ul>
 
@@ -498,6 +534,54 @@
           </table>
         </div>
       </div>
+    </div>
+
+    <!-- Comments Tab -->
+    <div id="tbComments" class="tabcontent" style="display: none;">
+
+      <div class="form-group row">
+        <label for="newComment" class="col-2 col-form-label font-weight-bold">Comment:</label>
+        <div class="col-8">
+          <textarea class="form-control" name="newLink" placeholder="-- Enter the comment --" id="newComment" rows="5" ></textarea>
+          <br />
+        </div>
+        <div class="col-2">
+          <button type="button" class="btn btn-success" id="btnAddComment">Add Comment</button>
+        </div>
+      </div>
+
+      <div class="form-group row">
+      <h3>Links</h3>
+      </div>
+
+      <div class="form-group row">
+        <div class="table-responsive">
+          <table class="table table-striped table-bordered">
+             <thead class="thead-light">
+               <th scope="col">ID</th>
+               <th scope="col">Date Entered</th>
+               <th scope="col">Comment</th>
+               <th scope="col">View / Delete</th>
+             </thead>
+             <tbody id="tblComments">
+               <?php if (! empty($commentsList) && is_array($commentsList)) : ?>
+                 <?php foreach ($commentsList as $cl): ?>
+                   <tr id="cl_<?= $cl->PublicationsCommentsID ?>">
+                     <td><?= $cl->PublicationsCommentsID; ?></td>
+                     <td><?= $cl->DateEntered; ?></td>
+                     <td><?= $cl->Comment; ?></td>
+                     <td>
+                       <button class="btn btn-info m-1 fas fa-info-circle" type="button" title="View Comment" data-toggle="modal" data-target="#commentModal" data-id="<?= $cl->PublicationsCommentsID ?>" />
+                       <button class="btn btn-danger m-1 fas fa-trash-alt" type="button" title="Delete Comment" onclick="removeComment('cl_<?= $cl->PublicationsCommentsID ?>', <?= $cl->PublicationsCommentsID ?>)" />
+                    </td>
+                   </tr>
+                 <?php endforeach; ?>
+               <?php endif ?>
+             </tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
 
     <button class="btn btn-success m-1" type="submit" name="submit" value="save" >Save Publication</button>

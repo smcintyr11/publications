@@ -698,6 +698,16 @@ class Publications extends Controller {
     * Returns: Array of objects representing the rows
     */
    private function getComments(string $publicationID) {
-     return "";
+     // Load the query builder
+     $db = \Config\Database::connect();
+
+     // Generate the query
+     $builder = $db->table('PublicationsComments');
+     $builder->select("PublicationsCommentsID, DateEntered, Comment");
+     $builder->where('PublicationID', $publicationID);
+     $builder->orderBy("DateEntered", "DESC");
+
+     // Retturn the result
+     return $builder->get()->getResult();
    }
 }

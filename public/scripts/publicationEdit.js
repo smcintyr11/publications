@@ -210,6 +210,28 @@ function removeLink(rowID, plID) {
     });
 }
 
+function removeComment(rowID, pcID) {
+  $.ajax({
+      url: "/publicationsComments/remove",
+      type: "POST",
+      data: {
+        publicationsCommentsID: pcID,
+      },
+      cache: false,
+      success: function(dataResult){
+        var dataResult = JSON.parse(dataResult);
+        if(dataResult.statusCode==200) {
+          // Success
+          $("#" + rowID).remove();
+          displaySuccessMessage("Comment removed.");
+        }
+        else if(dataResult.statusCode==201) {  // Error
+          displayErrorMessage("Error occurred removing comment");
+        }
+      }
+    });
+}
+
 $(document).ready(function(){
   // Assigned to autocomplete
   $("#assignedTo").autocomplete({
@@ -563,6 +585,7 @@ $(document).ready(function(){
 			});
     });
 
+  // Add link function
   $("#btnAddLink").click(function(){
     // Get the form variables
     var publicationID = $("#publicationID").val();
@@ -612,6 +635,49 @@ $(document).ready(function(){
       });
   });
 
+  // Add comment function
+  $("#btnAddComment").click(function(){
+    // Get the form variables
+    var publicationID = $("#publicationID").val();
+    var comment = $("#newComment").val();
+
+    // Check that everything is filled in
+    if (comment == "") {
+      alert("You enter a comment first");
+      return;
+    }
+
+    // Do the insert
+    $.ajax({
+        url: "/PublicationsComments/add",
+        type: "POST",
+        data: {
+          publicationID: publicationID,
+          comment: comment,
+        },
+        cache: false,
+        success: function(dataResult){
+          var dataResult = JSON.parse(dataResult);
+          if(dataResult.statusCode==200) {
+            // Get the new publicationsAuthorsID
+            var PublicationsCommentsID = dataResult.publicationsCommentsID;
+
+            // Success
+            var formatter = new Intl.DateTimeFormat('en-ca', { dateStyle: 'short', timeStyle: 'medium', hour12: false });
+            var html = '<tr id="cl_'+PublicationsCommentsID+'"><td>'+PublicationsCommentsID+'</td><td>'+formatter.format(Date.now())+'</td><td>'+comment+'</td><td><button class="btn btn-info m-1 fas fa-info-circle" type="button" title="View Comment" data-toggle="modal" data-target="#commentModal" data-id="'+PublicationsCommentsID+'" /><button class="btn btn-danger m-1 fas fa-trash-alt" type="button" title="Delete Comment" onclick="removeComment(\'cl_'+PublicationsCommentsID+'\', '+PublicationsCommentsID+')" /></td></tr>';
+            $(html).prependTo('#tblComments');
+            displaySuccessMessage("Comment Added");
+          }
+          else {  // Error
+            displayErrorMessage("Error occurred adding comment");
+          }
+
+          // Clear the comment box
+          $("#newComment").val("");
+        }
+      });
+  });
+
     // Select the General Tab
   $("#tbGeneralLink").className += " active";
 
@@ -626,6 +692,10 @@ $(document).ready(function(){
   $(function () {
     $('[data-toggle="tooltip"]').tooltip()
   });
+
+  // Make the view comments text area read only
+  $('#viewPublicationsCommentsComment').attr('readonly','readonly');
+
 
   // Edit link modal loading
   $('#linkModal').on('shown.bs.modal', function (event) {
@@ -661,4 +731,39 @@ $(document).ready(function(){
     // Pre populate the form
     $("#editPublicationsLinksID").val(id);
   });
+
+  // View comment modal loading
+  $('#commentModal').on('shown.bs.modal', function (event) {
+    // Variable declaration
+    var button = $(event.relatedTarget);
+    var id = button.data('id'); // Extract info from data-* attributes
+
+    // Get link data
+    $.ajax({
+        url: "/PublicationsComments/get",
+        type: "POST",
+        data: {
+          publicationsCommentsID: id,
+        },
+        cache: false,
+        success: function(dataResult){
+          var dataResult = JSON.parse(dataResult);
+          if(dataResult.statusCode==200) {
+            // Get the other data items
+            var dateEntered = dataResult.publicationComment.DateEntered
+            var comment = dataResult.publicationComment.Comment
+            // Populate the modal
+            $("#viewPublicationsCommentsID").val(id);
+            $("#viewPublicationsCommentsDateEntered").val(dateEntered);
+            $("#viewPublicationsCommentsComment").val(comment);
+          }
+          else if(dataResult.statusCode==201) {  // Error
+            $('#commentModal').modal('hide');
+            displayErrorMessage("Error occurred loading comment");
+          }
+        }
+      });
+  });
+
+
 });
