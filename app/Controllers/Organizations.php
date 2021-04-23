@@ -273,11 +273,16 @@ class Organizations extends Controller {
       $page = $uri->setSilent()->getSegment(3, 1);
       $organizationID = $uri->getSegment(4);
 
+      // Look for dependent records
+      $dependentRecords = $this->findDependentRecords($organizationID);
+//      $dependentRecords = false;
+
       // Generate the delete view
       $data = [
         'title' => 'Delete Organization',
         'organization' => $model->getOrganization($organizationID),
         'page' => $page,
+        'dependentRecords' => $dependentRecords,
       ];
       echo view('templates/header.php', $data);
       echo view('templates/menu.php', $data);
@@ -390,4 +395,42 @@ class Organizations extends Controller {
     // Output JSON response
     echo json_encode($autoComplete);
   }
+
+  /**
+   * Name: findDependentRecords
+   * Purpose: Searches the People and Publications table for records with the
+   *  specified OrganizationID
+   *
+   * Parameters:
+   *  string $organizationID
+   *
+   * Returns:
+   *  boolean - True if dependent records exist Otherwise false
+   */
+   private function findDependentRecords(string $organizationID) {
+     // Build the query for the people table
+     $db = \Config\Database::connect();
+     $builder = $db->table('People');
+     $builder->select("PersonID");
+     $builder->where('OrganizationID', $organizationID);
+
+     // Get the number of rows
+     $result = $builder->get()->getNumRows();
+     if ($result > 0) {
+       return true;
+     }
+
+     // Build the query for the Publications table
+     $builder = $db->table('Publications');
+     $builder->select("PublicationID");
+     $builder->where('OrganizationID', $organizationID);
+
+     // Get the number of rows
+     $result = $builder->get()->getNumRows();
+     if ($result > 0) {
+       return true;
+     }
+
+     return false;
+   }
 }
