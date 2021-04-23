@@ -39,7 +39,7 @@ class MyFormGeneration {
       <input type="text" readonly class="form-control-plaintext" name="' . $textboxID . '" id="' . $textboxID . '" value="' . $value . '" />
       <br /></div></div>';
 
-      // Return the resultinng HTML
+      // Return the resulting HTML
       return $html;
     }
 
@@ -63,7 +63,7 @@ class MyFormGeneration {
       <input class="form-control" type="input" name="' . $textboxID . '" value="' . $value . '" placeholder="' . $placeholder . '" id="' . $textboxID . '"  />
       <br /></div></div>';
 
-     // Return the resultinng HTML
+     // Return the resulting HTML
      return $html;
    }
 
