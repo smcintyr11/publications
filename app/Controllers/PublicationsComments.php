@@ -27,7 +27,6 @@ class PublicationsComments extends Controller {
     // Create the query builder object
     $db = \Config\Database::connect();
     $builder = $db->table('PublicationsComments');
-    $builder->select('*');
     $builder->where('PublicationsCommentsID', $publicationsCommentsID);
 
     // Run the query
@@ -36,6 +35,9 @@ class PublicationsComments extends Controller {
       echo json_encode(array("statusCode"=>201));
       return;
     }
+
+    $builder = $db->table('PublicationsComments');
+    $builder->where('PublicationsCommentsID', $publicationsCommentsID);
     $results = $builder->get()->getRow();
 
     // Create the return array

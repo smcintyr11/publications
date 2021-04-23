@@ -571,7 +571,7 @@
                      <td><?= $cl->DateEntered; ?></td>
                      <td><?= $cl->Comment; ?></td>
                      <td>
-                       <button class="btn btn-info m-1 fas fa-info-circle" type="button" title="View Comment" data-toggle="modal" data-target="#commentModal" data-id="<?= $cl->PublicationsCommentsID ?>" />
+                       <button class="btn btn-info m-1 fas fa-info-circle" type="button" title="View Comment" data-toggle="modal" data-target="#commentModal" data-pcid="<?= $cl->PublicationsCommentsID ?>" />
                        <button class="btn btn-danger m-1 fas fa-trash-alt" type="button" title="Delete Comment" onclick="removeComment('cl_<?= $cl->PublicationsCommentsID ?>', <?= $cl->PublicationsCommentsID ?>)" />
                     </td>
                    </tr>

@@ -85,7 +85,7 @@ class MyFormGeneration {
       $html = '<div class="form-group row">
        <label for="' . $textboxID . '" class="col-2 col-form-label font-weight-bold">' . $textboxLabel . ':</label>
        <div class="col-10">
-       <textarea class="form-control" rows="' . $rows . '" name="' . $textboxID . '" placeholder="' . $placeholder . '" >' . $value . '</textarea>
+       <textarea class="form-control" rows="' . $rows . '" name="' . $textboxID . '" placeholder="' . $placeholder . '" id="' . $textboxID . '" >' . $value . '</textarea>
        <br /></div></div>';
 
       // Return the resultinng HTML

@@ -694,8 +694,7 @@ $(document).ready(function(){
   });
 
   // Make the view comments text area read only
-  $('#viewPublicationsCommentsComment').attr('readonly','readonly');
-
+  //$('#viewPublicationsCommentsComment').attr('readonly','readonly');
 
   // Edit link modal loading
   $('#linkModal').on('shown.bs.modal', function (event) {
@@ -736,7 +735,7 @@ $(document).ready(function(){
   $('#commentModal').on('shown.bs.modal', function (event) {
     // Variable declaration
     var button = $(event.relatedTarget);
-    var id = button.data('id'); // Extract info from data-* attributes
+    var id = button.data('pcid'); // Extract info from data-* attributes
 
     // Get link data
     $.ajax({
@@ -749,13 +748,9 @@ $(document).ready(function(){
         success: function(dataResult){
           var dataResult = JSON.parse(dataResult);
           if(dataResult.statusCode==200) {
-            // Get the other data items
-            var dateEntered = dataResult.publicationComment.DateEntered
-            var comment = dataResult.publicationComment.Comment
-            // Populate the modal
-            $("#viewPublicationsCommentsID").val(id);
-            $("#viewPublicationsCommentsDateEntered").val(dateEntered);
-            $("#viewPublicationsCommentsComment").val(comment);
+            $("#viewPublicationsCommentsID").val(dataResult.publicationComment.PublicationsCommentsID);
+            $("#viewPublicationsCommentsDateEntered").val(dataResult.publicationComment.DateEntered);
+            $("#viewPublicationsCommentsComment").val(dataResult.publicationComment.Comment);
           }
           else if(dataResult.statusCode==201) {  // Error
             $('#commentModal').modal('hide');
@@ -764,6 +759,5 @@ $(document).ready(function(){
         }
       });
   });
-
 
 });
