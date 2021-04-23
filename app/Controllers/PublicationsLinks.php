@@ -4,18 +4,6 @@ use App\Models\PublicationsLinksModel;
 use CodeIgniter\Controller;
 
 class PublicationsLinks extends Controller {
-  public function test() {
-    // Generate the delete view
-    $data = [
-      'title' => 'Test',
-    ];
-    echo view('templates/header.php', $data);
-    echo view('templates/menu.php', $data);
-    echo view('publicationsLinks/test.php', $data);
-    echo view('templates/footer.php', $data);
-  }
-
-
   /**
    * Name: get
    * Purpose: Returns a specific PublicationsLinks row specified by the post terms
