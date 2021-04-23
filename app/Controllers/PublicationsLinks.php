@@ -36,6 +36,9 @@ class PublicationsLinks extends Controller {
       echo json_encode(array("statusCode"=>201));
       return;
     }
+    $builder = $db->table('PublicationsLinks');
+    $builder->select('*');
+    $builder->where('PublicationsLinksID', $publicationsLinksID);    
     $results = $builder->get()->getRow();
 
     // Create the return array
