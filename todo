@@ -1,2 +1,21 @@
-
 * Add logic to check for foreign key constraints on lookup tables
+  - Clients (Publications)
+  - Cost Centres (Publications)
+  - Fiscal Years (Publications)
+  - Journals (Publications)
+  - Keywords (PublicationsKeywords)
+  - Link Types (PublicationsLinks)
+  - People (PublicationsAuthors, PublicationsReviewers)
+  - Report Types (Publications)
+  - Statuses (Publications, PublicationsStatuses)
+* Refactor using MyFormGeneration
+  - Clients
+  - Cost Centres
+  - Fiscal Years
+  - Journals
+  - Keywords
+  - Link Types
+  - People
+  - Report Types
+  - Statuses
+* Add logic to check for status change on Publications

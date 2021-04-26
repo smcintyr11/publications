@@ -275,7 +275,6 @@ class Organizations extends Controller {
 
       // Look for dependent records
       $dependentRecords = $this->findDependentRecords($organizationID);
-//      $dependentRecords = false;
 
       // Generate the delete view
       $data = [

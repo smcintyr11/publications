@@ -258,7 +258,7 @@ class Clients extends Controller {
     // Is this a post (deleting)
     if ($this->request->getMethod() === 'post') {
       // Delete the client
-      $model->deleteClient($this->request->getPost('ClientID'));
+      $model->deleteClient($this->request->getPost('clientID'));
 
       // Get the view data from the form
       $page = $this->request->getPost('page');
@@ -273,11 +273,15 @@ class Clients extends Controller {
       $page = $uri->setSilent()->getSegment(3, 1);
       $clientID = $uri->getSegment(4);
 
+      // Look for dependent records
+      $dependentRecords = $this->findDependentRecords($clientID);
+
       // Generate the delete view
       $data = [
         'title' => 'Delete Client / Publisher',
         'client' => $model->getClient($clientID),
         'page' => $page,
+        'dependentRecords' => $dependentRecords,
       ];
       echo view('templates/header.php', $data);
       echo view('templates/menu.php', $data);
@@ -391,4 +395,31 @@ class Clients extends Controller {
     // Output JSON response
     echo json_encode($autoComplete);
   }
+
+  /**
+   * Name: findDependentRecords
+   * Purpose: Searches the Publications table for records with the
+   *  specified ClientID
+   *
+   * Parameters:
+   *  string $clientID
+   *
+   * Returns:
+   *  boolean - True if dependent records exist Otherwise false
+   */
+   private function findDependentRecords(string $clientID) {
+     // Build the query for the Publications table
+     $db = \Config\Database::connect();
+     $builder = $db->table('Publications');
+     $builder->select("PublicationID");
+     $builder->where('ClientID', $clientID);
+
+     // Get the number of rows
+     $result = $builder->get()->getNumRows();
+     if ($result > 0) {
+       return true;
+     }
+
+     return false;
+   }
 }

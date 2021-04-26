@@ -1,6 +1,4 @@
-<?php
-  use App\Libraries\MyFormGeneration;
- ?>
+<?php use App\Libraries\MyFormGeneration; ?>
 
 <div class="container my-3 py-3">
   <h1><?= esc($title); ?></h1>
