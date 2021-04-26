@@ -21,5 +21,6 @@
     <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/dbe22d5793.js" crossorigin="anonymous"></script>
 
-    <!-- jQuery UI CSS -->
+    <!-- jQuery UI & CSS -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
