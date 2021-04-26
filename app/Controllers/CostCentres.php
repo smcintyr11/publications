@@ -267,7 +267,7 @@ class CostCentres extends Controller
     // Is this a post (deleting)
     if ($this->request->getMethod() === 'post') {
       // Delete the cost centre
-      $model->deleteCostCentre($this->request->getPost('CostCentreID'));
+      $model->deleteCostCentre($this->request->getPost('costCentreID'));
 
       // Get the view data from the form
       $page = $this->request->getPost('page');
@@ -282,11 +282,15 @@ class CostCentres extends Controller
       $page = $uri->setSilent()->getSegment(3, 1);
       $costCentreID = $uri->getSegment(4);
 
+      // Look for dependent records
+      $dependentRecords = $this->findDependentRecords($costCentreID);
+
       // Generate the delete view
       $data = [
         'title' => 'Delete Cost Centre',
         'costCentre' => $model->getCostCentre($costCentreID),
         'page' => $page,
+        'dependentRecords' => $dependentRecords,
       ];
       echo view('templates/header.php', $data);
       echo view('templates/menu.php', $data);
@@ -365,4 +369,31 @@ class CostCentres extends Controller
       echo view('templates/footer.php', $data);
     }
   }
+
+  /**
+   * Name: findDependentRecords
+   * Purpose: Searches the Publications table for records with the
+   *  specified CostCentreID
+   *
+   * Parameters:
+   *  string $costCentreID
+   *
+   * Returns:
+   *  boolean - True if dependent records exist Otherwise false
+   */
+   private function findDependentRecords(string $costCentreID) {
+     // Build the query for the Publications table
+     $db = \Config\Database::connect();
+     $builder = $db->table('Publications');
+     $builder->select("PublicationID");
+     $builder->where('CostCentreID', $costCentreID);
+
+     // Get the number of rows
+     $result = $builder->get()->getNumRows();
+     if ($result > 0) {
+       return true;
+     }
+
+     return false;
+   }
 }
