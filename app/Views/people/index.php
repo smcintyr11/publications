@@ -1,12 +1,9 @@
+<?php use App\Libraries\MyFormGeneration; ?>
+
 <div class="container my-3 py-3">
   <h1><?= esc($title); ?></h1>
 
-  <form class="form-inline" action="/people/index/1" method="post" id="frmSearch">
-    <?= csrf_field() ?>
-    <input class="form-control mr-2" type="text" name="filter" placeholder="Search">
-    <button class="btn btn-success m-1" type="submit">Search</button>
-    <a class="btn btn-info m-1" href="/people/index/1?filter=">Reset</a>
-  </form>
+  <?= MyFormGeneration::generateIndexSearch("people", csrf_field()); ?>
 
   <a class="btn btn-primary my-3" href="/people/new/<?= $page ?>">Create Person</a>
 
@@ -39,56 +36,20 @@
        ?>
 
        <thead class="thead-light">
-         <th scope="col">
-           <a class="btn btn-link" href="/people/index/1?sort=<?= $id_sort_param ?>">Person ID</a>
-           <?php
-             if ($_SESSION["currentSort"] == "id_asc") {
-               echo("<i class=\"fas fa-sort-up\"></i>");
-             } elseif ($_SESSION["currentSort"] == "id_desc") {
-               echo ("<i class=\"fas fa-sort-down\"></i>");
-             }
-            ?>
-         </th>
-         <th scope="col">
-           <a class="btn btn-link" href="/people/index/1?sort=<?= $dname_sort_param ?>">Display Name</a>
-           <?php
-             if ($_SESSION["currentSort"] == "dname_asc") {
-               echo("<i class=\"fas fa-sort-up\"></i>");
-             } elseif ($_SESSION["currentSort"] == "dname_desc") {
-               echo ("<i class=\"fas fa-sort-down\"></i>");
-             }
-            ?>
-         </th>
-         <th scope="col">
-           <a class="btn btn-link" href="/people/index/1?sort=<?= $lname_sort_param ?>">Last Name</a>
-           <?php
-             if ($_SESSION["currentSort"] == "lname_asc") {
-               echo("<i class=\"fas fa-sort-up\"></i>");
-             } elseif ($_SESSION["currentSort"] == "lname_desc") {
-               echo ("<i class=\"fas fa-sort-down\"></i>");
-             }
-            ?>
-         </th>
-         <th scope="col">
-           <a class="btn btn-link" href="/people/index/1?sort=<?= $fname_sort_param ?>">First Name</a>
-           <?php
-             if ($_SESSION["currentSort"] == "fname_asc") {
-               echo("<i class=\"fas fa-sort-up\"></i>");
-             } elseif ($_SESSION["currentSort"] == "fname_desc") {
-               echo ("<i class=\"fas fa-sort-down\"></i>");
-             }
-            ?>
-         </th>
-         <th scope="col">
-           <a class="btn btn-link" href="/people/index/1?sort=<?= $org_sort_param ?>">Organization</a>
-           <?php
-             if ($_SESSION["currentSort"] == "org_asc") {
-               echo("<i class=\"fas fa-sort-up\"></i>");
-             } elseif ($_SESSION["currentSort"] == "org_desc") {
-               echo ("<i class=\"fas fa-sort-down\"></i>");
-             }
-            ?>
-         </th>
+         <?= MyFormGeneration::generateColumnHeader("people", "Person ID",
+           $id_sort_param, $_SESSION["currentSort"], "id_asc", "id_desc"); ?>
+
+         <?= MyFormGeneration::generateColumnHeader("people", "Display Name",
+           $dname_sort_param, $_SESSION["currentSort"], "dname_asc", "dname_desc"); ?>
+
+         <?= MyFormGeneration::generateColumnHeader("people", "Last Name",
+           $lname_sort_param, $_SESSION["currentSort"], "lname_asc", "lname_desc"); ?>
+
+         <?= MyFormGeneration::generateColumnHeader("people", "First Name",
+           $fname_sort_param, $_SESSION["currentSort"], "fname_asc", "fname_desc"); ?>
+
+           <?= MyFormGeneration::generateColumnHeader("people", "Organization",
+             $org_sort_param, $_SESSION["currentSort"], "org_asc", "org_desc"); ?>
          <th scope="col"></th>
        </thead>
 
@@ -111,16 +72,6 @@
     </table>
   </div>
 
-  <div class="row">
-    <div class="col-1 btn">Page:</div>
-    <div class="col-7"><?= $links ?></div>
-    <div class="col-2 btn  text-right">Rows per page:</div>
-    <div class="col-2">
-      <select class="form-control mr-2" name="rowsPerPage" id="rowsPerPage" form="frmSearch" onchange="this.form.submit()">
-        <option value=25 <?= ($_SESSION["rowsPerPage"] == 25) ? ' selected' : '' ?> >25</option>
-        <option value=50 <?= ($_SESSION["rowsPerPage"] == 50) ? ' selected' : '' ?> >50</option>
-        <option value=100 <?= ($_SESSION["rowsPerPage"] == 100) ? ' selected' : '' ?> >100</option>
-      </select>
-    </div>
-  </div>
+  <?= MyFormGeneration::generateRowsPerPage($_SESSION["rowsPerPage"], $links); ?>
+  
 </div>

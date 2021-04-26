@@ -9,7 +9,7 @@
   - Report Types (Publications)
   - Statuses (Publications, PublicationsStatuses)
 * Refactor using MyFormGeneration
-  - People
   - Report Types
   - Statuses
 * Add logic to check for status change on Publications
+* Add logic to check for duplicate person (FirstName, LastName, DisplaName, OrganizationID all identical)

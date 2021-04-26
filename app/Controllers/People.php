@@ -282,7 +282,7 @@ class People extends Controller {
     // Is this a post (deleting)
     if ($this->request->getMethod() === 'post') {
       // Delete the person
-      $model->deletePerson($this->request->getPost('PersonID'));
+      $model->deletePerson($this->request->getPost('personID'));
 
       // Get the view data from the form
       $page = $this->request->getPost('page');
@@ -297,11 +297,15 @@ class People extends Controller {
       $page = $uri->setSilent()->getSegment(3, 1);
       $personID = $uri->getSegment(4);
 
+      // Look for dependent records
+      $dependentRecords = $this->findDependentRecords($personID);
+
       // Generate the delete view
       $data = [
         'title' => 'Delete Person',
         'person' => $model->getPerson($personID),
         'page' => $page,
+        'dependentRecords' => $dependentRecords,
       ];
       echo view('templates/header.php', $data);
       echo view('templates/menu.php', $data);
@@ -424,4 +428,53 @@ class People extends Controller {
     // Output JSON response
     echo json_encode($autoComplete);
   }
+
+  /**
+   * Name: findDependentRecords
+   * Purpose: Searches the PublicationsAuthors, PublicationsReviewers, PublicationsStatuses
+   *   table for records with the specified PersonID
+   *
+   * Parameters:
+   *  string $personID
+   *
+   * Returns:
+   *  boolean - True if dependent records exist Otherwise false
+   */
+   private function findDependentRecords(string $personID) {
+     // Build the query for the PublicationsAuthors table
+     $db = \Config\Database::connect();
+     $builder = $db->table('PublicationsAuthors');
+     $builder->select("PublicationID");
+     $builder->where('PersonID', $personID);
+
+     // Get the number of rows
+     $result = $builder->get()->getNumRows();
+     if ($result > 0) {
+       return true;
+     }
+
+     // Build the query for the PublicationsReviewers table
+     $builder = $db->table('PublicationsReviewers');
+     $builder->select("PublicationID");
+     $builder->where('PersonID', $personID);
+
+     // Get the number of rows
+     $result = $builder->get()->getNumRows();
+     if ($result > 0) {
+       return true;
+     }
+
+     // Build the query for the PublicationsStatuses table
+     $builder = $db->table('PublicationsStatuses');
+     $builder->select("PublicationID");
+     $builder->where('StatusPersonID', $personID);
+
+     // Get the number of rows
+     $result = $builder->get()->getNumRows();
+     if ($result > 0) {
+       return true;
+     }
+
+     return false;
+   }
 }

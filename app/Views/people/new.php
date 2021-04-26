@@ -1,3 +1,5 @@
+<?php use App\Libraries\MyFormGeneration; ?>
+
 <div class="container my-3 py-3">
   <h1><?= esc($title); ?></h1>
 
@@ -8,31 +10,19 @@
 
     <input type="hidden" name="page" value="<?= $page ?>">
 
-    <div class="form-group row">
-      <label for="lastName" class="col-2 col-form-label font-weight-bold">Last Name:</label>
-      <div class="col-10">
-        <input class="form-control" type="input" id="lastName" name="lastName" value="<?= set_value('lastName') ?>"/><br />
-      </div>
-    </div>
-    <div class="form-group row">
-      <label for="firstName" class="col-2 col-form-label font-weight-bold">First Name:</label>
-      <div class="col-10">
-        <input class="form-control" type="input" id="firstName" name="firstName" value="<?= set_value('firstName') ?>"/><br />
-      </div>
-    </div>
-    <div class="form-group row">
-      <label for="displayName" class="col-2 col-form-label font-weight-bold">Display Name:</label>
-      <div class="col-10">
-        <input class="form-control" type="input" id="displayName" name="displayName" value="<?= set_value('displayName') ?>"/><br />
-      </div>
-    </div>
-    <div class="form-group row">
-      <label for="organization" class="col-2 col-form-label font-weight-bold">Organization:</label>
-      <div class="col-10">
-        <input class="form-control" type="input" id="organization" name="organization" value="<?= set_value('organization') ?>"/><br />
-      </div>
-      <input type="hidden" id="organizationID" name="organizationID" value="<?= set_value('organizationID') ?>">
-    </div>
+    <?= MyFormGeneration::generateTextBox("lastName",
+      set_value('lastName'), "-- Enter the person's last name --", "Last Name"); ?>
+
+    <?= MyFormGeneration::generateTextBox("firstName",
+      set_value('firstName'), "-- Enter the person's first name --", "First Name"); ?>
+
+    <?= MyFormGeneration::generateTextBox("displayName",
+      set_value('displayName'), "-- How the person's name appears as an author or reviewer.  The system will try to autogenerate it, but you can edit. --", "Display Name"); ?>
+
+    <?= MyFormGeneration::generateLookupTextBox("organization",
+      set_value('organization'), "-- Enter an organization --", "Organization",
+      MyFormGeneration::generateNewButtonURL(current_url(), "organizations"), "organizationID",
+      set_value('organizationID')); ?>
 
     <button class="btn btn-success m-1" type="submit" name="submit">Create Person</button>
     <a class="btn btn-info m-1" href="/people/index/<?= $page ?>">Back to People</a>
