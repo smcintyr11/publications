@@ -1,3 +1,5 @@
+<?php use App\Libraries\MyFormGeneration; ?>
+
 <div class="container my-3 py-3">
   <h1><?= esc($title); ?></h1>
 
@@ -8,12 +10,8 @@
 
     <input type="hidden" name="page" value="<?= $page ?>">
 
-    <div class="form-group row">
-    <label for="organization" class="col-2 col-form-label font-weight-bold">Organization:</label>
-    <div class="col-10">
-      <input class="form-control" type="input" name="organization" value="<?= set_value('organization') ?>"/><br />
-    </div>
-    </div>
+    <?= MyFormGeneration::generateTextBox("organization",
+      set_value('organization'), "-- Enter the organization name --", "Organization"); ?>
 
     <button class="btn btn-success m-1" type="submit" name="submit">Create Organization</button>
     <a class="btn btn-info m-1" href="/organizations/index/<?= $page ?>">Back to Organizations</a>

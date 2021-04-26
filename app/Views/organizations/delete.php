@@ -10,21 +10,14 @@
 
     <?= MyFormGeneration::generateDRAlert($dependentRecords); ?>
 
-    <div class="form-group row">
-      <label for="OrganizationID" class="col-2 col-form-label font-weight-bold">Organization ID:</label>
-      <div class="col-10">
-        <input type="text" readonly class="form-control-plaintext" name="OrganizationID" id="OrganizationID" value="<?= $organization['OrganizationID'] ?>">
-      </div>
-    </div>
-    <div class="form-group row">
-      <label for="Organization" class="col-2 col-form-label font-weight-bold">Organization:</label>
-      <div class="col-10">
-        <input type="text" readonly class="form-control-plaintext" id="Organization" value="<?= $organization['Organization'] ?>">
-      </div>
-    </div>
+    <?= MyFormGeneration::generateIDTextBox("organizationID",
+      $organization['OrganizationID'], "Organization ID"); ?>
+
+    <?= MyFormGeneration::generateIDTextBox("organization",
+      $organization['Organization'], "Organization"); ?>
 
     <?= MyFormGeneration::generateDeleteOptions($dependentRecords, 'organizations', 'organization', $page); ?>
-    
+
   </form>
 
 </div>

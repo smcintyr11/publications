@@ -258,7 +258,7 @@ class Organizations extends Controller {
     // Is this a post (deleting)
     if ($this->request->getMethod() === 'post') {
       // Delete the client
-      $model->deleteOrganization($this->request->getPost('OrganizationID'));
+      $model->deleteOrganization($this->request->getPost('organizationID'));
 
       // Get the view data from the form
       $page = $this->request->getPost('page');
