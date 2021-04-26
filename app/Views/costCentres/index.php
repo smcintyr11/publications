@@ -32,10 +32,10 @@
           $id_sort_param, $_SESSION["currentSort"], "id_asc", "id_desc"); ?>
 
         <?= MyFormGeneration::generateColumnHeader("costCentres", "Cost Centre",
-          $id_sort_param, $_SESSION["currentSort"], "cc_asc", "cc_desc"); ?>
+          $cc_sort_param, $_SESSION["currentSort"], "cc_asc", "cc_desc"); ?>
 
         <?= MyFormGeneration::generateColumnHeader("costCentres", "Description",
-          $id_sort_param, $_SESSION["currentSort"], "desc_asc", "desc_desc"); ?>
+          $desc_sort_param, $_SESSION["currentSort"], "desc_asc", "desc_desc"); ?>
         <th scope="col"></th>
       </thead>
 
@@ -57,5 +57,5 @@
   </div>
 
   <?= MyFormGeneration::generateRowsPerPage($_SESSION["rowsPerPage"], $links); ?>
-  
+
 </div>

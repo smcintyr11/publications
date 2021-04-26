@@ -29,7 +29,7 @@
              $id_sort_param, $_SESSION["currentSort"], "id_asc", "id_desc"); ?>
 
            <?= MyFormGeneration::generateColumnHeader("fiscalYears", "Fiscal Year",
-             $id_sort_param, $_SESSION["currentSort"], "fy_asc", "fy_desc"); ?>
+             $fy_sort_param, $_SESSION["currentSort"], "fy_asc", "fy_desc"); ?>
 
          <th scope="col"></th>
        </thead>
