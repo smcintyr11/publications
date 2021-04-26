@@ -258,7 +258,7 @@ class Journals extends Controller {
     // Is this a post (deleting)
     if ($this->request->getMethod() === 'post') {
       // Delete the journal
-      $model->deleteJournal($this->request->getPost('JournalID'));
+      $model->deleteJournal($this->request->getPost('journalID'));
 
       // Get the view data from the form
       $page = $this->request->getPost('page');
@@ -273,11 +273,15 @@ class Journals extends Controller {
       $page = $uri->setSilent()->getSegment(3, 1);
       $journalID = $uri->getSegment(4);
 
+      // Look for dependent records
+      $dependentRecords = $this->findDependentRecords($journalID);
+
       // Generate the delete view
       $data = [
         'title' => 'Delete Journal',
         'journal' => $model->getJournal($journalID),
         'page' => $page,
+        'dependentRecords' => $dependentRecords,
       ];
       echo view('templates/header.php', $data);
       echo view('templates/menu.php', $data);
@@ -391,4 +395,31 @@ class Journals extends Controller {
     // Output JSON response
     echo json_encode($autoComplete);
   }
+
+  /**
+   * Name: findDependentRecords
+   * Purpose: Searches the Publications table for records with the
+   *  specified JournalID
+   *
+   * Parameters:
+   *  string $journalID
+   *
+   * Returns:
+   *  boolean - True if dependent records exist Otherwise false
+   */
+   private function findDependentRecords(string $journalID) {
+     // Build the query for the Publications table
+     $db = \Config\Database::connect();
+     $builder = $db->table('Publications');
+     $builder->select("PublicationID");
+     $builder->where('JournalID', $journalID);
+
+     // Get the number of rows
+     $result = $builder->get()->getNumRows();
+     if ($result > 0) {
+       return true;
+     }
+
+     return false;
+   }
 }
