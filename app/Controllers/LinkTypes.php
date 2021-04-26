@@ -258,7 +258,7 @@ class LinkTypes extends Controller {
     // Is this a post (deleting)
     if ($this->request->getMethod() === 'post') {
       // Delete the link type
-      $model->deleteLinkType($this->request->getPost('LinkTypeID'));
+      $model->deleteLinkType($this->request->getPost('linkTypeID'));
 
       // Get the view data from the form
       $page = $this->request->getPost('page');
@@ -273,11 +273,15 @@ class LinkTypes extends Controller {
       $page = $uri->setSilent()->getSegment(3, 1);
       $linkTypeID = $uri->getSegment(4);
 
+      // Look for dependent records
+      $dependentRecords = $this->findDependentRecords($linkTypeID);
+
       // Generate the delete view
       $data = [
         'title' => 'Delete Link Type',
         'linkType' => $model->getLinkType($linkTypeID),
         'page' => $page,
+        'dependentRecords' => $dependentRecords,
       ];
       echo view('templates/header.php', $data);
       echo view('templates/menu.php', $data);
@@ -354,4 +358,31 @@ class LinkTypes extends Controller {
       echo view('templates/footer.php', $data);
     }
   }
+
+  /**
+   * Name: findDependentRecords
+   * Purpose: Searches the Publications table for records with the
+   *  specified LinkTypeID
+   *
+   * Parameters:
+   *  string $linkTypeID
+   *
+   * Returns:
+   *  boolean - True if dependent records exist Otherwise false
+   */
+   private function findDependentRecords(string $linkTypeID) {
+     // Build the query for the Publications table
+     $db = \Config\Database::connect();
+     $builder = $db->table('PublicationsLinks');
+     $builder->select("PublicationID");
+     $builder->where('LinkTypeID', $linkTypeID);
+
+     // Get the number of rows
+     $result = $builder->get()->getNumRows();
+     if ($result > 0) {
+       return true;
+     }
+
+     return false;
+   }
 }
