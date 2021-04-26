@@ -1,3 +1,5 @@
+<?php use App\Libraries\MyFormGeneration; ?>
+
 <div class="container my-3 py-3">
   <h1><?= esc($title); ?></h1>
 
@@ -6,27 +8,15 @@
 
     <input type="hidden" name="page" value="<?= $page ?>">
 
-    <div class="form-group row">
-      <label for="FiscalYearID" class="col-2 col-form-label font-weight-bold">Fiscal Year ID:</label>
-      <div class="col-10">
-        <input type="text" readonly class="form-control-plaintext" name="FiscalYearID" id="FiscalYearID" value="<?= $fiscalYear['FiscalYearID'] ?>">
-      </div>
-    </div>
+    <?= MyFormGeneration::generateDRAlert($dependentRecords); ?>
 
-    <div class="form-group row">
-      <label for="FiscalYear" class="col-2 col-form-label font-weight-bold">Fiscal Year:</label>
-      <div class="col-10">
-        <input type="text" readonly class="form-control-plaintext" name="FiscalYear" id="FiscalYear" value="<?= $fiscalYear['FiscalYear'] ?>">
-      </div>
-    </div>
+    <?= MyFormGeneration::generateIDTextBox("fiscalYearID",
+      $fiscalYear['FiscalYearID'], "Fiscal Year ID"); ?>
 
-    <div class="form-group row">
-      <label>Are you sure you wish to delete this fiscal year?</label>
-    </div>
+    <?= MyFormGeneration::generateIDTextBox("fiscalYear",
+      $fiscalYear['FiscalYear'], "Fiscal Year"); ?>
 
-    <div class="form-group row">
-      <button class="btn btn-success m-1" type="submit" name="submit">Yes</button>
-      <a class="btn btn-danger m-1" href="/fiscalYears/index/<?= $page ?>">No</a>
-    </div>
+    <?= MyFormGeneration::generateDeleteOptions($dependentRecords, 'fiscalYears', 'fiscal year', $page); ?>
+
   </form>
 </div>

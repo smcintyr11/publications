@@ -258,7 +258,7 @@ class FiscalYears extends Controller {
     // Is this a post (deleting)
     if ($this->request->getMethod() === 'post') {
       // Delete the fiscal year
-      $model->deleteFiscalYear($this->request->getPost('FiscalYearID'));
+      $model->deleteFiscalYear($this->request->getPost('fiscalYearID'));
 
       // Get the view data from the form
       $page = $this->request->getPost('page');
@@ -273,11 +273,15 @@ class FiscalYears extends Controller {
       $page = $uri->setSilent()->getSegment(3, 1);
       $fiscalYearID = $uri->getSegment(4);
 
+      // Look for dependent records
+      $dependentRecords = $this->findDependentRecords($fiscalYearID);
+
       // Generate the delete view
       $data = [
         'title' => 'Delete Fiscal Year',
         'fiscalYear' => $model->getFiscalYear($fiscalYearID),
         'page' => $page,
+        'dependentRecords' => $dependentRecords,
       ];
       echo view('templates/header.php', $data);
       echo view('templates/menu.php', $data);
@@ -390,4 +394,31 @@ class FiscalYears extends Controller {
     // Output JSON response
     echo json_encode($autoComplete);
   }
+
+  /**
+   * Name: findDependentRecords
+   * Purpose: Searches the Publications table for records with the
+   *  specified FiscalYearID
+   *
+   * Parameters:
+   *  string $fiscalYearID
+   *
+   * Returns:
+   *  boolean - True if dependent records exist Otherwise false
+   */
+   private function findDependentRecords(string $fiscalYearID) {
+     // Build the query for the Publications table
+     $db = \Config\Database::connect();
+     $builder = $db->table('Publications');
+     $builder->select("PublicationID");
+     $builder->where('FiscalYearID', $fiscalYearID);
+
+     // Get the number of rows
+     $result = $builder->get()->getNumRows();
+     if ($result > 0) {
+       return true;
+     }
+
+     return false;
+   }
 }
