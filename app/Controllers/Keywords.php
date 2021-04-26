@@ -265,7 +265,7 @@ class Keywords extends Controller {
     // Is this a post (deleting)
     if ($this->request->getMethod() === 'post') {
       // Delete the keyword
-      $model->deleteKeyword($this->request->getPost('KeywordID'));
+      $model->deleteKeyword($this->request->getPost('keywordID'));
 
       // Get the view data from the form
       $page = $this->request->getPost('page');
@@ -280,11 +280,15 @@ class Keywords extends Controller {
       $page = $uri->setSilent()->getSegment(3, 1);
       $keywordID = $uri->getSegment(4);
 
+      // Look for dependent records
+      $dependentRecords = $this->findDependentRecords($keywordID);
+
       // Generate the delete view
       $data = [
         'title' => 'Delete Keyword',
         'keyword' => $model->getKeyword($keywordID),
         'page' => $page,
+        'dependentRecords' => $dependentRecords,
       ];
       echo view('templates/header.php', $data);
       echo view('templates/menu.php', $data);
@@ -399,4 +403,31 @@ class Keywords extends Controller {
     // Output JSON response
     echo json_encode($autoComplete);
   }
+
+  /**
+   * Name: findDependentRecords
+   * Purpose: Searches the Publications table for records with the
+   *  specified KeywordID
+   *
+   * Parameters:
+   *  string $keywordID
+   *
+   * Returns:
+   *  boolean - True if dependent records exist Otherwise false
+   */
+   private function findDependentRecords(string $keywordID) {
+     // Build the query for the Publications table
+     $db = \Config\Database::connect();
+     $builder = $db->table('PublicationsKeywords');
+     $builder->select("PublicationID");
+     $builder->where('KeywordID', $keywordID);
+
+     // Get the number of rows
+     $result = $builder->get()->getNumRows();
+     if ($result > 0) {
+       return true;
+     }
+
+     return false;
+   }
 }

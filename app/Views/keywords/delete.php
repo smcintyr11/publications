@@ -1,3 +1,5 @@
+<?php use App\Libraries\MyFormGeneration; ?>
+
 <div class="container my-3 py-3">
   <h1><?= esc($title); ?></h1>
 
@@ -6,31 +8,19 @@
 
     <input type="hidden" name="page" value="<?= $page ?>">
 
-    <div class="form-group row">
-      <label for="KeywordID" class="col-2 col-form-label font-weight-bold">Keyword ID:</label>
-      <div class="col-10">
-        <input type="text" readonly class="form-control-plaintext" name="KeywordID" id="KeywordID" value="<?= $keyword['KeywordID'] ?>">
-      </div>
-    </div>
-    <div class="form-group row">
-      <label for="KeywordEnglish" class="col-2 col-form-label font-weight-bold">Keyword English:</label>
-      <div class="col-10">
-        <input type="text" readonly class="form-control-plaintext" id="Client" value="<?= $keyword['KeywordEnglish'] ?>">
-      </div>
-    </div>
-    <div class="form-group row">
-      <label for="KeywordFrench" class="col-2 col-form-label font-weight-bold">Keyword French:</label>
-      <div class="col-10">
-        <input type="text" readonly class="form-control-plaintext" id="Client" value="<?= $keyword['KeywordFrench'] ?>">
-      </div>
-    </div>
-    <div class="form-group row">
-      <label>Are you sure you wish to delete this keyword?</label>
-    </div>
-    <div class="form-group row">
-      <button class="btn btn-success m-1" type="submit" name="submit">Yes</button>
-      <a class="btn btn-danger m-1" href="/keywords/index/<?= $page ?>">No</a>
-    </div>
+    <?= MyFormGeneration::generateDRAlert($dependentRecords); ?>
+
+    <?= MyFormGeneration::generateIDTextBox("keywordID",
+      $keyword['KeywordID'], "Keyword ID"); ?>
+
+    <?= MyFormGeneration::generateIDTextBox("keywordEnglish",
+      $keyword['KeywordEnglish'], "Keyword (English)"); ?>
+
+    <?= MyFormGeneration::generateIDTextBox("keywordFrench",
+      $keyword['KeywordFrench'], "Keyword (French)"); ?>
+
+    <?= MyFormGeneration::generateDeleteOptions($dependentRecords, 'keywords', 'keyword', $page); ?>
+    
   </form>
 
 </div>
