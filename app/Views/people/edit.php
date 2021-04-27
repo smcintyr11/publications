@@ -4,6 +4,12 @@
   <h1><?= esc($title); ?></h1>
 
   <?= \Config\Services::validation()->listErrors(); ?>
+  <?php
+    if ($duplicate == true) {
+      echo ('<div class="alert alert-danger alert-dismissible fade show" role="alert">
+      That person already exists in the system.</div>');
+    }
+   ?>
 
   <form class="form-group" action="/people/edit" method="post">
     <?= csrf_field() ?>
@@ -30,7 +36,7 @@
       "-- Enter an organization --", "Organization",
       MyFormGeneration::generateNewButtonURL(current_url(), "organizations"), "organizationID",
       set_value('organizationID', $person['OrganizationID'])); ?>
-        
+
     <button class="btn btn-success m-1" type="submit" id="submit "name="submit">Save Person</button>
     <a class="btn btn-info m-1" href="/people/index/<?= $page ?>">Back to People</a>
   </form>
@@ -43,7 +49,7 @@ $(document).ready(function(){
     minLength: 1,
     source: function(request, response) {
       $.ajax({
-        url: location.protocol + "//" + location.host + "/organizations/searchLocation",
+        url: location.protocol + "//" + location.host + "/organizations/searchOrganization",
         datatype: "json",
         data: {
           term: request.term,

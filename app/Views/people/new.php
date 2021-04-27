@@ -4,6 +4,12 @@
   <h1><?= esc($title); ?></h1>
 
   <?= \Config\Services::validation()->listErrors(); ?>
+  <?php
+    if ($duplicate == true) {
+      echo ('<div class="alert alert-danger alert-dismissible fade show" role="alert">
+      That person already exists in the system.</div>');
+    }
+   ?>
 
   <form class="form-group" action="/people/new" method="post">
     <?= csrf_field() ?>

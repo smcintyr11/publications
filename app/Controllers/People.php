@@ -219,7 +219,10 @@ class People extends Controller {
       $validation->setRule('lastName', 'Last Name', 'max_length[64]');
       $validation->setRule('firstName', 'First Name', 'max_length[64]');
       $validation->setRule('organizationID', 'Organization', 'required');
-      if ($validation->withRequest($this->request)->run()) {
+      $duplicate = $this->isDuplicate($this->request->getPost('lastName'),
+        $this->request->getPost('firstName'), $this->request->getPost('displayName'),
+        $this->request->getPost('organizationID'));
+      if (($validation->withRequest($this->request)->run()) && ($duplicate == false)) {
         // Save
         $model->save([
           'DisplayName' => $this->request->getPost('displayName'),
@@ -235,6 +238,7 @@ class People extends Controller {
         $data = [
           'title' => 'Create New Person',
           'page' => $page,
+          'duplicate' => $duplicate,
         ];
 
         echo view('templates/header.php', $data);
@@ -253,6 +257,7 @@ class People extends Controller {
       $data = [
         'title' => 'Create New Person',
         'page' => $page,
+        'duplicate' => false,
       ];
 
       //echo view('templates/minimalHeader.php', $data);
@@ -344,7 +349,10 @@ class People extends Controller {
       $validation->setRule('lastName', 'Last Name', 'max_length[64]');
       $validation->setRule('firstName', 'First Name', 'max_length[64]');
       $validation->setRule('organizationID', 'Organization', 'required');
-      if ($validation->withRequest($this->request)->run()) {  // Valid
+      $duplicate = $this->isDuplicate($this->request->getPost('lastName'),
+        $this->request->getPost('firstName'), $this->request->getPost('displayName'),
+        $this->request->getPost('organizationID'), $this->request->getPost('personID'));
+      if (($validation->withRequest($this->request)->run()) && ($duplicate == false)) {   // Valid
         // Save
         $model->save([
           'PersonID' => $this->request->getPost('personID'),
@@ -362,6 +370,7 @@ class People extends Controller {
           'title' => 'Edit Person',
           'person' => $model->getPerson($this->request->getPost('personID')),
           'page' => $page,
+          'duplicate' => $duplicate,
         ];
         echo view('templates/header.php', $data);
         echo view('templates/menu.php', $data);
@@ -381,6 +390,7 @@ class People extends Controller {
         'title' => 'Edit Person',
         'person' => $model->getPerson($personID),
         'page' => $page,
+        'duplicate' => false,
       ];
       echo view('templates/header.php', $data);
       echo view('templates/menu.php', $data);
@@ -440,41 +450,77 @@ class People extends Controller {
    * Returns:
    *  boolean - True if dependent records exist Otherwise false
    */
-   private function findDependentRecords(string $personID) {
-     // Build the query for the PublicationsAuthors table
-     $db = \Config\Database::connect();
-     $builder = $db->table('PublicationsAuthors');
-     $builder->select("PublicationID");
-     $builder->where('PersonID', $personID);
+  private function findDependentRecords(string $personID) {
+   // Build the query for the PublicationsAuthors table
+   $db = \Config\Database::connect();
+   $builder = $db->table('PublicationsAuthors');
+   $builder->select("PublicationID");
+   $builder->where('PersonID', $personID);
 
-     // Get the number of rows
-     $result = $builder->get()->getNumRows();
-     if ($result > 0) {
-       return true;
-     }
-
-     // Build the query for the PublicationsReviewers table
-     $builder = $db->table('PublicationsReviewers');
-     $builder->select("PublicationID");
-     $builder->where('PersonID', $personID);
-
-     // Get the number of rows
-     $result = $builder->get()->getNumRows();
-     if ($result > 0) {
-       return true;
-     }
-
-     // Build the query for the PublicationsStatuses table
-     $builder = $db->table('PublicationsStatuses');
-     $builder->select("PublicationID");
-     $builder->where('StatusPersonID', $personID);
-
-     // Get the number of rows
-     $result = $builder->get()->getNumRows();
-     if ($result > 0) {
-       return true;
-     }
-
-     return false;
+   // Get the number of rows
+   $result = $builder->get()->getNumRows();
+   if ($result > 0) {
+     return true;
    }
+
+   // Build the query for the PublicationsReviewers table
+   $builder = $db->table('PublicationsReviewers');
+   $builder->select("PublicationID");
+   $builder->where('PersonID', $personID);
+
+   // Get the number of rows
+   $result = $builder->get()->getNumRows();
+   if ($result > 0) {
+     return true;
+   }
+
+   // Build the query for the PublicationsStatuses table
+   $builder = $db->table('PublicationsStatuses');
+   $builder->select("PublicationID");
+   $builder->where('StatusPersonID', $personID);
+
+   // Get the number of rows
+   $result = $builder->get()->getNumRows();
+   if ($result > 0) {
+     return true;
+   }
+
+   return false;
+ }
+
+  /**
+    * Name: isDuplicate
+    * Purpose: Searches for a Person with identical information for LastName,
+    *   FirstName, DisplaName, OrganizationID
+    *
+    * Parameters:
+    *  string $lastName - The last name to search for
+    *  string $firstName - The first name to search for
+    *  string $displayName - The display name to search for
+    *  string $organizationID - The organization id to search for
+    *  string $personID - The current record (if editing)
+    *
+    * Returns:
+    *  boolean - True if dependent records exist Otherwise false
+    */
+  private function isDuplicate(?string $lastName, ?string $firstName, ?string $displayName, ?string $organizationID, ?string $personID = null) {
+    // Build the query for the PublicationsAuthors table
+    $db = \Config\Database::connect();
+    $builder = $db->table('People');
+    $builder->select("PersonID");
+    $builder->where('LastName', $lastName);
+    $builder->where('FirstName', $firstName);
+    $builder->where('DisplayName', $displayName);
+    $builder->where('OrganizationID', $organizationID);
+    if (empty($personID) == false) {
+      $builder->where('PersonID !=', $personID);
+    }
+
+    // Get the number of rows
+    $result = $builder->get()->getNumRows();
+    if ($result > 0) {
+      return true;
+    }
+    return false;
+  }
 }
