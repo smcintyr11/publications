@@ -1,3 +1,5 @@
+<?php use App\Libraries\MyFormGeneration; ?>
+
 <div class="container my-3 py-3">
   <h1><?= esc($title); ?></h1>
 
@@ -8,26 +10,16 @@
 
     <input type="hidden" name="page" value="<?= $page ?>">
 
-    <div class="form-group row">
-      <label for="statusID" class="col-2 col-form-label font-weight-bold">Status ID:</label>
-      <div class="col-10">
-        <input type="text" readonly class="form-control-plaintext" name="statusID" id="statusID" value="<?= $status['StatusID'] ?>">
-      </div>
-    </div>
+    <?= MyFormGeneration::generateIDTextBox("statusID",
+      $status['StatusID'], "Status ID"); ?>
 
-    <div class="form-group row">
-      <label for="status" class="col-2 col-form-label font-weight-bold">Status:</label>
-      <div class="col-10">
-        <input class="form-control" type="input" name="status" id="status" value="<?= set_value('status', $status['Status']) ?>"/><br />
-      </div>
-    </div>
+    <?= MyFormGeneration::generateTextBox("status",
+      set_value('status', $status['Status']),
+      "-- Enter the status --", "Status"); ?>
 
-    <div class="form-group row">
-      <label for="expectedDuration" class="col-2 col-form-label font-weight-bold">Expected Duration:</label>
-      <div class="col-10">
-        <input class="form-control" type="number" name="expectedDuration" id="expectedDuration" value="<?= set_value('expectedDuration', $status['ExpectedDuration']) ?>"/><br />
-      </div>
-    </div>
+    <?= MyFormGeneration::generateNumberTextBox("expectedDuration",
+      set_value('expectedDuration', $status['ExpectedDuration']),
+      "-- Enter the expected duration in days --", "Expected Duration"); ?>
 
     <button class="btn btn-success m-1" type="submit" name="submit">Save Status</button>
     <a class="btn btn-info m-1" href="/statuses/index/<?= $page ?>">Back to Statuses</a>

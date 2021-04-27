@@ -204,7 +204,7 @@ class Statuses extends Controller {
 
       // Set validation rules
       $validation->setRule('status', 'Status', 'required|max_length[64]|is_unique[Statuses.Status,statusID,{statusID}]');
-      $validation->setRule('expectedDuration', 'Expected Duration', 'permit_empty|integer');
+      $validation->setRule('expectedDuration', 'Expected Duration', 'permit_empty|integer|greater_than_equal_to[1]');
       if ($validation->withRequest($this->request)->run()) {
         // An empty string is returned when nothing is entered, convert that to NULL
         $expectedDuration = $this->request->getPost('expectedDuration');
@@ -272,7 +272,7 @@ class Statuses extends Controller {
     // Is this a post (deleting)
     if ($this->request->getMethod() === 'post') {
       // Delete the client
-      $model->deleteStatus($this->request->getPost('StatusID'));
+      $model->deleteStatus($this->request->getPost('statusID'));
 
       // Get the view data from the form
       $page = $this->request->getPost('page');
@@ -287,11 +287,15 @@ class Statuses extends Controller {
       $page = $uri->setSilent()->getSegment(3, 1);
       $statusID = $uri->getSegment(4);
 
+      // Look for dependent records
+      $dependentRecords = $this->findDependentRecords($statusID);
+
       // Generate the delete view
       $data = [
         'title' => 'Delete Status',
         'status' => $model->getStatus($statusID),
         'page' => $page,
+        'dependentRecords' => $dependentRecords,
       ];
       echo view('templates/header.php', $data);
       echo view('templates/menu.php', $data);
@@ -327,7 +331,7 @@ class Statuses extends Controller {
 
       // Validate the data
       $validation->setRule('status', 'Status', 'required|max_length[64]|is_unique[Statuses.Status,statusID,{statusID}]');
-      $validation->setRule('expectedDuration', 'Expected Duration', 'permit_empty|integer');
+      $validation->setRule('expectedDuration', 'Expected Duration', 'permit_empty|integer|greater_than_equal_to[1]');
       if ($validation->withRequest($this->request)->run()) {  // Valid
         // An empty string is returned when nothing is entered, convert that to NULL
         $expectedDuration = $this->request->getPost('expectedDuration');
@@ -412,4 +416,31 @@ class Statuses extends Controller {
     // Output JSON response
     echo json_encode($autoComplete);
   }
+
+  /**
+   * Name: findDependentRecords
+   * Purpose: Searches the Publications table for records with the
+   *  specified StatusID
+   *
+   * Parameters:
+   *  string $statusID
+   *
+   * Returns:
+   *  boolean - True if dependent records exist Otherwise false
+   */
+   private function findDependentRecords(string $statusID) {
+     // Build the query for the Publications table
+     $db = \Config\Database::connect();
+     $builder = $db->table('PublicationsStatuses');
+     $builder->select("PublicationID");
+     $builder->where('StatusID', $statusID);
+
+     // Get the number of rows
+     $result = $builder->get()->getNumRows();
+     if ($result > 0) {
+       return true;
+     }
+
+     return false;
+   }
 }
