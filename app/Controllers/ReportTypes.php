@@ -265,7 +265,7 @@ class ReportTypes extends Controller {
     // Is this a post (deleting)
     if ($this->request->getMethod() === 'post') {
       // Delete the report type
-      $model->deleteReportType($this->request->getPost('ReportTypeID'));
+      $model->deleteReportType($this->request->getPost('reportTypeID'));
 
       // Get the view data from the form
       $page = $this->request->getPost('page');
@@ -280,11 +280,15 @@ class ReportTypes extends Controller {
       $page = $uri->setSilent()->getSegment(3, 1);
       $reportTypeID = $uri->getSegment(4);
 
+      // Look for dependent records
+      $dependentRecords = $this->findDependentRecords($reportTypeID);
+
       // Generate the delete view
       $data = [
         'title' => 'Delete Report Type',
         'reportType' => $model->getReportType($reportTypeID),
         'page' => $page,
+        'dependentRecords' => $dependentRecords,
       ];
       echo view('templates/header.php', $data);
       echo view('templates/menu.php', $data);
@@ -402,4 +406,31 @@ class ReportTypes extends Controller {
     // Output JSON response
     echo json_encode($autoComplete);
   }
+
+  /**
+   * Name: findDependentRecords
+   * Purpose: Searches the Publications table for records with the
+   *  specified ReportTypeID
+   *
+   * Parameters:
+   *  string $reportTypeID
+   *
+   * Returns:
+   *  boolean - True if dependent records exist Otherwise false
+   */
+   private function findDependentRecords(string $reportTypeID) {
+     // Build the query for the Publications table
+     $db = \Config\Database::connect();
+     $builder = $db->table('Publications');
+     $builder->select("PublicationID");
+     $builder->where('ReportTypeID', $reportTypeID);
+
+     // Get the number of rows
+     $result = $builder->get()->getNumRows();
+     if ($result > 0) {
+       return true;
+     }
+
+     return false;
+   }
 }
