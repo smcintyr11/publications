@@ -92,6 +92,29 @@ class MyFormGeneration {
  }
 
  /**
+  * Name: generateDateTextBox
+  * Purpose: Generates the label and textbox HTML
+  *
+  * Parameters:
+  *  string $textboxID   - The value to use for the input name field
+  *  string $value       - The value to populate the textbox with
+  *  string $textboxLabel  - The text for the label
+  *
+  * Returns: string - The HTML for these form elements
+  */
+ public static function generateDateTextBox(string $textboxID, ?string $value, string $textboxLabel) {
+  // Generate the HTML
+  $html = '<div class="form-group row">
+   <label for="' . $textboxID . '" class="col-2 col-form-label font-weight-bold">' . $textboxLabel . ':</label>
+   <div class="col-10">
+   <input class="form-control" type="Date" name="' . $textboxID . '" value="' . $value . '" id="' . $textboxID . '"  />
+   <br /></div></div>';
+
+  // Return the resulting HTML
+  return $html;
+ }
+
+ /**
     * Name: generateMultilineTextBox
     * Purpose: Generates the label and textbox HTML
     *
