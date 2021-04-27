@@ -1,13 +1,2 @@
-* Add logic to check for foreign key constraints on lookup tables
-  - Clients (Publications)
-  - Cost Centres (Publications)
-  - Fiscal Years (Publications)
-  - Journals (Publications)
-  - Keywords (PublicationsKeywords)
-  - Link Types (PublicationsLinks)
-  - People (PublicationsAuthors, PublicationsReviewers)
-  - Report Types (Publications)
-  - Statuses (Publications, PublicationsStatuses)
 * Add logic to check for status change on Publications
 * Add logic to check for duplicate person (FirstName, LastName, DisplaName, OrganizationID all identical)
-* Change HTML element for dates
