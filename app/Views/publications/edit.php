@@ -201,6 +201,13 @@
     <!-- Status Tab -->
     <div id="tbStatus" class="tabcontent" style="display: none;">
 
+      <?= MyFormGeneration::generateHiddenInput('originalStatusID',
+        set_value('originalStatusID', $publication['OriginalStatusID'])); ?>
+      <?= MyFormGeneration::generateHiddenInput('originalStatusPersonID',
+        set_value('originalStatusID', $publication['OriginalStatusPersonID'])); ?>
+      <?= MyFormGeneration::generateHiddenInput('originalStatusEstimatedCompletionDate',
+        set_value('originalStatusID', $publication['OriginalStatusEstimatedCompletionDate'])); ?>
+
       <?= MyFormGeneration::generateSelect("statusID",
         set_value('statusID', $publication['StatusID']),
         "-- Select a status --", "Status", $statuses); ?>

@@ -379,7 +379,6 @@ class Publications extends Controller {
        }
        $validation->setRule('recordNumber', 'Record Number', 'max_length[64]');
        if ($validation->withRequest($this->request)->run()) {  // Valid
-
          // Save
          $model->save([
            'PublicationID' => $this->request->getPost('publicationID'), // **
@@ -424,6 +423,14 @@ class Publications extends Controller {
            'ReportFormatted' => $this->request->getPost('reportFormatted') == "on" ? 1 : 0,
            'RecordNumber' => $this->request->getPost('recordNumber') == "" ? null : $this->request->getPost('recordNumber'),
          ]);
+
+         // Did the status change?  If so update the publications statuses table
+         if ($this->request->getPost('originalStatusID') != $this->request->getPost('statusID')) {
+          $this->updateCompleteStatus($this->request->getPost('publicationID'), $this->request->getPost('originalStatusID'));
+          $this->newStatus($this->request->getPost('publicationID'), $this->request->getPost('statusID'), $this->request->getPost('statusPersonID'), $this->request->getPost('statusEstimatedCompletionDate'));
+        } elseif (($this->request->getPost('originalStatusPersonID') != $this->request->getPost('statusPersonID')) || ($this->request->getPost('originalStatusEstimatedCompletionDate') != $this->request->getPost('statusEstimatedCompletionDate'))) {
+          $this->newStatus($this->request->getPost('publicationID'), $this->request->getPost('statusID'), $this->request->getPost('statusPersonID'), $this->request->getPost('statusEstimatedCompletionDate'));
+        }
 
          // Go back to index
          return redirect()->to("index/".$page);
@@ -710,4 +717,88 @@ class Publications extends Controller {
      // Retturn the result
      return $builder->get()->getResult();
    }
+
+  /**
+   * Name: updateCompleteStatus
+   * Purpose: Updates the date completed field in the PublicationsStatuses table
+   *  for the latest entry for the given PublicationID/StatusID combination
+   *
+   * Parameters:
+   *   string $publicationID - The PublicationID we are updating
+   *   string $statusID - The StatusID we are updating
+   *
+   * Returns: None
+   */
+  private function updateCompleteStatus(string $publicationID, string $statusID) {
+    // Get the ID of the PublicationsStatuses row to updated
+    $publicationsStatusesID = $this->getLastPublicationStatusesID($publicationID, $statusID);
+
+    // Load the query builder
+    $db = \Config\Database::connect();
+
+    // Generate the query
+    date_default_timezone_set("America/Edmonton");
+    $builder = $db->table('PublicationsStatuses');
+    $builder->set('CompletionDate', date("Y-m-d H:i:s"));
+    $builder->where('PublicationsStatusesID', $publicationsStatusesID);
+    $builder->update();
+  }
+
+  /**
+   * Name: getLastPublicationStatusesID
+   * Purpose: Updates the date completed field in the PublicationsStatuses table
+   *  for the latest entry for the given PublicationID/StatusID combination
+   *
+   * Parameters:
+   *   string $publicationID - The PublicationID we are updating
+   *   string $statusID - The StatusID we are updating
+   *
+   * Returns:
+   */
+  private function getLastPublicationStatusesID(string $publicationID, string $statusID) {
+    // Load the query builder
+    $db = \Config\Database::connect();
+
+    // Generate the query
+    $builder = $db->table('PublicationsStatuses');
+    $builder->selectMax("PublicationsStatusesID");
+    $builder->where('PublicationID', $publicationID);
+    $builder->where('StatusID', $statusID);
+
+    // Return the result
+    $result = $builder->get()->getRow();
+    return $result->PublicationsStatusesID;
+  }
+
+
+  /**
+   * Name: newStatus
+   * Purpose: Adds a new row to the PublicationsStatuses table using the provided parameters
+   *
+   * Parameters:
+   *   string $publicationID - The PublicationID we are inserting
+   *   string $statusID - The StatusID we are inserting
+   *   string $statusPersonID - The StatusPersonID we are inserting
+   *   string $estimatedCompletionDate - The StatusEstimatedCompletionDate we are inserting
+   *
+   * Returns: None
+   */
+  private function newStatus(string $publicationID, string $statusID, ?string $statusPersonID, ?string $estimatedCompletionDate) {
+    // Load the query builder
+    $db = \Config\Database::connect();
+
+    // Generate the query
+    date_default_timezone_set("America/Edmonton");
+    $builder = $db->table('PublicationsStatuses');
+    $builder->set('PublicationID', $publicationID);
+    $builder->set('StatusID', $statusID);
+    $builder->set('DateModified', date("Y-m-d H:i:s"));
+    if (empty($statusPersonID) == false) {
+      $builder->set('StatusPersonID', $statusPersonID);
+    }
+    if (empty($estimatedCompletionDate) == false) {
+      $builder->set('EstimatedCompletionDate', $estimatedCompletionDate);
+    }
+    $builder->insert();
+  }
 }

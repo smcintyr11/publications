@@ -678,7 +678,44 @@ $(document).ready(function(){
       });
   });
 
-    // Select the General Tab
+  // Status change function
+  $("#statusID").change(function(){
+    // Clear the assignedTo
+    $("#assignedTo").val("");
+    $("#statusPersonID").val("");
+
+    // Try to get the expected duration
+    $.ajax({
+      url: location.protocol + "//" + location.host + "/statuses/getExpectedDuration",
+      type: "POST",
+      data: {
+        statusID: $("#statusID").val(),
+      },
+      success: function(dataResult){
+        var dataResult = JSON.parse(dataResult);
+        if(dataResult.statusCode==200) {
+          // Get the expected duration
+          var expectedDuration = dataResult.expectedDuration;
+
+          // If there is an expected duration populate the estimated completion date
+          if (expectedDuration != null) {
+            var formatter = new Intl.DateTimeFormat('en-ca', { dateStyle: 'short' });
+            var nowDate = new Date();
+            nowDate.setDate(nowDate.getDate() + parseInt(expectedDuration, 10));
+            $("#statusEstimatedCompletionDate").val(formatter.format(nowDate));
+            $("#ipdNumber").val(formatter.format(nowDate));
+          } else {
+              $("#statusEstimatedCompletionDate").val("");
+          }
+        }
+        else if(dataResult.statusCode==201) {
+          // Unknown expected duration
+          $("#statusEstimatedCompletionDate").val("");
+        }
+      },
+    });
+  });
+  // Select the General Tab
   $("#tbGeneralLink").className += " active";
 
   // Add sorting to the various internal tables

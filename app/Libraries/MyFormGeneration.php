@@ -115,6 +115,24 @@ class MyFormGeneration {
  }
 
  /**
+  * Name: generateHiddenInput
+  * Purpose: Generates the HTML for a hidden input field
+  *
+  * Parameters:
+  *  string $textboxID   - The value to use for the input name field
+  *  string $value       - The value to populate the textbox with
+  *
+  * Returns: string - The HTML for these form elements
+  */
+ public static function generateHiddenInput(string $textboxID, ?string $value) {
+  // Generate the HTML
+  $html = '<input type="hidden" name="' . $textboxID . '" value="' . $value . '" id="' . $textboxID . '"  />';
+
+  // Return the resulting HTML
+  return $html;
+ }
+
+ /**
     * Name: generateMultilineTextBox
     * Purpose: Generates the label and textbox HTML
     *

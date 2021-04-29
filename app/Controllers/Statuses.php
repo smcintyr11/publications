@@ -383,7 +383,7 @@ class Statuses extends Controller {
 
   /**
    * Name: searchStatus
-   * Purpose: Uses a query variable passed to the URL to search for an organization
+   * Purpose: Uses a query variable passed to the URL to search for a status
    *  name that is like the search term.
    *
    * Parameters: None
@@ -400,7 +400,7 @@ class Statuses extends Controller {
     $builder = $db->table('Statuses');
     $builder->like('Status', $searchString);
 
-    // Run the query and compile an array of organization data
+    // Run the query and compile an array of status data
     $autoComplete = array();
     $query = $builder->get();
     foreach ($query->getResult() as $row)
@@ -415,6 +415,53 @@ class Statuses extends Controller {
 
     // Output JSON response
     echo json_encode($autoComplete);
+  }
+
+  /**
+   * Name: getExpectedDuration
+   * Purpose: Uses a query variable passed to the URL to search for a status'
+   *  expected duration
+   *
+   * Parameters: None
+   *
+   * Returns: Outputs JSON - An array of data
+   */
+  public function getExpectedDuration() {
+    // Get the POST variables
+    $statusID = $this->request->getPost('statusID');
+
+    // Make sure the variables are valid
+    if (empty($statusID)) {
+      echo json_encode(array("statusCode"=>201));
+      return;
+    }
+
+    // Get the row
+    // Create the query builder object
+    $db = \Config\Database::connect();
+    $builder = $db->table('Statuses');
+    $builder->select('ExpectedDuration');
+    $builder->where('StatusID', $statusID);
+
+    // Run the query
+    $results = $builder->get()->getNumRows();
+    if ($results < 1) {
+      echo json_encode(array("statusCode"=>201));
+      return;
+    }
+    $builder = $db->table('Statuses');
+    $builder->select('ExpectedDuration');
+    $builder->where('StatusID', $statusID);
+    $results = $builder->get()->getRow();
+
+    // Create the return array
+    $result = array(
+      "statusCode"=>200,
+      "expectedDuration"=>$results->ExpectedDuration,
+    );
+
+    // Return the success
+    echo json_encode($result);
   }
 
   /**
