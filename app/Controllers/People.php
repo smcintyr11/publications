@@ -218,7 +218,7 @@ class People extends Controller {
       $validation->setRule('displayName', 'Display Name', 'required|max_length[128]');
       $validation->setRule('lastName', 'Last Name', 'max_length[64]');
       $validation->setRule('firstName', 'First Name', 'max_length[64]');
-      $validation->setRule('organizationID', 'Organization', 'required');
+      //$validation->setRule('organizationID', 'Organization', 'required');
       $duplicate = $this->isDuplicate($this->request->getPost('lastName'),
         $this->request->getPost('firstName'), $this->request->getPost('displayName'),
         $this->request->getPost('organizationID'));
@@ -228,7 +228,7 @@ class People extends Controller {
           'DisplayName' => $this->request->getPost('displayName'),
           'LastName' => $this->request->getPost('lastName'),
           'FirstName' => $this->request->getPost('firstName'),
-          'OrganizationID' => $this->request->getPost('organizationID'),
+          'OrganizationID' => $this->request->getPost('organizationID') == "" ? null : $this->request->getPost('organizationID'),
         ]);
 
         // Go back to index
@@ -348,7 +348,7 @@ class People extends Controller {
       $validation->setRule('displayName', 'Display Name', 'required|max_length[128]');
       $validation->setRule('lastName', 'Last Name', 'max_length[64]');
       $validation->setRule('firstName', 'First Name', 'max_length[64]');
-      $validation->setRule('organizationID', 'Organization', 'required');
+      //$validation->setRule('organizationID', 'Organization', 'required');
       $duplicate = $this->isDuplicate($this->request->getPost('lastName'),
         $this->request->getPost('firstName'), $this->request->getPost('displayName'),
         $this->request->getPost('organizationID'), $this->request->getPost('personID'));
@@ -359,7 +359,7 @@ class People extends Controller {
           'FirstName' => $this->request->getPost('firstName'),
           'LastName' => $this->request->getPost('lastName'),
           'DisplayName' => $this->request->getPost('displayName'),
-          'OrganizationID' => $this->request->getPost('organizationID'),
+          'OrganizationID' => $this->request->getPost('organizationID') == "" ? null : $this->request->getPost('organizationID'),
         ]);
 
         // Go back to index
