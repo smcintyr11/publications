@@ -158,7 +158,7 @@
       <?= MyFormGeneration::generateLookupTextBox("reportType",
         set_value('reportType', $publication['ReportType']),
         "-- Enter a report type --", "Report Type",
-        MyFormGeneration::generateNewButtonURL(current_url(), "reportTypes"), "reportTypeID",
+        MyFormGeneration::generateNewButtonURL("reportTypes"), "reportTypeID",
         set_value('reportTypeID', $publication['ReportTypeID'])); ?>
 
       <?= MyFormGeneration::generateTextBox("reportNumber",
@@ -172,13 +172,13 @@
       <?= MyFormGeneration::generateLookupTextBox("fiscalYear",
         set_value('fiscalYear', $publication['FiscalYear']),
         "-- Enter a fiscal year (e.g. 2020 / 2021) --", "Fiscal Year",
-        MyFormGeneration::generateNewButtonURL(current_url(), "fiscalYears"), "fiscalYearID",
+        MyFormGeneration::generateNewButtonURL("fiscalYears"), "fiscalYearID",
         set_value('fiscalYearID', $publication['FiscalYearID'])); ?>
 
       <?= MyFormGeneration::generateLookupTextBox("organization",
         set_value('organization', $publication['Organization']),
         "-- Enter an organization --", "Organization",
-        MyFormGeneration::generateNewButtonURL(current_url(), "organizations"), "organizationID",
+        MyFormGeneration::generateNewButtonURL("organizations"), "organizationID",
         set_value('organizationID', $publication['OrganizationID'])); ?>
 
       <?= MyFormGeneration::generateSelect("costCentreID",
@@ -215,7 +215,7 @@
       <?= MyFormGeneration::generateLookupTextBox("assignedTo",
         set_value('assignedTo', $publication['StatusPerson']),
         "-- Enter a person --", "Assigned To",
-        MyFormGeneration::generateNewButtonURL(current_url(), "people"), "statusPersonID",
+        MyFormGeneration::generateNewButtonURL("people"), "statusPersonID",
         set_value('statusPersonID', $publication['StatusPersonID'])); ?>
 
       <?= MyFormGeneration::generateDateTextBox("statusEstimatedCompletionDate",
@@ -409,13 +409,13 @@
       <?= MyFormGeneration::generateLookupTextBox("client",
         set_value('client', $publication['Client']),
         "-- Enter a client / publisher --", "Client / Publisher",
-        MyFormGeneration::generateNewButtonURL(current_url(), "clients"), "clientID",
+        MyFormGeneration::generateNewButtonURL("clients"), "clientID",
         set_value('clientID', $publication['ClientID'])); ?>
 
       <?= MyFormGeneration::generateLookupTextBox("journal",
         set_value('journal', $publication['Journal']),
         "-- Enter a journal --", "Journal",
-        MyFormGeneration::generateNewButtonURL(current_url(), "journals"), "journalID",
+        MyFormGeneration::generateNewButtonURL("journals"), "journalID",
         set_value('journalID', $publication['JournalID'])); ?>
 
       <?= MyFormGeneration::generateTextBox("manuscriptNumber",

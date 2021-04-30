@@ -34,7 +34,7 @@
     <?= MyFormGeneration::generateLookupTextBox("organization",
       set_value('organization', $person['Organization']),
       "-- Enter an organization --", "Organization",
-      MyFormGeneration::generateNewButtonURL(current_url(), "organizations"), "organizationID",
+      MyFormGeneration::generateNewButtonURL("organizations"), "organizationID",
       set_value('organizationID', $person['OrganizationID'])); ?>
 
     <button class="btn btn-success m-1" type="submit" id="submit "name="submit">Save Person</button>

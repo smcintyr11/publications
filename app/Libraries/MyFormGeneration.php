@@ -11,12 +11,9 @@ class MyFormGeneration {
    *
    * Returns: string - The URL for the new page for the given type
    */
- public static function generateNewButtonURL(string $currentURL, string $newType) {
-   // Parse the URL
-   $t = parse_url($currentURL);
-
+ public static function generateNewButtonURL(string $newType) {
    // Create the new URL and return it
-   $newUrl = $t['scheme'] . "://" . $t['host'] . ':' . $t['port'] . '/' . $newType . '/new/1';
+   $newUrl = base_url() . '/' . $newType . '/new/1';
    return $newUrl;
  }
 

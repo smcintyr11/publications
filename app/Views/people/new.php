@@ -27,7 +27,7 @@
 
     <?= MyFormGeneration::generateLookupTextBox("organization",
       set_value('organization'), "-- Enter an organization --", "Organization",
-      MyFormGeneration::generateNewButtonURL(current_url(), "organizations"), "organizationID",
+      MyFormGeneration::generateNewButtonURL("organizations"), "organizationID",
       set_value('organizationID')); ?>
 
     <button class="btn btn-success m-1" type="submit" name="submit">Create Person</button>
