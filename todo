@@ -1,0 +1,11 @@
+0.02
+----
+- Change Add buttons that redirect to URL to code to create a new item
+- Add code to add a PublicationsStatuses entry when a new publication is created
+  - Modify the new publication form to not ask for a status, this should be defaulted to initial status or something
+- Make notifications disappear after 5 seconds
+- Move Edit/Delete to the left most column
+- Change Edit/Delete to icons
+- When you create a new comment the view
+- On Publications (Edit), Comments Tab, change the Table title to Comments from Links
+- Use javascript to verify that FY (when adding / editing) is in the correct format
