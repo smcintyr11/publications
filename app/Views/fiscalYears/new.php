@@ -1,3 +1,5 @@
+<script type="text/javascript" src="/scripts/fiscalYearsNew.js"></script>
+
 <?php use App\Libraries\MyFormGeneration; ?>
 
 <div class="container my-3 py-3">
@@ -5,7 +7,7 @@
 
   <?= \Config\Services::validation()->listErrors(); ?>
 
-  <form class="form-group" action="/fiscalYears/new" method="post">
+  <form class="form-group" action="/fiscalYears/new" method="post" id="frmNewFiscalYear" >
     <?= csrf_field() ?>
 
     <input type="hidden" name="page" value="<?= $page ?>">
