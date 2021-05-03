@@ -4,9 +4,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/css/theme.bootstrap_4.min.css" integrity="sha512-2C6AmJKgt4B+bQc08/TwUeFKkq8CsBNlTaNcNgUmsDJSU1Fg+R6azDbho+ZzuxEkJnCjLZQMozSq3y97ZmgwjA==" crossorigin="anonymous" />
 <script type="text/javascript" src="/scripts/publicationEdit.js"></script>
 
-<?php
-  use App\Libraries\MyFormGeneration;
- ?>
+<?php use App\Libraries\MyFormGeneration; ?>
 
 <!-- Edit Link Modal -->
  <div class="modal fade" id="linkModal" tabindex="-1" role="dialog">
