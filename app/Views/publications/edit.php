@@ -548,7 +548,7 @@
       </div>
 
       <div class="form-group row">
-      <h3>Links</h3>
+      <h3>Comments</h3>
       </div>
 
       <div class="form-group row">

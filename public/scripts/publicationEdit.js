@@ -19,12 +19,19 @@ function openTab(evt, tabName) {
   evt.currentTarget.className += " active";
 }
 
+function closeAlerts() {
+  $(".close").click();
+  window.clearTimeout();
+}
+
 function displaySuccessMessage(message) {
   $("#alertSuccess").html('<div class="alert alert-success alert-dismissible fade show" role="alert">'+message+'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+  window.setTimeout(closeAlerts, 3000);
 }
 
 function displayErrorMessage(message) {
   $("#alertFail").html('<div class="alert alert-danger alert-dismissible fade show" role="alert">'+message+'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+  window.setTimeout(closeAlerts, 3000);
 }
 
 function removeAuthor(rowID, paID) {
