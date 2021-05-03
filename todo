@@ -6,3 +6,4 @@
 - Move Edit/Delete to the left most column
   - Change Edit/Delete to icons
 - Use javascript to verify that FY (when adding / editing) is in the correct format
+- Refactor new publication to use MyFormGeneration

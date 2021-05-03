@@ -38,24 +38,7 @@
           ?>
         </select><br />
       </div>
-    </div>
-    <div class="form-group row">
-      <label for="statusID" class="col-2 col-form-label font-weight-bold">Status:</label>
-      <div class="col-10">
-        <select class="form-control" id="statusID" name="statusID" value="<?= set_value('statusID') ?>">
-          <option value=''>-- Select a status --</option>
-          <?php
-            foreach ($statuses as $status) {
-              echo ('<option value="' . $status->StatusID . '"');
-              if ($status->StatusID == set_value('statusID')) {
-                echo (' selected="selected"');
-              }
-              echo ('>' . $status->Status . '</option>');
-            }
-          ?>
-        </select><br />
-      </div>
-    </div>
+    </div>    
 
     <button class="btn btn-success m-1" type="submit" name="submit">Create Publication</button>
     <a class="btn btn-info m-1" href="/publications/index/<?= $page ?>">Back to Publications</a>

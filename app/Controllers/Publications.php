@@ -255,14 +255,19 @@ class Publications extends Controller {
         // Set validation rules
         $validation->setRule('primaryTitle', 'Primary Title', 'required');
         $validation->setRule('reportTypeID', 'Report Type', 'required');
-        $validation->setRule('statusID', 'Status', 'required');
         if ($validation->withRequest($this->request)->run()) {
           // Save
           $model->save([
             'PrimaryTitle' => $this->request->getPost('primaryTitle'),
             'ReportTypeID' => $this->request->getPost('reportTypeID'),
-            'StatusID' => $this->request->getPost('statusID'),
+            'StatusID' => 9,
           ]);
+
+          // Get the publication id
+          $publicationID = $this->getLastPublicationID($this->request->getPost('primaryTitle'), $this->request->getPost('reportTypeID'));
+
+          // Add the new publications statuses entry
+          $this->newStatus($publicationID, 9, null, null);
 
           // Go back to index
           return redirect()->to("index/".$page);
@@ -770,7 +775,6 @@ class Publications extends Controller {
     return $result->PublicationsStatusesID;
   }
 
-
   /**
    * Name: newStatus
    * Purpose: Adds a new row to the PublicationsStatuses table using the provided parameters
@@ -800,5 +804,33 @@ class Publications extends Controller {
       $builder->set('EstimatedCompletionDate', $estimatedCompletionDate);
     }
     $builder->insert();
+  }
+
+  /**
+   * Name: getLastPublicationID
+   * Purpose: Gets the latest publicationID with the matching primary title,
+   *  report type id, with an initial status
+   *
+   * Parameters:
+   *   string $primaryTitle - The primary title we are searching for
+   *   string $reportTypeID - The report type id we are searching for
+   *
+   * Returns:
+   *  The publication id
+   */
+  private function getLastPublicationID(string $primaryTitle, string $reportTypeID) {
+    // Load the query builder
+    $db = \Config\Database::connect();
+
+    // Generate the query
+    $builder = $db->table('Publications');
+    $builder->selectMax('PublicationID');
+    $builder->where('PrimaryTitle', $primaryTitle);
+    $builder->where('ReportTypeID', $reportTypeID);
+    $builder->where('StatusID', 9);
+
+    // Return the result
+    $result = $builder->get()->getRow();
+    return $result->PublicationID;
   }
 }
