@@ -1,4 +1,16 @@
-<?php use App\Libraries\MyFormGeneration; ?>
+<?php
+  // Use MyFormGeneration
+  use App\Libraries\MyFormGeneration;
+
+  // Calculate sort parameters
+  $id_sort_param = "id_asc";
+  $org_sort_param = "org_asc";
+  if ($_SESSION["currentSort"] == "id_asc") {
+    $id_sort_param = "id_desc";
+  } elseif ($_SESSION["currentSort"] == "org_asc") {
+    $org_sort_param = "org_desc";
+  }
+?>
 
 <div class="container my-3 py-3">
   <h1><?= esc($title); ?></h1>
@@ -9,39 +21,26 @@
 
   <div class="table-responsive-lg">
     <table class="table table-striped table-bordered">
+      <col style="width: 15%">
       <col style="width: 17%">
       <col style="width: 68%">
-      <col style="width: 15%">
-
-      <?php
-        $id_sort_param = "id_asc";
-        $org_sort_param = "org_asc";
-        if ($_SESSION["currentSort"] == "id_asc") {
-          $id_sort_param = "id_desc";
-        } elseif ($_SESSION["currentSort"] == "org_asc") {
-          $org_sort_param = "org_desc";
-        }
-       ?>
 
       <thead class="thead-light">
+        <th scope="col"><div class="btn">Edit | Delete</div></th>
         <?= MyFormGeneration::generateColumnHeader("organizations", "Organization ID",
           $id_sort_param, $_SESSION["currentSort"], "id_asc", "id_desc"); ?>
 
         <?= MyFormGeneration::generateColumnHeader("organizations", "Organization",
           $org_sort_param, $_SESSION["currentSort"], "org_asc", "org_desc"); ?>
-
-        <th scope="col"></th>
       </thead>
 
       <tbody>
         <?php if (! empty($organizations) && is_array($organizations)) : ?>
           <?php foreach ($organizations as $organization): ?>
             <tr>
+              <?= MyFormGeneration::generateIndexRowButtons("organizations", $page, $organization->OrganizationID); ?>
               <td><?= $organization->OrganizationID; ?></td>
               <td><?= $organization->Organization; ?></td>
-              <td><a class="btn btn-link" href="/organizations/edit/<?= $page ?>/<?= $organization->OrganizationID ?>">Edit</a>
-                |<a class="btn btn-link" href="/organizations/delete/1/<?= $organization->OrganizationID ?>">Delete</a>
-              </td>
             </tr>
           <?php endforeach; ?>
         <?php endif ?>
@@ -50,5 +49,5 @@
   </div>
 
   <?= MyFormGeneration::generateRowsPerPage($_SESSION["rowsPerPage"], $links); ?>
-  
+
 </div>

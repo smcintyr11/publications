@@ -1,4 +1,25 @@
-<?php use App\Libraries\MyFormGeneration; ?>
+<?php
+  // Use MyFormGeneration
+  use App\Libraries\MyFormGeneration;
+
+  // Calculate sort parameters
+  $id_sort_param = "id_asc";
+  $lname_sort_param = "lname_asc";
+  $fname_sort_param = "fname_asc";
+  $dname_sort_param = "dname_asc";
+  $org_sort_param = "org_asc";
+  if ($_SESSION["currentSort"] == "id_asc") {
+    $id_sort_param = "id_desc";
+  } elseif ($_SESSION["currentSort"] == "lname_asc") {
+    $lname_sort_param = "lname_desc";
+  } elseif ($_SESSION["currentSort"] == "fname_asc") {
+    $fname_sort_param = "fname_desc";
+  } elseif ($_SESSION["currentSort"] == "dname_asc") {
+    $dname_sort_param = "dname_desc";
+  } elseif ($_SESSION["currentSort"] == "org_asc") {
+    $org_sort_param = "org_desc";
+  }
+?>
 
 <div class="container my-3 py-3">
   <h1><?= esc($title); ?></h1>
@@ -10,32 +31,15 @@
   <div class="table-responsive-lg">
     <table class="table table-striped table-bordered">
       <col style="width: 15%">
-      <col style="width: 17.5%">
-      <col style="width: 17.5%">
-      <col style="width: 17.5%">
-      <col style="width: 17.5%">
       <col style="width: 15%">
+      <col style="width: 17.5%">
+      <col style="width: 17.5%">
+      <col style="width: 17.5%">
+      <col style="width: 17.5%">
 
-      <?php
-        $id_sort_param = "id_asc";
-        $lname_sort_param = "lname_asc";
-        $fname_sort_param = "fname_asc";
-        $dname_sort_param = "dname_asc";
-        $org_sort_param = "org_asc";
-        if ($_SESSION["currentSort"] == "id_asc") {
-          $id_sort_param = "id_desc";
-        } elseif ($_SESSION["currentSort"] == "lname_asc") {
-          $lname_sort_param = "lname_desc";
-        } elseif ($_SESSION["currentSort"] == "fname_asc") {
-          $fname_sort_param = "fname_desc";
-        } elseif ($_SESSION["currentSort"] == "dname_asc") {
-          $dname_sort_param = "dname_desc";
-        } elseif ($_SESSION["currentSort"] == "org_asc") {
-          $org_sort_param = "org_desc";
-        }
-       ?>
 
        <thead class="thead-light">
+         <th scope="col"><div class="btn">Edit | Delete</div></th>
          <?= MyFormGeneration::generateColumnHeader("people", "Person ID",
            $id_sort_param, $_SESSION["currentSort"], "id_asc", "id_desc"); ?>
 
@@ -50,21 +54,18 @@
 
            <?= MyFormGeneration::generateColumnHeader("people", "Organization",
              $org_sort_param, $_SESSION["currentSort"], "org_asc", "org_desc"); ?>
-         <th scope="col"></th>
        </thead>
 
        <tbody>
          <?php if (! empty($people) && is_array($people)) : ?>
            <?php foreach ($people as $person): ?>
              <tr>
+               <?= MyFormGeneration::generateIndexRowButtons("people", $page, $person->PersonID); ?>
                <td><?= $person->PersonID ?></td>
                <td><?= $person->DisplayName ?></td>
                <td><?= $person->LastName ?></td>
                <td><?= $person->FirstName ?></td>
                <td><?= $person->Organization ?></td>
-               <td><a class="btn btn-link" href="/people/edit/<?= $page ?>/<?= $person->PersonID ?>">Edit</a>
-                 |<a class="btn btn-link" href="/people/delete/1/<?= $person->PersonID ?>">Delete</a>
-               </td>
              </tr>
            <?php endforeach; ?>
          <?php endif ?>
@@ -73,5 +74,5 @@
   </div>
 
   <?= MyFormGeneration::generateRowsPerPage($_SESSION["rowsPerPage"], $links); ?>
-  
+
 </div>

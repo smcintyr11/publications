@@ -1,3 +1,44 @@
+<?php
+  // Use MyFormGeneration
+  use App\Libraries\MyFormGeneration;
+
+  // Calculate sort parameters
+  $id_sort_param = "id_asc";
+  $cc_sort_param = "cc_asc";
+  $pc_sort_param = "pc_asc";
+  $ipd_sort_param = "ipd_asc";
+  $xref_sort_param = "xref_asc";
+  $rn_sort_param = "rn_asc";
+  $abbr_sort_param = "abbr_asc";
+  $pt_sort_param = "pt_asc";
+  $status_sort_param = "status_asc";
+  $pa_sort_param = "pa_asc";
+  $pr_sort_param = "pr_asc";
+  if ($_SESSION["currentSort"] == "id_asc") {
+    $id_sort_param = "id_desc";
+  } elseif ($_SESSION["currentSort"] == "cc_asc") {
+    $cc_sort_param = "cc_desc";
+  } elseif ($_SESSION["currentSort"] == "pc_asc") {
+    $pc_sort_param = "pc_desc";
+  } elseif ($_SESSION["currentSort"] == "ipd_asc") {
+    $ipd_sort_param = "ipd_desc";
+  } elseif ($_SESSION["currentSort"] == "xref_asc") {
+    $xref_sort_param = "xref_desc";
+  } elseif ($_SESSION["currentSort"] == "rn_asc") {
+    $rn_sort_param = "rn_desc";
+  } elseif ($_SESSION["currentSort"] == "abbr_asc") {
+    $abbr_sort_param = "abbr_desc";
+  } elseif ($_SESSION["currentSort"] == "pt_asc") {
+    $pt_sort_param = "pt_desc";
+  } elseif ($_SESSION["currentSort"] == "status_asc") {
+    $status_sort_param = "status_desc";
+  } elseif ($_SESSION["currentSort"] == "pa_asc") {
+    $pa_sort_param = "pa_desc";
+  } elseif ($_SESSION["currentSort"] == "pr_asc") {
+    $pr_sort_param = "pr_desc";
+  }
+?>
+
 <div style="width: 2500px">
 <div class="container-fluid my-5 my-5">
   <h1><?= esc($title); ?></h1>
@@ -13,9 +54,10 @@
 
   <div class="table-responsive">
     <table class="table table-striped table-bordered">
+      <col style="width: 4%">
       <col style="width: 7%">
       <col style="width: 7%">
-      <col style="width: 17%">
+      <col style="width: 20%">
       <col style="width: 7%">
       <col style="width: 7%">
       <col style="width: 7%">
@@ -24,165 +66,48 @@
       <col style="width: 7%">
       <col style="width: 10%">
       <col style="width: 10%">
-      <col style="width: 7%">
-
-      <?php
-        $id_sort_param = "id_asc";
-        $cc_sort_param = "cc_asc";
-        $pc_sort_param = "pc_asc";
-        $ipd_sort_param = "ipd_asc";
-        $xref_sort_param = "xref_asc";
-        $rn_sort_param = "rn_asc";
-        $abbr_sort_param = "abbr_asc";
-        $pt_sort_param = "pt_asc";
-        $status_sort_param = "status_asc";
-        $pa_sort_param = "pa_asc";
-        $pr_sort_param = "pr_asc";
-        if ($_SESSION["currentSort"] == "id_asc") {
-          $id_sort_param = "id_desc";
-        } elseif ($_SESSION["currentSort"] == "cc_asc") {
-          $cc_sort_param = "cc_desc";
-        } elseif ($_SESSION["currentSort"] == "pc_asc") {
-          $pc_sort_param = "pc_desc";
-        } elseif ($_SESSION["currentSort"] == "ipd_asc") {
-          $ipd_sort_param = "ipd_desc";
-        } elseif ($_SESSION["currentSort"] == "xref_asc") {
-          $xref_sort_param = "xref_desc";
-        } elseif ($_SESSION["currentSort"] == "rn_asc") {
-          $rn_sort_param = "rn_desc";
-        } elseif ($_SESSION["currentSort"] == "abbr_asc") {
-          $abbr_sort_param = "abbr_desc";
-        } elseif ($_SESSION["currentSort"] == "pt_asc") {
-          $pt_sort_param = "pt_desc";
-        } elseif ($_SESSION["currentSort"] == "status_asc") {
-          $status_sort_param = "status_desc";
-        } elseif ($_SESSION["currentSort"] == "pa_asc") {
-          $pa_sort_param = "pa_desc";
-        } elseif ($_SESSION["currentSort"] == "pr_asc") {
-          $pr_sort_param = "pr_desc";
-        }
-       ?>
 
       <thead class="thead-light">
-        <th scope="col">
-          <a class="btn btn-link" href="/publications/index/1?sort=<?= $id_sort_param ?>">Publication ID</a>
-          <?php
-            if ($_SESSION["currentSort"] == "id_asc") {
-              echo("<i class=\"fas fa-sort-up\"></i>");
-            } elseif ($_SESSION["currentSort"] == "id_desc") {
-              echo ("<i class=\"fas fa-sort-down\"></i>");
-            }
-           ?>
-        </th>
-        <th scope="col">
-          <a class="btn btn-link" href="/publications/index/1?sort=<?= $rn_sort_param ?>">Report Number</a>
-          <?php
-            if ($_SESSION["currentSort"] == "rn_asc") {
-              echo("<i class=\"fas fa-sort-up\"></i>");
-            } elseif ($_SESSION["currentSort"] == "rn_desc") {
-              echo ("<i class=\"fas fa-sort-down\"></i>");
-            }
-           ?>
-        </th>
-        <th scope="col">
-          <a class="btn btn-link" href="/publications/index/1?sort=<?= $pt_sort_param ?>">Primary title</a>
-          <?php
-            if ($_SESSION["currentSort"] == "pt_asc") {
-              echo("<i class=\"fas fa-sort-up\"></i>");
-            } elseif ($_SESSION["currentSort"] == "pt_desc") {
-              echo ("<i class=\"fas fa-sort-down\"></i>");
-            }
-           ?>
-        </th>
-        <th scope="col">
-          <a class="btn btn-link" href="/publications/index/1?sort=<?= $abbr_sort_param ?>">Report Type</a>
-          <?php
-            if ($_SESSION["currentSort"] == "abbr_asc") {
-              echo("<i class=\"fas fa-sort-up\"></i>");
-            } elseif ($_SESSION["currentSort"] == "abbr_desc") {
-              echo ("<i class=\"fas fa-sort-down\"></i>");
-            }
-           ?>
-        </th>
-        <th scope="col">
-          <a class="btn btn-link" href="/publications/index/1?sort=<?= $cc_sort_param ?>">Cost Centre</a>
-          <?php
-            if ($_SESSION["currentSort"] == "cc_asc") {
-              echo("<i class=\"fas fa-sort-up\"></i>");
-            } elseif ($_SESSION["currentSort"] == "cc_desc") {
-              echo ("<i class=\"fas fa-sort-down\"></i>");
-            }
-           ?>
-        </th>
-        <th scope="col">
-          <a class="btn btn-link" href="/publications/index/1?sort=<?= $pc_sort_param ?>">Project Code</a>
-          <?php
-            if ($_SESSION["currentSort"] == "pc_asc") {
-              echo("<i class=\"fas fa-sort-up\"></i>");
-            } elseif ($_SESSION["currentSort"] == "pc_desc") {
-              echo ("<i class=\"fas fa-sort-down\"></i>");
-            }
-           ?>
-        </th>
-        <th scope="col">
-          <a class="btn btn-link" href="/publications/index/1?sort=<?= $ipd_sort_param ?>">IPD Number</a>
-          <?php
-            if ($_SESSION["currentSort"] == "ipd_asc") {
-              echo("<i class=\"fas fa-sort-up\"></i>");
-            } elseif ($_SESSION["currentSort"] == "ipd_desc") {
-              echo ("<i class=\"fas fa-sort-down\"></i>");
-            }
-           ?>
-        </th>
-        <th scope="col">
-          <a class="btn btn-link" href="/publications/index/1?sort=<?= $xref_sort_param ?>">Cross Reference Number</a>
-          <?php
-            if ($_SESSION["currentSort"] == "xref_asc") {
-              echo("<i class=\"fas fa-sort-up\"></i>");
-            } elseif ($_SESSION["currentSort"] == "xref_desc") {
-              echo ("<i class=\"fas fa-sort-down\"></i>");
-            }
-           ?>
-        </th>
+        <th scope="col"><div class="btn">Edit</div></th>
+        <?= MyFormGeneration::generateColumnHeader("publications", "Publication ID",
+          $id_sort_param, $_SESSION["currentSort"], "id_asc", "id_desc"); ?>
 
+        <?= MyFormGeneration::generateColumnHeader("publications", "Report Number",
+          $rn_sort_param, $_SESSION["currentSort"], "rn_asc", "rn_desc"); ?>
 
-        <th scope="col">
-          <a class="btn btn-link" href="/publications/index/1?sort=<?= $status_sort_param ?>">Status</a>
-          <?php
-            if ($_SESSION["currentSort"] == "status_asc") {
-              echo("<i class=\"fas fa-sort-up\"></i>");
-            } elseif ($_SESSION["currentSort"] == "status_desc") {
-              echo ("<i class=\"fas fa-sort-down\"></i>");
-            }
-           ?>
-        </th>
-        <th scope="col">
-          <a class="btn btn-link" href="/publications/index/1?sort=<?= $pa_sort_param ?>">Publication Authors</a>
-          <?php
-            if ($_SESSION["currentSort"] == "pa_asc") {
-              echo("<i class=\"fas fa-sort-up\"></i>");
-            } elseif ($_SESSION["currentSort"] == "pa_desc") {
-              echo ("<i class=\"fas fa-sort-down\"></i>");
-            }
-           ?>
-        </th>
-        <th scope="col">
-          <a class="btn btn-link" href="/publications/index/1?sort=<?= $pr_sort_param ?>">Publication Reviewers</a>
-          <?php
-            if ($_SESSION["currentSort"] == "pr_asc") {
-              echo("<i class=\"fas fa-sort-up\"></i>");
-            } elseif ($_SESSION["currentSort"] == "pr_desc") {
-              echo ("<i class=\"fas fa-sort-down\"></i>");
-            }
-           ?>
-        </th>
-        <th scope="col"></th>
+        <?= MyFormGeneration::generateColumnHeader("publications", "Primary Title",
+          $pt_sort_param, $_SESSION["currentSort"], "pt_asc", "pt_desc"); ?>
+
+        <?= MyFormGeneration::generateColumnHeader("publications", "Report Type",
+          $abbr_sort_param, $_SESSION["currentSort"], "abbr_asc", "abbr_desc"); ?>
+
+        <?= MyFormGeneration::generateColumnHeader("publications", "Cost Centre",
+          $cc_sort_param, $_SESSION["currentSort"], "cc_asc", "cc_desc"); ?>
+
+        <?= MyFormGeneration::generateColumnHeader("publications", "Project Code",
+          $pc_sort_param, $_SESSION["currentSort"], "pc_asc", "pc_desc"); ?>
+
+        <?= MyFormGeneration::generateColumnHeader("publications", "IPD Number",
+          $ipd_sort_param, $_SESSION["currentSort"], "ipd_asc", "ipd_desc"); ?>
+
+        <?= MyFormGeneration::generateColumnHeader("publications", "Cross Reference Number",
+          $xref_sort_param, $_SESSION["currentSort"], "xref_asc", "xref_desc"); ?>
+
+        <?= MyFormGeneration::generateColumnHeader("publications", "Status",
+          $status_sort_param, $_SESSION["currentSort"], "status_asc", "status_desc"); ?>
+
+        <?= MyFormGeneration::generateColumnHeader("publications", "Authors",
+          $pa_sort_param, $_SESSION["currentSort"], "pa_asc", "pa_desc"); ?>
+
+        <?= MyFormGeneration::generateColumnHeader("publications", "Reviewers",
+          $pr_sort_param, $_SESSION["currentSort"], "pr_asc", "pr_desc"); ?>
       </thead>
 
       <tbody>
         <?php if (! empty($publications) && is_array($publications)) : ?>
           <?php foreach ($publications as $publication): ?>
             <tr>
+              <?= MyFormGeneration::generateIndexRowButtons("publications", $page, $publication->PublicationID, false); ?>
               <td><?= $publication->PublicationID; ?></td>
               <td><?= $publication->ReportNumber; ?></td>
               <td><?= $publication->PrimaryTitle; ?></td>
@@ -194,9 +119,6 @@
               <td><?= $publication->Status; ?></td>
               <td><?= $publication->PublicationAuthors; ?></td>
               <td><?= $publication->PublicationReviewers; ?></td>
-              <td><a class="btn btn-link" href="/publications/edit/<?= $page ?>/<?= $publication->PublicationID ?>">Edit</a>
-                |<a class="btn btn-link" href="/publications/delete/1/<?= $publication->PublicationID ?>">Delete</a>
-              </td>
             </tr>
           <?php endforeach; ?>
         <?php endif ?>
@@ -205,17 +127,6 @@
     </table>
   </div>
 
-  <div class="row">
-    <div class="col-1 btn">Page:</div>
-    <div class="col-9"><?= $links ?></div>
-    <div class="col-1 btn  text-right">Rows per page:</div>
-    <div class="col-1">
-      <select class="form-control mr-2" name="rowsPerPage" id="rowsPerPage" form="frmSearch" onchange="this.form.submit()">
-        <option value=25 <?= ($_SESSION["rowsPerPage"] == 25) ? ' selected' : '' ?> >25</option>
-        <option value=50 <?= ($_SESSION["rowsPerPage"] == 50) ? ' selected' : '' ?> >50</option>
-        <option value=100 <?= ($_SESSION["rowsPerPage"] == 100) ? ' selected' : '' ?> >100</option>
-      </select>
-    </div>
-  </div>
+  <?= MyFormGeneration::generateRowsPerPage($_SESSION["rowsPerPage"], $links); ?>
 </div>
 </div>

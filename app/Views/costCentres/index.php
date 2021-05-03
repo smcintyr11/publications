@@ -1,4 +1,19 @@
-<?php use App\Libraries\MyFormGeneration; ?>
+<?php
+  // Use MyFormGeneration
+  use App\Libraries\MyFormGeneration;
+
+  // Calculate sort parameters
+  $id_sort_param = "id_asc";
+  $cc_sort_param = "cc_asc";
+  $desc_sort_param = "desc_asc";
+  if ($_SESSION["currentSort"] == "id_asc") {
+    $id_sort_param = "id_desc";
+  } elseif ($_SESSION["currentSort"] == "cc_asc") {
+    $cc_sort_param = "cc_desc";
+  } elseif ($_SESSION["currentSort"] == "desc_asc") {
+    $desc_sort_param = "desc_desc";
+  }
+ ?>
 
 <div class="container my-3 py-3">
   <h1><?= esc($title); ?></h1>
@@ -9,25 +24,14 @@
 
   <div class="table-responsive-lg">
     <table class="table table-striped table-bordered">
+      <col style="width: 15%">
       <col style="width: 17%">
       <col style="width: 17%">
       <col style="width: 51%">
-      <col style="width: 15%">
 
-      <?php
-        $id_sort_param = "id_asc";
-        $cc_sort_param = "cc_asc";
-        $desc_sort_param = "desc_asc";
-        if ($_SESSION["currentSort"] == "id_asc") {
-          $id_sort_param = "id_desc";
-        } elseif ($_SESSION["currentSort"] == "cc_asc") {
-          $cc_sort_param = "cc_desc";
-        } elseif ($_SESSION["currentSort"] == "desc_asc") {
-          $desc_sort_param = "desc_desc";
-        }
-       ?>
 
       <thead class="thead-light">
+        <th scope="col"><div class="btn">Edit | Delete</div></th>
         <?= MyFormGeneration::generateColumnHeader("costCentres", "Cost Centre ID",
           $id_sort_param, $_SESSION["currentSort"], "id_asc", "id_desc"); ?>
 
@@ -36,19 +40,16 @@
 
         <?= MyFormGeneration::generateColumnHeader("costCentres", "Description",
           $desc_sort_param, $_SESSION["currentSort"], "desc_asc", "desc_desc"); ?>
-        <th scope="col"></th>
       </thead>
 
       <tbody>
         <?php if (! empty($costCentres) && is_array($costCentres)) : ?>
           <?php foreach ($costCentres as $costCentre): ?>
             <tr>
+              <?= MyFormGeneration::generateIndexRowButtons("costCentres", $page, $costCentre->CostCentreID); ?>
               <td><?= $costCentre->CostCentreID; ?></td>
               <td><?= $costCentre->CostCentre; ?></td>
               <td><?= $costCentre->Description; ?></td>
-              <td><a class="btn btn-link" href="/costCentres/edit/<?= $page ?>/<?= $costCentre->CostCentreID ?>">Edit</a>
-                |<a class="btn btn-link" href="/costCentres/delete/1/<?= $costCentre->CostCentreID ?>">Delete</a>
-              </td>
             </tr>
           <?php endforeach; ?>
         <?php endif ?>

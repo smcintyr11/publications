@@ -1,4 +1,16 @@
-<?php use App\Libraries\MyFormGeneration; ?>
+<?php
+  // Use MyFormGeneration
+  use App\Libraries\MyFormGeneration;
+
+  // Calculate sort parameters
+  $id_sort_param = "id_asc";
+  $fy_sort_param = "fy_asc";
+  if ($_SESSION["currentSort"] == "id_asc") {
+    $id_sort_param = "id_desc";
+  } elseif ($_SESSION["currentSort"] == "fy_asc") {
+    $fy_sort_param = "fy_desc";
+  }
+?>
 
 <div class="container my-3 py-3">
   <h1><?= esc($title); ?></h1>
@@ -10,39 +22,26 @@
   <div class="table-responsive-lg">
     <table class="table table-striped table-bordered">
       <col style="width: 15%">
-      <col style="width: 70%">
       <col style="width: 15%">
-
-      <?php
-        $id_sort_param = "id_asc";
-        $fy_sort_param = "fy_asc";
-        if ($_SESSION["currentSort"] == "id_asc") {
-          $id_sort_param = "id_desc";
-        } elseif ($_SESSION["currentSort"] == "fy_asc") {
-          $fy_sort_param = "fy_desc";
-        }
-       ?>
+      <col style="width: 70%">
 
        <thead class="thead-light">
          <thead class="thead-light">
+         <th scope="col"><div class="btn">Edit | Delete</div></th>
            <?= MyFormGeneration::generateColumnHeader("fiscalYears", "Fiscal Year ID",
              $id_sort_param, $_SESSION["currentSort"], "id_asc", "id_desc"); ?>
 
            <?= MyFormGeneration::generateColumnHeader("fiscalYears", "Fiscal Year",
              $fy_sort_param, $_SESSION["currentSort"], "fy_asc", "fy_desc"); ?>
-
-         <th scope="col"></th>
        </thead>
 
        <tbody>
          <?php if (! empty($fiscalYears) && is_array($fiscalYears)) : ?>
            <?php foreach ($fiscalYears as $fiscalYear): ?>
              <tr>
+               <?= MyFormGeneration::generateIndexRowButtons("fiscalYears", $page, $fiscalYear->FiscalYearID); ?>
                <td><?= $fiscalYear->FiscalYearID; ?></td>
                <td><?= $fiscalYear->FiscalYear; ?></td>
-               <td><a class="btn btn-link" href="/fiscalYears/edit/<?= $page ?>/<?= $fiscalYear->FiscalYearID ?>">Edit</a>
-                 |<a class="btn btn-link" href="/fiscalYears/delete/1/<?= $fiscalYear->FiscalYearID ?>">Delete</a>
-               </td>
              </tr>
            <?php endforeach; ?>
          <?php endif ?>

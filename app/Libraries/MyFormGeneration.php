@@ -379,44 +379,72 @@ class MyFormGeneration {
    *
    * Returns: string - The HTML for the form part
    */
-   public static function generateRowsPerPage(string $rowsPerPage, string $links) {
-     // Generate the html
-     $html = '<div class="row">
-      <div class="col-1 btn">Page:</div>
-      <div class="col-7">' . $links . '</div>
-      <div class="col-2 btn text-right">Rows per page:</div>
-      <div class="col-2">
-      <select class="form-control mr-2" name="rowsPerPage" id="rowsPerPage" form="frmSearch" onchange="this.form.submit()">
-      <option value=25 ' . ($rowsPerPage == 25 ? 'selected' : '') . '>25</option>
-      <option value=50 ' . ($rowsPerPage == 50 ? 'selected' : '') . '>50</option>
-      <option value=100 ' . ($rowsPerPage == 100 ? 'selected' : '') . '>100</option>
-      </select></div></div>
-     ';
+ public static function generateRowsPerPage(string $rowsPerPage, string $links) {
+   // Generate the html
+   $html = '<div class="row">
+    <div class="col-1 btn">Page:</div>
+    <div class="col-7">' . $links . '</div>
+    <div class="col-2 btn text-right">Rows per page:</div>
+    <div class="col-2">
+    <select class="form-control mr-2" name="rowsPerPage" id="rowsPerPage" form="frmSearch" onchange="this.form.submit()">
+    <option value=25 ' . ($rowsPerPage == 25 ? 'selected' : '') . '>25</option>
+    <option value=50 ' . ($rowsPerPage == 50 ? 'selected' : '') . '>50</option>
+    <option value=100 ' . ($rowsPerPage == 100 ? 'selected' : '') . '>100</option>
+    </select></div></div>
+   ';
 
-     // Return the html
-     return $html;
-   }
+   // Return the html
+   return $html;
+ }
 
-   /**
-    * Name: generateIndexSearch
-    * Purpose: Generates the search form for the index page
-    *
-    * Parameters:
-    *  string $controller - The name of the controller
-    *  string $csrf_field - The html for the csrf_field
-    *
-    * Returns: string - The HTML for the form part
-    */
-    public static function generateIndexSearch(string $controller, string $csrf_field) {
-      // Generate the html
-      $html = '<form class="form-inline" action="/' . $controller . '/index/1" method="post" id="frmSearch">
-        ' . $csrf_field . '
-        <input class="form-control mr-2" type="text" name="filter" placeholder="Search">
-        <button class="btn btn-success m-1" type="submit">Search</button>
-        <a class="btn btn-info m-1" href="/' . $controller . '/index/1?filter=">Reset</a>
-        </form>';
+ /**
+  * Name: generateIndexSearch
+  * Purpose: Generates the search form for the index page
+  *
+  * Parameters:
+  *  string $controller - The name of the controller
+  *  string $csrf_field - The html for the csrf_field
+  *
+  * Returns: string - The HTML for the form part
+  */
+  public static function generateIndexSearch(string $controller, string $csrf_field) {
+    // Generate the html
+    $html = '<form class="form-inline" action="/' . $controller . '/index/1" method="post" id="frmSearch">
+      ' . $csrf_field . '
+      <input class="form-control mr-2" type="text" name="filter" placeholder="Search">
+      <button class="btn btn-success m-1" type="submit">Search</button>
+      <a class="btn btn-info m-1" href="/' . $controller . '/index/1?filter=">Reset</a>
+      </form>';
 
-      // Return the html
-      return $html;
-    }
+    // Return the html
+    return $html;
+  }
+
+  /**
+     * Name: generateIndexRowButtons
+     * Purpose: Generates the HTML for the Edit and Delete buttons for a row on
+     *  the index page
+     *
+     * Parameters:
+     *  string $controller   - The name of the index controller
+     *  string $page         - The current page number
+     *  string $id           - The id (e.g. PublicationID) of the current row of
+     *                         the table
+     *  bool $$renderDelete  - Should the delete button be rendered
+     *
+     * Returns: string - The HTML for these form elements
+     */
+ public static function generateIndexRowButtons(string $controller, string $page, string $id, bool $renderDelete=true) {
+   // Generate the HTML
+  $html = '<td>
+    <a href="/' . $controller . '/edit/' . $page . '/' . $id . '" class="btn btn-info m-1 fas fa-edit"></a>';
+  if ($renderDelete) {
+    $html = $html . ' <a href="/' . $controller . '/delete/1/' . $id . '" class="btn btn-danger m-1 fas fa-trash-alt"></a>';
+  }
+  $html = $html . '</td>';
+
+   // Return the resulting HTML
+   return $html;
+ }
+
 }
