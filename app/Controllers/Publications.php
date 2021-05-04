@@ -277,10 +277,13 @@ class Publications extends Controller {
           } else { // Tell the user no default status exists
             $data = [
               'title' => 'Error',
+              'message' => '<p>There is no default status defined in the system.  Please visit the
+              <a href="/statuses/index">Statuses</a> lookup table and either modify an existing
+              status to be the default, or create a new status that is assigned the default status flag.</p>',
             ];
             echo view('templates/header.php', $data);
             echo view('templates/menu.php', $data);
-            echo view('errors/noDefaultStatus.php', $data);
+            echo view('errors/customError.php', $data);
             echo view('templates/footer.php', $data);
 
           }
