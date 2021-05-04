@@ -16,6 +16,9 @@
     <?= MyFormGeneration::generateNumberTextBox("expectedDuration",
       set_value('expectedDuration'), "-- Enter the expected duration in days --", "Expected Duration"); ?>
 
+    <?= MyFormGeneration::generateCheckBox("defaultStatus",
+        set_value('defaultStatus'), "Make Default"); ?>      
+
     <button class="btn btn-success m-1" type="submit" name="submit">Create Status</button>
     <a class="btn btn-info m-1" href="/statuses/index/<?= $page ?>">Back to Statuses</a>
   </form>

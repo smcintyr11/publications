@@ -256,21 +256,34 @@ class Publications extends Controller {
         $validation->setRule('primaryTitle', 'Primary Title', 'required');
         $validation->setRule('reportTypeID', 'Report Type', 'required');
         if ($validation->withRequest($this->request)->run()) {
-          // Save
-          $model->save([
-            'PrimaryTitle' => $this->request->getPost('primaryTitle'),
-            'ReportTypeID' => $this->request->getPost('reportTypeID'),
-            'StatusID' => 9,
-          ]);
+          // Get the default statusID
+          $statusID = $this->getDefaultStatus();
+          if (empty($statusID) == false) {
+            // Save
+            $model->save([
+              'PrimaryTitle' => $this->request->getPost('primaryTitle'),
+              'ReportTypeID' => $this->request->getPost('reportTypeID'),
+              'StatusID' => $statusID,
+            ]);
 
-          // Get the publication id
-          $publicationID = $this->getLastPublicationID($this->request->getPost('primaryTitle'), $this->request->getPost('reportTypeID'));
+            // Get the publication id
+            $publicationID = $this->getLastPublicationID($this->request->getPost('primaryTitle'), $this->request->getPost('reportTypeID'));
 
-          // Add the new publications statuses entry
-          $this->newStatus($publicationID, 9, null, null);
+            // Add the new publications statuses entry
+            $this->newStatus($publicationID, $statusID, null, null);
 
-          // Go back to index
-          return redirect()->to("index/".$page);
+            // Go back to index
+            return redirect()->to("index/".$page);
+          } else { // Tell the user no default status exists
+            $data = [
+              'title' => 'Error',
+            ];
+            echo view('templates/header.php', $data);
+            echo view('templates/menu.php', $data);
+            echo view('errors/noDefaultStatus.php', $data);
+            echo view('templates/footer.php', $data);
+
+          }
         } else {  // Invalid - Redisplay the form
           // Generate the create view
           $data = [
@@ -832,5 +845,32 @@ class Publications extends Controller {
     // Return the result
     $result = $builder->get()->getRow();
     return $result->PublicationID;
+  }
+
+  /**
+   * Name: getDefaultStatus
+   * Purpose: Gets the first StatusID (should be only 1) of the Status row where
+   *  DefaultStatus = 1 (True)
+   *
+   * Parameters: None
+   *
+   * Returns:
+   *  The StatusID
+   */
+  private function getDefaultStatus() {
+    // Load the query builder
+    $db = \Config\Database::connect();
+
+    // Generate the query
+    $builder = $db->table('Statuses');
+    $builder->selectMax('StatusID');
+    $builder->where('DefaultStatus', 1);
+
+    // Return the result
+    $result = $builder->get()->getRow();
+    if (empty($result)) {
+      return null;
+    }
+    return $result->StatusID;
   }
 }

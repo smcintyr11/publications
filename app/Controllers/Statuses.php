@@ -218,6 +218,18 @@ class Statuses extends Controller {
           'ExpectedDuration' => $expectedDuration,
         ]);
 
+        // If the make default was checked update the default status
+        if ($this->request->getPost('defaultStatus') == true) {
+          // Get the newly added status
+          $statusID = $this->getLastStatusID($this->request->getPost('status'), $expectedDuration);
+
+          // Change all the statuses to false
+          $this->clearDefaultStatus();
+
+          // Set the newly created status to default
+          $this->setDefaultStatus($statusID);
+        }
+
         // Go back to index
         return redirect()->to("index/".$page);
       } else {  // Invalid - Redisplay the form
@@ -273,6 +285,18 @@ class Statuses extends Controller {
     if ($this->request->getMethod() === 'post') {
       // Delete the client
       $model->deleteStatus($this->request->getPost('statusID'));
+
+
+      // Was this the default status?
+      if ($this->request->getPost('defaultStatus') == "Yes") {
+        // Find the latest status id
+        $lastStatusID = $this->getMaxStatusID();
+
+        // Set the last status to the default
+        if (empty($lastStatusID) == false) {
+          $this->setDefaultStatus($lastStatusID);
+        }
+      }
 
       // Get the view data from the form
       $page = $this->request->getPost('page');
@@ -345,6 +369,15 @@ class Statuses extends Controller {
           'Status' => $this->request->getPost('status'),
           'ExpectedDuration' => $expectedDuration,
         ]);
+
+        // If the make default was checked update the default status
+        if ($this->request->getPost('defaultStatus') == true) {
+          // Change all the statuses to false
+          $this->clearDefaultStatus();
+
+          // Set the status to default
+          $this->setDefaultStatus($this->request->getPost('statusID'));
+        }
 
         // Go back to index
         return redirect()->to("index/".$page);
@@ -490,4 +523,100 @@ class Statuses extends Controller {
 
      return false;
    }
+
+   /**
+    * Name: getLastStatusID
+    * Purpose: Gets the latest StatusID with the matching status, and
+    *  expectedDuration
+    *
+    * Parameters:
+    *   string $status - The primary title we are searching for
+    *   string $expectedDuration - The report type id we are searching for
+    *
+    * Returns:
+    *  The status id
+    */
+   private function getLastStatusID(string $status, ?string $expectedDuration) {
+     // Load the query builder
+     $db = \Config\Database::connect();
+
+     // Generate the query
+     $builder = $db->table('Statuses');
+     $builder->selectMax('StatusID');
+     $builder->where('Status', $status);
+     $builder->where('ExpectedDuration', $expectedDuration);
+
+     // Return the result
+     $result = $builder->get()->getRow();
+     return $result->StatusID;
+   }
+
+   /**
+    * Name: getLastStatusID
+    * Purpose: Gets the latest StatusID
+    *
+    * Parameters: None
+    *
+    * Returns:
+    *  The last status id
+    */
+   private function getMaxStatusID() {
+     // Load the query builder
+     $db = \Config\Database::connect();
+
+     // Generate the query
+     $builder = $db->table('Statuses');
+     $builder->selectMax('StatusID');
+
+     // Return the result
+     $result = $builder->get()->getRow();
+     if (empty($result)) {
+       return null;
+     }
+     return $result->StatusID;
+   }
+
+   /**
+    * Name: clearDefaultStatus
+    * Purpose: Sets the DefaultStatus column to 0 for any row in the database
+    *   where it is not 0
+    *
+    * Parameters: None
+    *
+    * Returns: None
+    */
+   private function clearDefaultStatus() {
+     // Load the query builder
+     $db = \Config\Database::connect();
+
+     // Generate the query
+     $builder = $db->table('Statuses');
+     $builder->set('DefaultStatus', 0);
+     $builder->where('DefaultStatus', 1);
+
+     // Run the update
+     $builder->update();
+   }
+
+  /**
+   * Name: setDefaultStatus
+   * Purpose: Sets the DefaultStatus column to 1 for the specified StatusID row
+   *
+   * Parameters:
+   *  string $statusID - The StatusID of the Status to make the default
+   *
+   * Returns: None
+   */
+  private function setDefaultStatus(string $statusID) {
+    // Load the query builder
+    $db = \Config\Database::connect();
+
+    // Generate the query
+    $builder = $db->table('Statuses');
+    $builder->set('DefaultStatus', 1);
+    $builder->where('StatusID', $statusID);
+
+    // Run the update
+    $builder->update();
+  }
 }

@@ -6,7 +6,7 @@ class StatusModel extends Model {
   // Member variables
   protected $table = "Statuses";
   protected $primaryKey = "StatusID";
-  protected $allowedFields = ["Status", "ExpectedDuration"];
+  protected $allowedFields = ["Status", "ExpectedDuration", "DefaultStatus"];
 
   /**
    * Name: getStatus

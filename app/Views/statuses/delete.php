@@ -19,6 +19,9 @@
     <?= MyFormGeneration::generateIDTextBox("expectedDuration",
       $status['ExpectedDuration'], "Expected Duration"); ?>
 
+    <?= MyFormGeneration::generateIDTextBox("defaultStatus",
+        ($status['DefaultStatus'] == 0 ? "No" : "Yes"), "Default Status"); ?>
+
     <?= MyFormGeneration::generateDeleteOptions($dependentRecords, 'statuses', 'status', $page); ?>
 
   </form>
