@@ -9,7 +9,7 @@ class PublicationModel extends Model {
   protected $allowedFields = ["PrimaryTitle", "SecondaryTitle", "PublicationDate", "FiscalYearID", "Volume", "StartPage",
     "EndPage", "ClientID", "OrganizationID", "AbstractEnglish", "AbstractFrench", "PLSEnglish", "PLSFrench", "PRSEnglish",
     "PRSFrench", "ISBN", "AgreementNumber", "IPDNumber", "CrossReferenceNumber", "ProjectCode", "ReportNumber", "ManuscriptNumber",
-    "CostCentreID", "JournalID", "ReportTypeID", "StatusID", "StatusPersonID", "StatusEstimatedCompletionDate", "DOI", "JournalSubmissionDate",
+    "CostCentreID", "JournalID", "ReportTypeID", "StatusID", "StatusPersonID", "StatusDueDate", "DOI", "JournalSubmissionDate",
     "JournalAcceptanceDate", "ConferenceSubmissionDate", "ConferenceAcceptanceDate", "EmbargoPeriod", "EmbargoEndDate",
     "WebPublicationDate", "SentToClient", "SentToClientDate", "ReportFormatted", "RecordNumber"];
 
@@ -29,7 +29,7 @@ class PublicationModel extends Model {
       p.Volume, p.StartPage, p.EndPage, p.ClientID, c.Client, p.OrganizationID, o.Organization, p.AbstractEnglish, p.AbstractFrench,
       p.PLSEnglish, p.PLSFrench, p.PRSEnglish, p.PRSFrench, p.ISBN, p.AgreementNumber, p.IPDNumber, p.CrossReferenceNumber,
       p.ProjectCode, p.ReportNumber, p.ManuscriptNumber, p.CostCentreID, cc.CostCentre, p.JournalID, j.Journal, p.ReportTypeID,
-      CONCAT (rt.ReportType, " (", rt.Abbreviation, ")") AS ReportType, p.StatusID, s.Status, p.StatusPersonID, pe.DisplayName AS StatusPerson, p.StatusEstimatedCompletionDate, p.DOI,
+      CONCAT (rt.ReportType, " (", rt.Abbreviation, ")") AS ReportType, p.StatusID, s.Status, p.StatusPersonID, pe.DisplayName AS StatusPerson, p.StatusDueDate, p.DOI,
       p.JournalSubmissionDate, p.JournalAcceptanceDate, p.ConferenceSubmissionDate, p.ConferenceAcceptanceDate, p.EmbargoPeriod,
       p.EmbargoEndDate, p.WebPublicationDate, p.SentToClient, p.SentToClientDate, p.ReportFormatted, p.RecordNumber
       FROM (((((((Publications AS p LEFT JOIN FiscalYears AS fy ON p.FiscalYearID = fy.FiscalYearID)
@@ -82,8 +82,8 @@ class PublicationModel extends Model {
         "StatusPersonID" => $row->StatusPersonID,
         "OriginalStatusPersonID" => $row->StatusPersonID,
         "StatusPerson" => $row->StatusPerson,
-        "StatusEstimatedCompletionDate" => $row->StatusEstimatedCompletionDate,
-        "OriginalStatusEstimatedCompletionDate" => $row->StatusEstimatedCompletionDate,
+        "StatusDueDate" => $row->StatusDueDate,
+        "OriginalStatusDueDate" => $row->StatusDueDate,
         "DOI" => $row->DOI,
         "JournalSubmissionDate" => $row->JournalSubmissionDate,
         "JournalAcceptanceDate" => $row->JournalAcceptanceDate,

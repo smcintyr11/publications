@@ -370,8 +370,8 @@ class Publications extends Controller {
        $validation->setRule('reportNumber', 'Report Number', 'max_length[64]');
        $validation->setRule('manuscriptNumber', 'Manuscript Number', 'max_length[64]');
        $validation->setRule('isbn', 'ISBN', 'max_length[64]');
-       if (!empty($this->request->getPost('statusEstimatedCompletionDate'))) {
-         $validation->setRule('statusEstimatedCompletionDate ', 'Status Estimated Completion Date ', 'valid_date');
+       if (!empty($this->request->getPost('statusDueDate'))) {
+         $validation->setRule('statusDueDate ', 'Status Due Date ', 'valid_date');
        }
        $validation->setRule('doi', 'DOI', 'max_length[64]');
        if (!empty($this->request->getPost('journalSubmissionDate'))) {
@@ -430,7 +430,7 @@ class Publications extends Controller {
            'ReportTypeID' => $this->request->getPost('reportTypeID'), // **
            'StatusID' => $this->request->getPost('statusID'), // **
            'StatusPersonID' => $this->request->getPost('statusPersonID') == "" ? null : $this->request->getPost('statusPersonID'),
-           'StatusEstimatedCompletionDate' => $this->request->getPost('statusEstimatedCompletionDate') == "" ? null : $this->request->getPost('statusEstimatedCompletionDate'),
+           'StatusDueDate' => $this->request->getPost('statusDueDate') == "" ? null : $this->request->getPost('statusDueDate'),
            'DOI' => $this->request->getPost('doi') == "" ? null : $this->request->getPost('doi'),
            'JournalSubmissionDate' => $this->request->getPost('journalSubmissionDate') == "" ? null : $this->request->getPost('journalSubmissionDate'),
            'JournalAcceptanceDate' => $this->request->getPost('journalAcceptanceDate') == "" ? null : $this->request->getPost('journalAcceptanceDate'),
@@ -448,9 +448,9 @@ class Publications extends Controller {
          // Did the status change?  If so update the publications statuses table
          if ($this->request->getPost('originalStatusID') != $this->request->getPost('statusID')) {
           $this->updateCompleteStatus($this->request->getPost('publicationID'), $this->request->getPost('originalStatusID'));
-          $this->newStatus($this->request->getPost('publicationID'), $this->request->getPost('statusID'), $this->request->getPost('statusPersonID'), $this->request->getPost('statusEstimatedCompletionDate'));
-        } elseif (($this->request->getPost('originalStatusPersonID') != $this->request->getPost('statusPersonID')) || ($this->request->getPost('originalStatusEstimatedCompletionDate') != $this->request->getPost('statusEstimatedCompletionDate'))) {
-          $this->newStatus($this->request->getPost('publicationID'), $this->request->getPost('statusID'), $this->request->getPost('statusPersonID'), $this->request->getPost('statusEstimatedCompletionDate'));
+          $this->newStatus($this->request->getPost('publicationID'), $this->request->getPost('statusID'), $this->request->getPost('statusPersonID'), $this->request->getPost('statusDueDate'));
+        } elseif (($this->request->getPost('originalStatusPersonID') != $this->request->getPost('statusPersonID')) || ($this->request->getPost('originalStatusDueDate') != $this->request->getPost('statusDueDate'))) {
+          $this->newStatus($this->request->getPost('publicationID'), $this->request->getPost('statusID'), $this->request->getPost('statusPersonID'), $this->request->getPost('statusDueDate'));
         }
 
          // Go back to index
@@ -608,7 +608,7 @@ class Publications extends Controller {
 
      // Generate the query
      $builder = $db->table('PublicationsStatuses');
-     $builder->select("PublicationsStatusesID, DateModified, Status, DisplayName, EstimatedCompletionDate, CompletionDate");
+     $builder->select("PublicationsStatusesID, DateModified, Status, DisplayName, DueDate, CompletionDate");
      $builder->join('Statuses', 'PublicationsStatuses.StatusID = Statuses.StatusID', 'left');
      $builder->join('vPeopleDropDown', 'PublicationsStatuses.StatusPersonID = vPeopleDropDown.PersonID', 'left');
      $builder->where('PublicationID', $publicationID);
@@ -799,11 +799,11 @@ class Publications extends Controller {
    *   string $publicationID - The PublicationID we are inserting
    *   string $statusID - The StatusID we are inserting
    *   string $statusPersonID - The StatusPersonID we are inserting
-   *   string $estimatedCompletionDate - The StatusEstimatedCompletionDate we are inserting
+   *   string $dueDate - The StatusDueDate we are inserting
    *
    * Returns: None
    */
-  private function newStatus(string $publicationID, string $statusID, ?string $statusPersonID, ?string $estimatedCompletionDate) {
+  private function newStatus(string $publicationID, string $statusID, ?string $statusPersonID, ?string $dueDate) {
     // Load the query builder
     $db = \Config\Database::connect();
 
@@ -816,8 +816,8 @@ class Publications extends Controller {
     if (empty($statusPersonID) == false) {
       $builder->set('StatusPersonID', $statusPersonID);
     }
-    if (empty($estimatedCompletionDate) == false) {
-      $builder->set('EstimatedCompletionDate', $estimatedCompletionDate);
+    if (empty($dueDate) == false) {
+      $builder->set('DueDate', $dueDate);
     }
     $builder->insert();
   }

@@ -203,8 +203,8 @@
         set_value('originalStatusID', $publication['OriginalStatusID'])); ?>
       <?= MyFormGeneration::generateHiddenInput('originalStatusPersonID',
         set_value('originalStatusID', $publication['OriginalStatusPersonID'])); ?>
-      <?= MyFormGeneration::generateHiddenInput('originalStatusEstimatedCompletionDate',
-        set_value('originalStatusID', $publication['OriginalStatusEstimatedCompletionDate'])); ?>
+      <?= MyFormGeneration::generateHiddenInput('originalStatusDueDate',
+        set_value('originalStatusID', $publication['OriginalStatusDueDate'])); ?>
 
       <?= MyFormGeneration::generateSelect("statusID",
         set_value('statusID', $publication['StatusID']),
@@ -216,9 +216,9 @@
         MyFormGeneration::generateNewButtonURL("people"), "statusPersonID",
         set_value('statusPersonID', $publication['StatusPersonID'])); ?>
 
-      <?= MyFormGeneration::generateDateTextBox("statusEstimatedCompletionDate",
-          set_value('statusEstimatedCompletionDate', $publication['StatusEstimatedCompletionDate']),
-          "Estimated Completion"); ?>
+      <?= MyFormGeneration::generateDateTextBox("statusDueDate",
+          set_value('statusDueDate', $publication['StatusDueDate']),
+          "Due Date"); ?>
 
       <div class="form-group row">
       <h3>Status Log</h3>
@@ -232,7 +232,7 @@
                <th scope="col">Date Modified</th>
                <th scope="col">Status</th>
                <th scope="col">Assigned To</th>
-               <th scope="col">Estimated Completion Date</th>
+               <th scope="col">Due Date</th>
                <th scope="col">Completion Date</th>
              </thead>
              <tbody>
@@ -243,7 +243,7 @@
                      <td><?= $sl->DateModified; ?></td>
                      <td><?= $sl->Status; ?></td>
                      <td><?= $sl->DisplayName; ?></td>
-                     <td><?= $sl->EstimatedCompletionDate; ?></td>
+                     <td><?= $sl->DueDate; ?></td>
                      <td><?= $sl->CompletionDate; ?></td>
                    </tr>
                  <?php endforeach; ?>

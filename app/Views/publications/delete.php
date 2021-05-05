@@ -144,7 +144,7 @@
                 <th scope="col">Date Modified</th>
                 <th scope="col">Status</th>
                 <th scope="col">Assigned To</th>
-                <th scope="col">Estimated Completion Date</th>
+                <th scope="col">Due Date</th>
                 <th scope="col">Completion Date</th>
               </thead>
               <tbody>
@@ -155,7 +155,7 @@
                       <td><?= $sl->DateModified; ?></td>
                       <td><?= $sl->Status; ?></td>
                       <td><?= $sl->DisplayName; ?></td>
-                      <td><?= $sl->EstimatedCompletionDate; ?></td>
+                      <td><?= $sl->DueDate; ?></td>
                       <td><?= $sl->CompletionDate; ?></td>
                     </tr>
                   <?php endforeach; ?>

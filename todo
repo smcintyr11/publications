@@ -1,3 +1,14 @@
 0.02
 ----
 - Change Add buttons that redirect to URL to code to create a new item
+- Rename system to Publications Tracker
+- Publications Index
+  - Flag Rush Publications (on Publication as well)
+  - Flag Upcoming Publications (on Publication as well)
+  - Allow Multiple Filters
+  - Prevent a Due Date of < 5 Days from now
+  - Multiple Views
+    - View 1:
+      - Report #, Report Type, Status, Due Date, Assigned To
+    - View 2:
+      - Report #, Report Type, Title, Authors, Status, Due Date, Cost Centre, Project Code

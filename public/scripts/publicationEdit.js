@@ -704,20 +704,20 @@ $(document).ready(function(){
           // Get the expected duration
           var expectedDuration = dataResult.expectedDuration;
 
-          // If there is an expected duration populate the estimated completion date
+          // If there is an expected duration populate the due date
           if (expectedDuration != null) {
             var formatter = new Intl.DateTimeFormat('en-ca', { dateStyle: 'short' });
             var nowDate = new Date();
             nowDate.setDate(nowDate.getDate() + parseInt(expectedDuration, 10));
-            $("#statusEstimatedCompletionDate").val(formatter.format(nowDate));
+            $("#statusDueDate").val(formatter.format(nowDate));
             $("#ipdNumber").val(formatter.format(nowDate));
           } else {
-              $("#statusEstimatedCompletionDate").val("");
+              $("#statusDueDate").val("");
           }
         }
         else if(dataResult.statusCode==201) {
           // Unknown expected duration
-          $("#statusEstimatedCompletionDate").val("");
+          $("#statusDueDate").val("");
         }
       },
     });
