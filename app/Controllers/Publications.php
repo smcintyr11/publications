@@ -443,6 +443,7 @@ class Publications extends Controller {
            'SentToClientDate' => $this->request->getPost('sentToClientDate') == "" ? null : $this->request->getPost('sentToClientDate'),
            'ReportFormatted' => $this->request->getPost('reportFormatted') == "on" ? 1 : 0,
            'RecordNumber' => $this->request->getPost('recordNumber') == "" ? null : $this->request->getPost('recordNumber'),
+           'RushPublication' => $this->request->getPost('rushPublication') == "on" ? 1 : 0,
          ]);
 
          // Did the status change?  If so update the publications statuses table

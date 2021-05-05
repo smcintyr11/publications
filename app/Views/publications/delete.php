@@ -43,7 +43,13 @@
  <div class="container my-3 py-3">
    <h1><?= esc($title); ?></h1>
 
-
+   <?php
+     if ($publication['RushPublication'] == 1) {
+       echo ('<div class="alert alert-primary" role="alert">
+         This is a <strong>RUSH</strong> publication.
+         </div>');
+     }
+    ?>
 
    <!-- Tab links -->
    <ul class="nav nav-tabs">
@@ -104,6 +110,9 @@
 
        <?= MyFormGeneration::generateIDTextBox("reportType",
          $publication['ReportType'], "Report Type"); ?>
+
+       <?= MyFormGeneration::generateIDTextBox("rushPublication",
+         ($publication['RushPublication'] == 0 ? "No" : "Yes"), "Rush Publication"); ?>
 
        <?= MyFormGeneration::generateIDTextBox("reportNumber",
          $publication['ReportNumber'], "Report Number"); ?>

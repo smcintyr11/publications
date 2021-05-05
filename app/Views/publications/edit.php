@@ -92,6 +92,14 @@
   <div id="alertFail"></div>
   <div id="alertSuccess"></div>
 
+  <?php
+    if ($publication['RushPublication'] == 1) {
+      echo ('<div class="alert alert-primary" role="alert">
+        This is a <strong>RUSH</strong> publication.
+        </div>');
+    }
+   ?>
+
   <!-- Tab links -->
   <ul class="nav nav-tabs">
     <li class="nav-item">
@@ -158,6 +166,9 @@
         "-- Enter a report type --", "Report Type",
         MyFormGeneration::generateNewButtonURL("reportTypes"), "reportTypeID",
         set_value('reportTypeID', $publication['ReportTypeID'])); ?>
+
+      <?= MyFormGeneration::generateCheckBox("rushPublication",
+          set_value('rushPublication', $publication['RushPublication']), "Rush Publication"); ?>
 
       <?= MyFormGeneration::generateTextBox("reportNumber",
         set_value('reportNumber', $publication['ReportNumber']),
