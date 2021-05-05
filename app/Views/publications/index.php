@@ -54,10 +54,10 @@
 
   <div class="table-responsive">
     <table class="table table-striped table-bordered">
-      <col style="width: 4%">
       <col style="width: 7%">
       <col style="width: 7%">
-      <col style="width: 20%">
+      <col style="width: 7%">
+      <col style="width: 17%">
       <col style="width: 7%">
       <col style="width: 7%">
       <col style="width: 7%">
@@ -68,7 +68,7 @@
       <col style="width: 10%">
 
       <thead class="thead-light">
-        <th scope="col"><div class="btn">Edit</div></th>
+        <th scope="col"><div class="btn">Edit / Delete</div></th>
         <?= MyFormGeneration::generateColumnHeader("publications", "Publication ID",
           $id_sort_param, $_SESSION["currentSort"], "id_asc", "id_desc"); ?>
 
@@ -107,7 +107,7 @@
         <?php if (! empty($publications) && is_array($publications)) : ?>
           <?php foreach ($publications as $publication): ?>
             <tr>
-              <?= MyFormGeneration::generateIndexRowButtons("publications", $page, $publication->PublicationID, false); ?>
+              <?= MyFormGeneration::generateIndexRowButtons("publications", $page, $publication->PublicationID); ?>
               <td><?= $publication->PublicationID; ?></td>
               <td><?= $publication->ReportNumber; ?></td>
               <td><?= $publication->PrimaryTitle; ?></td>

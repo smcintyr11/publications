@@ -876,4 +876,57 @@ class Publications extends Controller {
     }
     return $result->StatusID;
   }
+
+  /**
+   * Name: delete
+   * Purpose: Generates the delete page
+   *
+   * Parameters: None
+   *
+   * Returns: None
+   */
+  public function delete() {
+    // Get the model
+    $model = new PublicationModel();
+
+    // Set the session last page
+    $session = session();
+    $session->set('lastPage', 'Publications::delete');
+
+    // Is this a post (deleting)
+    if ($this->request->getMethod() === 'post') {
+      // Delete the publication
+      $model->deletePublication($this->request->getPost('publicationID'));
+
+      // Set the page
+      $page = 1;
+
+      // Go back to index
+      return redirect()->to("index");
+    } else {  // // Not post - show delete form
+      // Get the URI service
+      $uri = service('uri');
+
+      // Parse the URI
+      $page = $uri->setSilent()->getSegment(3, 1);
+      $publicationID = $uri->getSegment(4);
+
+      // Generate the delete view
+      $data = [
+        'title' => 'Delete Publication',
+        'publication' => $model->getPublication($publicationID),
+        'page' => $page,
+        'statusLog' => $this->getStatusLog($publicationID),
+        'authorsList' => $this->getAuthors($publicationID),
+        'reviewersList' => $this->getReviewers($publicationID),
+        'keywordsList' => $this->getKeywords($publicationID),
+        'linksList' => $this->getLinks($publicationID),
+        'commentsList'=> $this->getComments($publicationID),
+      ];
+      echo view('templates/header.php', $data);
+      echo view('templates/menu.php', $data);
+      echo view('publications/delete.php', $data);
+      echo view('templates/footer.php', $data);
+    }
+  }
 }

@@ -142,12 +142,16 @@ class MyFormGeneration {
     *
     * Returns: string - The HTML for these form elements
     */
-  public static function generateMultilineTextBox(string $textboxID, ?string $value, string $placeholder, string $textboxLabel, int $rows = 5) {
+  public static function generateMultilineTextBox(string $textboxID, ?string $value, string $placeholder, string $textboxLabel, int $rows = 5, bool $readonly = false) {
     // Generate the HTML
     $html = '<div class="form-group row">
      <label for="' . $textboxID . '" class="col-2 col-form-label font-weight-bold">' . $textboxLabel . ':</label>
      <div class="col-10">
-     <textarea class="form-control" rows="' . $rows . '" name="' . $textboxID . '" placeholder="' . $placeholder . '" id="' . $textboxID . '" >' . $value . '</textarea>
+     <textarea class="form-control" rows="' . $rows . '" name="' . $textboxID . '" placeholder="' . $placeholder . '" id="' . $textboxID . '" ';
+     if ($readonly == true) {
+       $html = $html . "readonly ";
+     }
+     $html = $html . ' >' . $value . '</textarea>
      <br /></div></div>';
 
     // Return the resultinng HTML
