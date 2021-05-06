@@ -272,8 +272,26 @@ class Publications extends Controller {
             // Add the new publications statuses entry
             $this->newStatus($publicationID, $statusID, null, null);
 
-            // Go back to index
-            return redirect()->to("index/".$page);
+            // Open the newly added publication
+            $data = [
+              'title' => 'Edit Publication',
+              'publication' => $model->getPublication($publicationID),
+              'page' => $page,
+              'statuses' => $this->getStatuses(),
+              'reportTypes' => $this->getReportTypes(),
+              'costCentres' => $this->getCostCentres(),
+              'statusLog' => $this->getStatusLog($publicationID),
+              'authorsList' => $this->getAuthors($publicationID),
+              'reviewersList' => $this->getReviewers($publicationID),
+              'keywordsList' => $this->getKeywords($publicationID),
+              'linkTypes' => $this->getLinkTypes(),
+              'linksList' => $this->getLinks($publicationID),
+              'commentsList'=> $this->getComments($publicationID),
+            ];
+            echo view('templates/header.php', $data);
+            echo view('templates/menu.php', $data);
+            echo view('publications/edit.php', $data);
+            echo view('templates/footer.php', $data);
           } else { // Tell the user no default status exists
             $data = [
               'title' => 'Error',
