@@ -1,9 +1,10 @@
 0.02
 ----
 - Change Add buttons that redirect to URL to code to create a new item
-- Rename system to Publications Tracker
+- Allow URL links to be clickable
+- Automatically open the Edit form of the new publication after creation
 - Publications Index
-  - Flag Rush Publications (on Publication as well)
+  - Flag Rush Publications
   - Flag Upcoming Publications (on Publication as well)
   - Allow Multiple Filters
   - Prevent a Due Date of < 5 Days from now

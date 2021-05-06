@@ -1,5 +1,5 @@
 <div class="container my-3 py-3">
-  <h1>Welcome to the CanmetENERGY Devon Publications System</h1>
+  <h1>Welcome to the CanmetENERGY Devon Publications Tracker</h1>
 
   <p>This system contains a database of all publications created by CanmetENERGY
     Devon.  It contains information such as authors, reviewers, publishers,
