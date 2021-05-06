@@ -383,7 +383,16 @@
                   <?php foreach ($linksList as $ll): ?>
                     <tr>
                       <td><?= $ll->PublicationsLinksID; ?></td>
-                      <td><?= $ll->Link; ?></td>
+                      <td>
+                        <?php
+                         $pattern = '/http|https|ftp/i';
+                         if (preg_match($pattern, $ll->Link)) {
+                           echo ('<a href="' . $ll->Link . '" target="_blank">' . $ll->Link . '</a>');
+                         } else {
+                           echo ($ll->Link);
+                         }
+                        ?>
+                      </td>
                       <td><?= $ll->LinkType; ?></td>
                     </tr>
                   <?php endforeach; ?>

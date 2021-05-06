@@ -527,7 +527,17 @@
                  <?php foreach ($linksList as $ll): ?>
                    <tr id="ll_<?= $ll->PublicationsLinksID ?>">
                      <td><?= $ll->PublicationsLinksID; ?></td>
-                     <td id="ll_l_<?= $ll->PublicationsLinksID ?>"><?= $ll->Link; ?></td>
+                     <td id="ll_l_<?= $ll->PublicationsLinksID ?>">
+                       <?php
+                        $pattern = '/http|https|ftp/i';
+                        if (preg_match($pattern, $ll->Link)) {
+                          echo ('<a href="' . $ll->Link . '" target="_blank">' . $ll->Link . '</a>');
+                        } else {
+                          echo ($ll->Link);
+                        }
+                       ?>
+                     </td>
+
                      <td id="ll_lt_<?= $ll->PublicationsLinksID ?>"><?= $ll->LinkType; ?></td>
                      <td>
                        <button class="btn btn-info m-1 fas fa-edit" id="btnEL_<?= $ll->PublicationsLinksID ?>" type="button" title="Edit Link" data-toggle="modal" data-target="#linkModal" data-id="<?= $ll->PublicationsLinksID ?>" />

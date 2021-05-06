@@ -627,7 +627,14 @@ $(document).ready(function(){
             var PublicationsLinksID = dataResult.publicationsLinksID;
 
             // Success
-            var html = '<tr id="ll_'+PublicationsLinksID+'"><td>'+PublicationsLinksID+'</td><td id="ll_l_'+PublicationsLinksID+'">'+link+'</td><td id="ll_lt_'+PublicationsLinksID+'">'+linkType+'</td><td><button class="btn btn-info m-1 fas fa-edit" id="btnEL_'+PublicationsLinksID+'" type="button" title="Edit Link" data-toggle="modal" data-target="#linkModal" data-id="'+PublicationsLinksID+'" /><button class="btn btn-danger m-1 fas fa-trash-alt" type="button" title="Delete Link" onclick="removeLink(\'ll_'+PublicationsLinksID+'\', '+PublicationsLinksID+'" /></td></tr>';
+            let re = /http|https|ftp/i;
+            html = '<tr id="ll_'+PublicationsLinksID+'"><td>'+PublicationsLinksID+'</td><td id="ll_l_'+PublicationsLinksID+'">';
+            if (re.test(link)) {
+              html = html + '<a href="'+link+'" target="_blank">'+link+'</a>';
+            } else {
+              html = html + link;
+            }
+            html = html + '</td><td id="ll_lt_'+PublicationsLinksID+'">'+linkType+'</td><td><button class="btn btn-info m-1 fas fa-edit" id="btnEL_'+PublicationsLinksID+'" type="button" title="Edit Link" data-toggle="modal" data-target="#linkModal" data-id="'+PublicationsLinksID+'" /><button class="btn btn-danger m-1 fas fa-trash-alt" type="button" title="Delete Link" onclick="removeLink(\'ll_'+PublicationsLinksID+'\', '+PublicationsLinksID+'" /></td></tr>';
             $("#tblLinks").append(html);
             displaySuccessMessage("Link Added");
           }

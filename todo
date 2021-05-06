@@ -1,7 +1,6 @@
 0.02
 ----
 - Change Add buttons that redirect to URL to code to create a new item
-- Allow URL links to be clickable
 - Automatically open the Edit form of the new publication after creation
 - Publications Index
   - Flag Rush Publications
