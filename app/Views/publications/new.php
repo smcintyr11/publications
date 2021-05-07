@@ -20,9 +20,9 @@
 
     <input type="hidden" name="page" value="<?= $page ?>">
 
-    <?= MyFormGeneration::generateTextBox("primaryTitle",
+    <?= MyFormGeneration::generateMultilineTextBox("primaryTitle",
       set_value('primaryTitle'),
-      "-- Enter the primary title --", "Primary Title"); ?>
+      "-- Enter the primary title --", "Primary Title", 3); ?>
 
     <?= MyFormGeneration::generateLookupTextBox("reportType",
       set_value('reportType'), "-- Enter a report type --", "Report Type",

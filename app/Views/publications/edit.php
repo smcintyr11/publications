@@ -153,19 +153,18 @@
       <?= MyFormGeneration::generateIDTextBox("publicationID",
         $publication['PublicationID'], "Publication ID"); ?>
 
-      <?= MyFormGeneration::generateTextBox("primaryTitle",
+      <?= MyFormGeneration::generateMultilineTextBox("primaryTitle",
         set_value('primaryTitle', $publication['PrimaryTitle']),
-        "-- Enter the primary title --", "Primary Title"); ?>
+        "-- Enter the primary title --", "Primary Title", 3); ?>
 
-      <?= MyFormGeneration::generateTextBox("secondaryTitle",
+      <?= MyFormGeneration::generateMultilineTextBox("secondaryTitle",
         set_value('secondaryTitle', $publication['SecondaryTitle']),
-        "-- Enter the secondary title --", "Secondary Title"); ?>
+        "-- Enter the secondary title --", "Secondary Title", 3); ?>
 
       <?= MyFormGeneration::generateLookupTextBox("reportType",
         set_value('reportType', $publication['ReportType']),
         "-- Enter a report type --", "Report Type",
-        MyFormGeneration::generateNewButtonURL("reportTypes"), "reportTypeID",
-        set_value('reportTypeID', $publication['ReportTypeID'])); ?>
+        "reportTypeID", set_value('reportTypeID', $publication['ReportTypeID'])); ?>
 
       <?= MyFormGeneration::generateCheckBox("rushPublication",
           set_value('rushPublication', $publication['RushPublication']), "Rush Publication"); ?>
@@ -181,14 +180,12 @@
       <?= MyFormGeneration::generateLookupTextBox("fiscalYear",
         set_value('fiscalYear', $publication['FiscalYear']),
         "-- Enter a fiscal year (e.g. 2020 / 2021) --", "Fiscal Year",
-        MyFormGeneration::generateNewButtonURL("fiscalYears"), "fiscalYearID",
-        set_value('fiscalYearID', $publication['FiscalYearID'])); ?>
+        "fiscalYearID", set_value('fiscalYearID', $publication['FiscalYearID'])); ?>
 
       <?= MyFormGeneration::generateLookupTextBox("organization",
         set_value('organization', $publication['Organization']),
         "-- Enter an organization --", "Organization",
-        MyFormGeneration::generateNewButtonURL("organizations"), "organizationID",
-        set_value('organizationID', $publication['OrganizationID'])); ?>
+        "organizationID", set_value('organizationID', $publication['OrganizationID'])); ?>
 
       <?= MyFormGeneration::generateSelect("costCentreID",
         set_value('costCentreID', $publication['CostCentreID']),
@@ -224,8 +221,7 @@
       <?= MyFormGeneration::generateLookupTextBox("assignedTo",
         set_value('assignedTo', $publication['StatusPerson']),
         "-- Enter a person --", "Assigned To",
-        MyFormGeneration::generateNewButtonURL("people"), "statusPersonID",
-        set_value('statusPersonID', $publication['StatusPersonID'])); ?>
+        "statusPersonID", set_value('statusPersonID', $publication['StatusPersonID'])); ?>
 
       <?= MyFormGeneration::generateDateTextBox("statusDueDate",
           set_value('statusDueDate', $publication['StatusDueDate']),
@@ -270,7 +266,7 @@
     <div id="tbAuthors" class="tabcontent" style="display: none;">
 
       <?= MyFormGeneration::generateLookupTextBox("newAuthor",
-        null, "-- Enter a person --", "Author", null, "authorID", null, "btnAddAuthor"); ?>
+        null, "-- Enter a person --", "Author", "authorID", null); ?>
 
       <div class="form-group row">
       <h3>Authors</h3>
@@ -308,7 +304,7 @@
     <div id="tbReviewers" class="tabcontent" style="display: none;">
 
       <?= MyFormGeneration::generateLookupTextBox("newReviewer",
-        null, "-- Enter a person --", "Reviewer", null, "reviewerID", null, "btnAddReviewer"); ?>
+        null, "-- Enter a person --", "Reviewer", "reviewerID", null); ?>
 
       <div class="form-group row">
       <h3>Reviewers</h3>
@@ -379,7 +375,7 @@
     <div id="tbKeywords" class="tabcontent" style="display: none;">
 
       <?= MyFormGeneration::generateLookupTextBox("newKeyword",
-        null, "-- Enter a keyword --", "Keyword", null, "keywordID", null, "btnAddKeyword"); ?>
+        null, "-- Enter a keyword --", "Keyword", "keywordID", null); ?>
 
       <div class="form-group row">
       <h3>Keywords</h3>
@@ -418,14 +414,12 @@
       <?= MyFormGeneration::generateLookupTextBox("client",
         set_value('client', $publication['Client']),
         "-- Enter a client / publisher --", "Client / Publisher",
-        MyFormGeneration::generateNewButtonURL("clients"), "clientID",
-        set_value('clientID', $publication['ClientID'])); ?>
+        "clientID", set_value('clientID', $publication['ClientID'])); ?>
 
       <?= MyFormGeneration::generateLookupTextBox("journal",
         set_value('journal', $publication['Journal']),
         "-- Enter a journal --", "Journal",
-        MyFormGeneration::generateNewButtonURL("journals"), "journalID",
-        set_value('journalID', $publication['JournalID'])); ?>
+        "journalID", set_value('journalID', $publication['JournalID'])); ?>
 
       <?= MyFormGeneration::generateTextBox("manuscriptNumber",
           set_value('manuscriptNumber', $publication['ManuscriptNumber']),
