@@ -159,8 +159,8 @@ class MyFormGeneration {
   }
 
  /**
-    * Name: generateLookupTextBox
-    * Purpose: Generates the label and textbox HTML
+    * Name: generateLookupTextBoxWithButton
+    * Purpose: Generates the label, textbox and button HTML
     *
     * Parameters:
     *  string $textboxID    - The value to use for the input name field
@@ -174,7 +174,7 @@ class MyFormGeneration {
     *
     * Returns: string - The HTML for these form elements
     */
-  public static function generateLookupTextBox(string $textboxID, ?string $textboxValue, string $placeholder, string $textboxLabel, ?string $newButtonURL, string $lookupID, ?string $lookupValue, ?string $buttonID = null) {
+  public static function generateLookupTextBoxWithButton(string $textboxID, ?string $textboxValue, string $placeholder, string $textboxLabel, ?string $newButtonURL, string $lookupID, ?string $lookupValue, ?string $buttonID = null) {
     // Generate the HTML
     $html = '<div class="form-group row">
       <label for="' . $textboxID . '" class="col-2 col-form-label font-weight-bold">' . $textboxLabel . ':</label>
@@ -199,6 +199,35 @@ class MyFormGeneration {
     // Return the resultinng HTML
     return $html;
   }
+
+  /**
+     * Name: generateLookupTextBox
+     * Purpose: Generates the label and textbox HTML
+     *
+     * Parameters:
+     *  string $textboxID    - The value to use for the input name field
+     *  string $textboxValue - The value to populate the textbox with
+     *  string $placeholder  - The placeholder text
+     *  string $textboxLabel  - The text for the label
+     *  string $lookupID     - The ID for the lookup value
+     *  string $lookupValue  - The value to populate the lookupID with
+     *
+     * Returns: string - The HTML for these form elements
+     */
+   public static function generateLookupTextBox(string $textboxID, ?string $textboxValue, string $placeholder, string $textboxLabel, string $lookupID, ?string $lookupValue) {
+     // Generate the HTML
+     $html = '<div class="form-group row">
+       <label for="' . $textboxID . '" class="col-2 col-form-label font-weight-bold">' . $textboxLabel . ':</label>
+       <div class="col-10">
+         <input class="form-control" type="input" id="' . $textboxID . '" name="' . $textboxID . '" value="' . $textboxValue . '" placeholder="' . $placeholder . '" />
+         <input type="hidden" id="' . $lookupID . '" name="' . $lookupID . '" value="' . $lookupValue . '">
+         <br />
+       </div>     
+     </div>';
+
+     // Return the resultinng HTML
+     return $html;
+   }
 
   /**
      * Name: generateSelectBox

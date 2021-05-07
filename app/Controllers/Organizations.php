@@ -406,30 +406,145 @@ class Organizations extends Controller {
    * Returns:
    *  boolean - True if dependent records exist Otherwise false
    */
-   private function findDependentRecords(string $organizationID) {
-     // Build the query for the people table
-     $db = \Config\Database::connect();
-     $builder = $db->table('People');
-     $builder->select("PersonID");
-     $builder->where('OrganizationID', $organizationID);
+ private function findDependentRecords(string $organizationID) {
+   // Build the query for the people table
+   $db = \Config\Database::connect();
+   $builder = $db->table('People');
+   $builder->select("PersonID");
+   $builder->where('OrganizationID', $organizationID);
 
-     // Get the number of rows
-     $result = $builder->get()->getNumRows();
-     if ($result > 0) {
-       return true;
-     }
-
-     // Build the query for the Publications table
-     $builder = $db->table('Publications');
-     $builder->select("PublicationID");
-     $builder->where('OrganizationID', $organizationID);
-
-     // Get the number of rows
-     $result = $builder->get()->getNumRows();
-     if ($result > 0) {
-       return true;
-     }
-
-     return false;
+   // Get the number of rows
+   $result = $builder->get()->getNumRows();
+   if ($result > 0) {
+     return true;
    }
+
+   // Build the query for the Publications table
+   $builder = $db->table('Publications');
+   $builder->select("PublicationID");
+   $builder->where('OrganizationID', $organizationID);
+
+   // Get the number of rows
+   $result = $builder->get()->getNumRows();
+   if ($result > 0) {
+     return true;
+   }
+
+   return false;
+ }
+
+ /**
+  * Name: add
+  * Purpose: Adds a new organization using variables from the POST
+  *
+  * Parameters: None
+  *
+  * Returns: json encoded array with status code (200 = success, 201 = failure)
+  *  and the OrganizationID of the newly inserted row
+  */
+ public function add() {
+   // Create a new Model
+   $model = new OrganizationModel();
+
+   // Get the POST variables
+   $organization = $this->request->getPost('organization');
+
+   // Make sure the variables are valid
+   if (empty($organization)) {
+     echo json_encode(array("statusCode"=>201));
+     return;
+   }
+
+   // Does the organization already exist?
+   if ($this->organizationCount($organization) > 0) {
+     $organizationID = $this->getOrganizationID($organization);
+     echo json_encode(array("statusCode"=>202, "organizationID"=>$organizationID));
+     return;
+   }
+
+   // Do the insert
+   $model->save([
+     'Organization' => $organization,
+   ]);
+
+   // Get the ID of the insert
+   $organizationID = $this->getOrganizationID($organization);
+
+   // Return the success
+   echo json_encode(array("statusCode"=>200, "organizationID"=>$organizationID));
+ }
+
+ /**
+  * Name: organizationCount
+  * Purpose: Gets the number of rows with the matching orgganization
+  *
+  * Parameters:
+  *   string $organization - The name of the organization to search for
+  *
+  * Returns: The number of rows that match the organization name
+  */
+ private function organizationCount(string $organization) {
+   // Create the query builder object
+   $db = \Config\Database::connect();
+   $builder = $db->table('Organizations');
+   $builder->select('OrganizationID');
+   $builder->where('Organization', $organization);
+
+   // Run the query
+   $results = $builder->get()->getNumRows();
+
+   // Return the whether rows exist
+   return $results;
+ }
+
+ /**
+  * Name: getOrganizationID
+  * Purpose: Gets the OrganizationID of the specified organization
+  *
+  * Parameters:
+  *   string $organization - The name of the organization to search for
+  *
+  * Returns: The organizationID
+  */
+ private function getOrganizationID(string $organization) {
+   // Create the query builder object
+   $db = \Config\Database::connect();
+   $builder = $db->table('Organizations');
+   $builder->select('OrganizationID');
+   $builder->where('Organization', $organization);
+
+   // Run the query
+   $results = $builder->get()->getRow();
+
+   // Return the whether rows exist
+   return $results->OrganizationID;
+ }
+
+ /**
+  * Name: searchOrganizationID
+  * Purpose: Gets the OrganizationID of the specified organization from POST
+  *   variables
+  *
+  * Parameters: None
+  *
+  * Returns: json encoded array with status code (200 = success, 201 = failure)
+  *  and the OrganizationID
+  */
+ public function searchOrganizationID() {
+   // Get the POST variables
+   $organization = $this->request->getPost('organization');
+
+   // See if the organization actually exists
+   if ($this->organizationCount($organization) > 0) {
+     // Get the organizationID
+     $organizationID = $this->getOrganizationID($organization);
+
+     // Return the success
+     echo json_encode(array("statusCode"=>200, "organizationID"=>$organizationID));
+     return;
+   }
+
+   // Return the failure
+   echo json_encode(array("statusCode"=>201));
+ }
 }
