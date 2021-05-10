@@ -1,10 +1,12 @@
 0.02
 ----
-- Fix add author lookup (missing button now)
-- Fix add reviewer lookup (missing button now)
-- Fix add keyword lookup (missing button now)
-
 - Change Add buttons that redirect to URL to code to create a new item
+  - ReportType
+  - FiscalYear
+  - Organization
+  - Status Assigned To / Author / Reviewer
+  - Keyword
+  - Client
 - Publications Index
   - Flag Rush Publications
   - Flag Upcoming Publications (on Publication as well)
