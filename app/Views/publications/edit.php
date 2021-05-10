@@ -2,7 +2,9 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.widgets.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/css/theme.bootstrap_4.min.css" integrity="sha512-2C6AmJKgt4B+bQc08/TwUeFKkq8CsBNlTaNcNgUmsDJSU1Fg+R6azDbho+ZzuxEkJnCjLZQMozSq3y97ZmgwjA==" crossorigin="anonymous" />
-<script type="text/javascript" src="/scripts/publicationEdit.js"></script>
+<script type="text/javascript" src="/scripts/lookup.js"></script>
+<script type="text/javascript" src="/scripts/publications.js"></script>
+<script type="text/javascript" src="/scripts/publicationsEdit.js"></script>
 
 <?php use App\Libraries\MyFormGeneration; ?>
 
@@ -265,8 +267,8 @@
     <!-- Authors Tab -->
     <div id="tbAuthors" class="tabcontent" style="display: none;">
 
-      <?= MyFormGeneration::generateLookupTextBox("newAuthor",
-        null, "-- Enter a person --", "Author", "authorID", null); ?>
+      <?= MyFormGeneration::generateLookupTextBoxWithButton("newAuthor",
+        null, "-- Enter a person --", "Author", null, "authorID", null, "btnAddAuthor"); ?>
 
       <div class="form-group row">
       <h3>Authors</h3>
@@ -303,8 +305,8 @@
     <!-- Reviewers Tab -->
     <div id="tbReviewers" class="tabcontent" style="display: none;">
 
-      <?= MyFormGeneration::generateLookupTextBox("newReviewer",
-        null, "-- Enter a person --", "Reviewer", "reviewerID", null); ?>
+      <?= MyFormGeneration::generateLookupTextBoxWithButton("newReviewer",
+        null, "-- Enter a person --", "Reviewer", null, "reviewerID", null, "btnAddReviewer"); ?>
 
       <div class="form-group row">
       <h3>Reviewers</h3>
@@ -374,8 +376,8 @@
     <!-- Keywords Tab -->
     <div id="tbKeywords" class="tabcontent" style="display: none;">
 
-      <?= MyFormGeneration::generateLookupTextBox("newKeyword",
-        null, "-- Enter a keyword --", "Keyword", "keywordID", null); ?>
+      <?= MyFormGeneration::generateLookupTextBoxWithButton("newKeyword",
+        null, "-- Enter a keyword --", "Keyword", null, "keywordID", null, "btnAddKeyword"); ?>
 
       <div class="form-group row">
       <h3>Keywords</h3>

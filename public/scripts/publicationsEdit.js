@@ -241,229 +241,28 @@ function removeComment(rowID, pcID) {
 
 $(document).ready(function(){
   // Assigned to autocomplete
-  $("#assignedTo").autocomplete({
-    minLength: 1,
-    source: function(request, response) {
-      $.ajax({
-        url: location.protocol + "//" + location.host + "/people/searchPerson",
-        datatype: "json",
-        data: {
-          term: request.term,
-        },
-        success: function(data) {
-          data = $.parseJSON(data);
-          response(data);
-        },
-      });
-    },
-    select: function(event, ui) {
-      $("#statusPersonID").val(ui.item.id);
-    }
-  }).keyup(function(){
-    if (event.which != 13) {
-      $("#statusPersonID").val("");
-    }
-  });
-
-	// Report Type autocomplete
-	$("#reportType").autocomplete({
-		minLength: 1,
-		source: function(request, response) {
-			$.ajax({
-				url: location.protocol + "//" + location.host + "/reportTypes/searchReportType",
-				datatype: "json",
-				data: {
-					term: request.term,
-				},
-				success: function(data) {
-					data = $.parseJSON(data);
-					response(data);
-				},
-			});
-		},
-		select: function(event, ui) {
-			$("#reportTypeID").val(ui.item.id);
-		}
-	}).keyup(function(){
-		if (event.which != 13) {
-			$("#reportTypeID").val("");
-		}
-	});
+  lookup("#assignedTo", "#statusPersonID", "/people/searchPerson");
 
 	// Fiscal Year autocomplete
-	$("#fiscalYear").autocomplete({
-		minLength: 1,
-		source: function(request, response) {
-			$.ajax({
-				url: location.protocol + "//" + location.host + "/fiscalYears/searchFiscalYear",
-				datatype: "json",
-				data: {
-					term: request.term,
-				},
-				success: function(data) {
-					data = $.parseJSON(data);
-					response(data);
-				},
-			});
-		},
-		select: function(event, ui) {
-			$("#fiscalYearID").val(ui.item.id);
-		}
-	}).keyup(function(){
-		if (event.which != 13) {
-			$("#fiscalYearID").val("");
-		}
-	});
+  lookup("#fiscalYear", "#fiscalYearID", "/fiscalYears/searchFiscalYear");
 
   // Organization autocomplete
-	$("#organization").autocomplete({
-		minLength: 1,
-		source: function(request, response) {
-			$.ajax({
-				url: location.protocol + "//" + location.host + "/organizations/searchOrganization",
-				datatype: "json",
-				data: {
-					term: request.term,
-				},
-				success: function(data) {
-					data = $.parseJSON(data);
-					response(data);
-				},
-			});
-		},
-		select: function(event, ui) {
-			$("#organizationID").val(ui.item.id);
-		}
-	}).keyup(function(){
-		if (event.which != 13) {
-			$("#organizationID").val("");
-		}
-	});
+  lookup("#organization", "#organizationID", "/organizations/searchOrganization");
 
   // Author autocomplete
-	$("#newAuthor").autocomplete({
-		minLength: 1,
-		source: function(request, response) {
-			$.ajax({
-				url: location.protocol + "//" + location.host + "/people/searchPerson",
-				datatype: "json",
-				data: {
-					term: request.term,
-				},
-				success: function(data) {
-					data = $.parseJSON(data);
-					response(data);
-				},
-			});
-		},
-		select: function(event, ui) {
-			$("#authorID").val(ui.item.id);
-		}
-	}).keyup(function(){
-		if (event.which != 13) {
-			$("#authorID").val("");
-		}
-	});
+  lookup("#newAuthor", "#authorID", "/people/searchPerson");
 
   // Reviewer autocomplete
-  $("#newReviewer").autocomplete({
-    minLength: 1,
-    source: function(request, response) {
-      $.ajax({
-        url: location.protocol + "//" + location.host + "/people/searchPerson",
-        datatype: "json",
-        data: {
-          term: request.term,
-        },
-        success: function(data) {
-          data = $.parseJSON(data);
-          response(data);
-        },
-      });
-    },
-    select: function(event, ui) {
-      $("#reviewerID").val(ui.item.id);
-    }
-  }).keyup(function(){
-    if (event.which != 13) {
-      $("#reviewerID").val("");
-    }
-  });
+  lookup("#newReviewer", "#reviewerID", "/people/searchPerson");
 
   // Keyword autocomplete
-  $("#newKeyword").autocomplete({
-    minLength: 1,
-    source: function(request, response) {
-      $.ajax({
-        url: location.protocol + "//" + location.host + "/keywords/searchKeyword",
-        datatype: "json",
-        data: {
-          term: request.term,
-        },
-        success: function(data) {
-          data = $.parseJSON(data);
-          response(data);
-        },
-      });
-    },
-    select: function(event, ui) {
-      $("#keywordID").val(ui.item.id);
-    }
-  }).keyup(function(){
-    if (event.which != 13) {
-      $("#keywordID").val("");
-    }
-  });
+  lookup("#newKeyword", "#keywordID", "/keywords/searchKeyword");
 
   // Publisher autocomplete
-  $("#client").autocomplete({
-    minLength: 1,
-    source: function(request, response) {
-      $.ajax({
-        url: location.protocol + "//" + location.host + "/clients/searchClient",
-        datatype: "json",
-        data: {
-          term: request.term,
-        },
-        success: function(data) {
-          data = $.parseJSON(data);
-          response(data);
-        },
-      });
-    },
-    select: function(event, ui) {
-      $("#clientID").val(ui.item.id);
-    }
-  }).keyup(function(){
-    if (event.which != 13) {
-      $("#clientID").val("");
-    }
-  });
+  lookup("#client", "#clientID", "/clients/searchClient");
 
   // Journal autocomplete
-  $("#journal").autocomplete({
-    minLength: 1,
-    source: function(request, response) {
-      $.ajax({
-        url: location.protocol + "//" + location.host + "/journals/searchJournal",
-        datatype: "json",
-        data: {
-          term: request.term,
-        },
-        success: function(data) {
-          data = $.parseJSON(data);
-          response(data);
-        },
-      });
-    },
-    select: function(event, ui) {
-      $("#journalID").val(ui.item.id);
-    }
-  }).keyup(function(){
-    if (event.which != 13) {
-      $("#journalID").val("");
-    }
-  });
+  lookup("#journal", "#journalID", "/journals/searchJournal");
 
   // Add author function
   $("#btnAddAuthor").click(function(){

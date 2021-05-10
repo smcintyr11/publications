@@ -1,10 +1,9 @@
-$(document).ready(function(){
-  // Report Type autocomplete
-  $("#reportType").autocomplete({
+function lookup(lookupField, lookupID, url) {
+  $(lookupField).autocomplete({
     minLength: 1,
     source: function(request, response) {
       $.ajax({
-        url: location.protocol + "//" + location.host + "/reportTypes/searchReportType",
+        url: location.protocol + "//" + location.host + url,
         datatype: "json",
         data: {
           term: request.term,
@@ -16,11 +15,11 @@ $(document).ready(function(){
       });
     },
     select: function(event, ui) {
-      $("#reportTypeID").val(ui.item.id);
+      $(lookupID).val(ui.item.id);
     }
   }).keyup(function(){
     if (event.which != 13) {
-      $("#reportTypeID").val("");
+      $(lookupID).val("");
     }
   });
-});
+}
