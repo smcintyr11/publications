@@ -369,6 +369,49 @@ class ReportTypes extends Controller {
   }
 
   /**
+   * Name: add
+   * Purpose: Adds a new report type using variables from the POST
+   *
+   * Parameters: None
+   *
+   * Returns: json encoded array with status code (200 = success, 201 = failure)
+   *  and the ReportTypeID of the newly inserted row
+   */
+  public function add() {
+    // Create a new Model
+    $model = new ReportTypeModel();
+
+    // Get the POST variables
+    $reportType = $this->request->getPost('reportType');
+    $abbreviation = $this->request->getPost('abbreviation');
+
+    // Make sure the variables are valid
+    if ((empty($reportType)) || (empty($abbreviation))) {
+      echo json_encode(array("statusCode"=>201));
+      return;
+    }
+
+    // Does the report type already exist?
+    if ($this->reportTypeCount($reportType) > 0) {
+      $reportTypeID = $this->getReportTypeID($reportType);
+      echo json_encode(array("statusCode"=>202, "reportTypeID"=>$reportTypeID));
+      return;
+    }
+
+    // Do the insert
+    $model->save([
+      'ReportType' => $reportType,
+      'Abbreviation' => $abbreviation,
+    ]);
+
+    // Get the ID of the insert
+    $reportTypeID = $this->getReportTypeID($reportType);
+
+    // Return the success
+    echo json_encode(array("statusCode"=>200, "reportTypeID"=>$reportTypeID));
+  }
+
+  /**
    * Name: searchReportType
    * Purpose: Uses a query variable passed to the URL to search for a report type
    *  that is like the search term.
@@ -390,7 +433,7 @@ class ReportTypes extends Controller {
     $builder->select('ReportTypeID,CONCAT (ReportType, " (", Abbreviation, ")") AS DDValue');
 
 
-    // Run the query and compile an array of organization data
+    // Run the query and compile an array of report data
     $autoComplete = array();
     $query = $builder->get();
     foreach ($query->getResult() as $row)
@@ -405,6 +448,79 @@ class ReportTypes extends Controller {
 
     // Output JSON response
     echo json_encode($autoComplete);
+  }
+
+  /**
+   * Name: searchReportTypeID
+   * Purpose: Uses a query variable passed to the URL to search for a report type
+   *  that matches the report type passed in
+   *
+   * Parameters: None
+   *
+   * Returns: Outputs JSON - An array of data
+   */
+  public function searchReportTypeID() {
+    // Get the POST variables
+    $reportType = $this->request->getPost('reportType');
+
+    // See if the report type actually exists
+    if ($this->reportTypeCount($reportType) > 0) {
+      // Get the reportTypeID
+      $reportTypeID = $this->getReportTypeID($reportType);
+
+      // Return the success
+      echo json_encode(array("statusCode"=>200, "reportTypeID"=>$reportTypeID));
+      return;
+    }
+
+    // Return the failure
+    echo json_encode(array("statusCode"=>201));
+  }
+
+  /**
+   * Name: reportTypeCount
+   * Purpose: Gets the number of rows with the matching report type
+   *
+   * Parameters:
+   *   string $reportType - The name of the report type to search for
+   *
+   * Returns: The number of rows that match the report type
+   */
+  private function reportTypeCount(string $reportType) {
+    // Create the query builder object
+    $db = \Config\Database::connect();
+    $builder = $db->table('ReportTypes');
+    $builder->select('ReportTypeID');
+    $builder->where('ReportType', $reportType);
+
+    // Run the query
+    $results = $builder->get()->getNumRows();
+
+    // Return the number of rows
+    return $results;
+  }
+
+  /**
+   * Name: getReportTypeID
+   * Purpose: Gets the ReportTypeID of the specified report type
+   *
+   * Parameters:
+   *   string $reportType - The report type to search for
+   *
+   * Returns: The ReportTypeID
+   */
+  private function getReportTypeID(string $reportType) {
+    // Create the query builder object
+    $db = \Config\Database::connect();
+    $builder = $db->table('ReportTypes');
+    $builder->select('ReportTypeID');
+    $builder->where('ReportType', $reportType);
+
+    // Run the query
+    $results = $builder->get()->getRow();
+
+    // Return the result
+    return $results->ReportTypeID;
   }
 
   /**

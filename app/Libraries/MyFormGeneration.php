@@ -171,10 +171,11 @@ class MyFormGeneration {
     *  string $lookupID     - The ID for the lookup value
     *  string $lookupValue  - The value to populate the lookupID with
     *  string $buttonID     - The ID for the button
+    *  string $buttonText   - The text for the button (if you want to specify something other than the default)
     *
     * Returns: string - The HTML for these form elements
     */
-  public static function generateLookupTextBoxWithButton(string $textboxID, ?string $textboxValue, string $placeholder, string $textboxLabel, ?string $newButtonURL, string $lookupID, ?string $lookupValue, ?string $buttonID = null) {
+  public static function generateLookupTextBoxWithButton(string $textboxID, ?string $textboxValue, string $placeholder, string $textboxLabel, ?string $newButtonURL, string $lookupID, ?string $lookupValue, ?string $buttonID = null, ?string $buttonText = null) {
     // Generate the HTML
     $html = '<div class="form-group row">
       <label for="' . $textboxID . '" class="col-2 col-form-label font-weight-bold">' . $textboxLabel . ':</label>
@@ -191,8 +192,12 @@ class MyFormGeneration {
     if (is_null($buttonID) == false) {
       $html = $html . 'id="' . $buttonID . '" ';
     }
-    $html = $html . '>Add ' . $textboxLabel . '</button>
-    </div>
+    if (is_null($buttonText)) {
+      $html = $html . '>Add ' . $textboxLabel . '</button>';
+    } else {
+      $html = $html . '>' . $buttonText . '</button>';
+    }
+    $html = $html . '</div>
     <input type="hidden" id="' . $lookupID . '" name="' . $lookupID . '" value="' . $lookupValue . '">
     </div>';
 
@@ -222,7 +227,7 @@ class MyFormGeneration {
          <input class="form-control" type="input" id="' . $textboxID . '" name="' . $textboxID . '" value="' . $textboxValue . '" placeholder="' . $placeholder . '" />
          <input type="hidden" id="' . $lookupID . '" name="' . $lookupID . '" value="' . $lookupValue . '">
          <br />
-       </div>     
+       </div>
      </div>';
 
      // Return the resultinng HTML

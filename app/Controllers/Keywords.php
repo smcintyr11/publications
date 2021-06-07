@@ -369,6 +369,50 @@ class Keywords extends Controller {
   }
 
   /**
+   * Name: add
+   * Purpose: Adds a new keyword using variables from the POST
+   *
+   * Parameters: None
+   *
+   * Returns: json encoded array with status code (200 = success, 201 = failure)
+   *  and the KeywordID of the newly inserted row
+   */
+  public function add() {
+    // Create a new Model
+    $model = new KeywordModel();
+
+    // Get the POST variables
+    $keywordE = $this->request->getPost('keywordE');
+    $keywordF = $this->request->getPost('keywordF');
+
+    // Make sure the variables are valid
+    if (empty($keywordE) || empty($keywordF)) {
+      echo json_encode(array("statusCode"=>201));
+      return;
+    }
+
+    // Does the keyword already exist?
+    if ($this->exactKeywordCount($keywordE) > 0) {
+      $keywordID = $this->getKeywordID($keywordE);
+
+      echo json_encode(array("statusCode"=>202, "keywordID"=>$keywordID));
+      return;
+    }
+
+    // Do the insert
+    $model->save([
+      'KeywordEnglish' => $keywordE,
+      'KeywordFrench' => $keywordF,
+    ]);
+
+    // Get the ID of the insert
+    $keywordID = $this->getKeywordID($keywordE);
+
+    // Return the success
+    echo json_encode(array("statusCode"=>200, "keywordID"=>$keywordID));
+  }
+
+  /**
    * Name: searchKeyword
    * Purpose: Uses a query variable passed to the URL to search for a keyword
    *  that is like the search term.
@@ -378,7 +422,7 @@ class Keywords extends Controller {
    * Returns: Outputs JSON - An array of data
    */
   public function searchKeyword() {
-    // Varoable declaration
+    // Variable declaration
     $autoComplete = array();
 
     // Build the query
@@ -386,6 +430,8 @@ class Keywords extends Controller {
     $db = \Config\Database::connect();
     $builder = $db->table('Keywords');
     $builder->select('KeywordID, CONCAT(KeywordEnglish, " | ", KeywordFrench) AS Keyword');
+    $builder->like('KeywordEnglish', $searchString);
+    $builder->orLike('KeywordFrench', $searchString);
 
     // Run the query and compile an array of organization data
     $autoComplete = array();
@@ -402,6 +448,93 @@ class Keywords extends Controller {
 
     // Output JSON response
     echo json_encode($autoComplete);
+  }
+
+  /**
+   * Name: searchExactKeyword
+   * Purpose: Uses a query variable passed to the URL to search for a keyword
+   *  that matches the search term
+   *
+   * Parameters: None
+   *
+   * Returns: Outputs JSON - An array of data
+   */
+  public function searchExactKeyword() {
+    // Variable declaration
+    $searchString = $this->request->getVar('keyword');
+
+    // Is there an exact match
+    if ($this->exactKeywordCount($searchString) > 0) {
+      // Build the query
+      $db = \Config\Database::connect();
+      $builder = $db->table('Keywords');
+      $builder->select('KeywordID, CONCAT(KeywordEnglish, " | ", KeywordFrench) AS Keyword');
+      $builder->where('KeywordEnglish', $searchString);
+      $builder->orWhere('KeywordFrench', $searchString);
+      $builder->orWhere('CONCAT(KeywordEnglish, " | ", KeywordFrench)', $searchString);
+
+      // Run the query and compile an array of organization data
+      $result = $builder->get()->getRow();
+
+      // Return success
+      echo json_encode(array("statusCode"=>200, "keywordID"=>$result->KeywordID, "keyword"=>$result->Keyword));
+      return;
+    }
+
+    // Return failure
+    echo json_encode(array("statusCode"=>201));
+  }
+
+  /**
+   * Name: exactKeywordCount
+   * Purpose: Finds out how many rows have a keyword that exactly matches the
+   *  search string passed in (exact match = "KeywordEnglish" OR "KeywordFrench" OR
+   *  "KeywordEnglish | KeywordFrench")
+   *
+   * Parameters:
+   *  string $searchString - The keyword to search for
+   *
+   * Returns: Number of matching rows
+   */
+  private function exactKeywordCount(string $searchString) {
+    // Build the query
+    $db = \Config\Database::connect();
+    $builder = $db->table('Keywords');
+    $builder->select('KeywordID');
+    $builder->where('KeywordEnglish', $searchString);
+    $builder->orWhere('KeywordFrench', $searchString);
+    $builder->orWhere('CONCAT(KeywordEnglish, " | ", KeywordFrench)', $searchString);
+
+    // Run the query
+    $results = $builder->get()->getNumRows();
+
+    // Return the number of rows
+    return $results;
+  }
+
+  /**
+   * Name: getKeywordID
+   * Purpose: Gets the KeywordID of the specified keyword
+   *
+   * Parameters:
+   *   string $searchString - The keyword to search for
+   *
+   * Returns: The KeywordID
+   */
+  private function getKeywordID(string $searchString) {
+    // Build the query
+    $db = \Config\Database::connect();
+    $builder = $db->table('Keywords');
+    $builder->select('KeywordID, CONCAT(KeywordEnglish, " | ", KeywordFrench) AS Keyword, KeywordEnglish, KeywordFrench');
+    $builder->where('KeywordEnglish', $searchString);
+    $builder->orWhere('KeywordFrench', $searchString);
+    $builder->orWhere('CONCAT(KeywordEnglish, " | ", KeywordFrench)', $searchString);
+
+    // Run the query
+    $results = $builder->get()->getRow();
+
+    // Return the result
+    return $results->KeywordID;
   }
 
   /**

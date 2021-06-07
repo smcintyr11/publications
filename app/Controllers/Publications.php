@@ -254,7 +254,7 @@ class Publications extends Controller {
 
         // Set validation rules
         $validation->setRule('primaryTitle', 'Primary Title', 'required');
-        $validation->setRule('reportTypeID', 'Report Type', 'required');
+        $validation->setRule('reportTypeNID', 'Report Type', 'required');
         if ($validation->withRequest($this->request)->run()) {
           // Get the default statusID
           $statusID = $this->getDefaultStatus();
@@ -262,12 +262,12 @@ class Publications extends Controller {
             // Save
             $model->save([
               'PrimaryTitle' => $this->request->getPost('primaryTitle'),
-              'ReportTypeID' => $this->request->getPost('reportTypeID'),
+              'ReportTypeID' => $this->request->getPost('reportTypeNID'),
               'StatusID' => $statusID,
             ]);
 
             // Get the publication id
-            $publicationID = $this->getLastPublicationID($this->request->getPost('primaryTitle'), $this->request->getPost('reportTypeID'));
+            $publicationID = $this->getLastPublicationID($this->request->getPost('primaryTitle'), $this->request->getPost('reportTypeNID'));
 
             // Add the new publications statuses entry
             $this->newStatus($publicationID, $statusID, null, null);
@@ -275,6 +275,7 @@ class Publications extends Controller {
             // Open the newly added publication
             $data = [
               'title' => 'Edit Publication',
+              'publication' => $model->getPublication($publicationID),
               'publication' => $model->getPublication($publicationID),
               'page' => $page,
               'statuses' => $this->getStatuses(),

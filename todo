@@ -1,12 +1,5 @@
 0.02
 ----
-- Change Add buttons that redirect to URL to code to create a new item
-  - ReportType
-  - FiscalYear
-  - Organization
-  - Status Assigned To / Author / Reviewer
-  - Keyword
-  - Client
 - Publications Index
   - Flag Rush Publications
   - Flag Upcoming Publications (on Publication as well)
@@ -17,3 +10,7 @@
       - Report #, Report Type, Status, Due Date, Assigned To
     - View 2:
       - Report #, Report Type, Title, Authors, Status, Due Date, Cost Centre, Project Code
+- MyFormGeneration
+  - Add code to hide fields
+- Publications edit
+  - Hide fields that we won't be using right away

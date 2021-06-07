@@ -360,6 +360,47 @@ class FiscalYears extends Controller {
   }
 
   /**
+   * Name: add
+   * Purpose: Adds a new fiscal year using variables from the POST
+   *
+   * Parameters: None
+   *
+   * Returns: json encoded array with status code (200 = success, 201 = failure)
+   *  and the FiscalYearID of the newly inserted row
+   */
+  public function add() {
+    // Create a new Model
+    $model = new FiscalYearModel();
+
+    // Get the POST variables
+    $fiscalYear = $this->request->getPost('fiscalYear');
+
+    // Make sure the variables are valid
+    if (empty($fiscalYear)) {
+      echo json_encode(array("statusCode"=>201));
+      return;
+    }
+
+    // Does the fiscal year already exist?
+    if ($this->fiscalYearCount($fiscalYear) > 0) {
+      $fiscalYearID = $this->getFiscalYearID($fiscalYear);
+      echo json_encode(array("statusCode"=>202, "fiscalYearID"=>$fiscalYearID));
+      return;
+    }
+
+    // Do the insert
+    $model->save([
+      'FiscalYear' => $fiscalYear,
+    ]);
+
+    // Get the ID of the insert
+    $fiscalYearID = $this->getFiscalYearID($fiscalYear);
+
+    // Return the success
+    echo json_encode(array("statusCode"=>200, "fiscalYearID"=>$fiscalYearID));
+  }
+
+  /**
    * Name: searchFiscalYear
    * Purpose: Uses a query variable passed to the URL to search for a fiscal year
    *  that is like the search term.
@@ -393,6 +434,79 @@ class FiscalYears extends Controller {
 
     // Output JSON response
     echo json_encode($autoComplete);
+  }
+
+  /**
+   * Name: searchFiscalYearID
+   * Purpose: Uses a query variable passed to the URL to search for a fiscal year
+   *  that matches the fiscal year passed in
+   *
+   * Parameters: None
+   *
+   * Returns: Outputs JSON - An array of data
+   */
+  public function searchFiscalYearID() {
+    // Get the POST variables
+    $fiscalYear = $this->request->getPost('fiscalYear');
+
+    // See if the fiscal year actually exists
+    if ($this->fiscalYearCount($fiscalYear) > 0) {
+      // Get the fiscalYearID
+      $fiscalYearID = $this->getFiscalYearID($fiscalYear);
+
+      // Return the success
+      echo json_encode(array("statusCode"=>200, "fiscalYearID"=>$fiscalYearID));
+      return;
+    }
+
+    // Return the failure
+    echo json_encode(array("statusCode"=>201));
+  }
+
+  /**
+   * Name: fiscalYearCount
+   * Purpose: Gets the number of rows with the matching fiscal year
+   *
+   * Parameters:
+   *   string $fiscalYear - The fiscal year to search for
+   *
+   * Returns: The number of rows that match the fiscal year
+   */
+  private function fiscalYearCount(string $fiscalYear) {
+    // Create the query builder object
+    $db = \Config\Database::connect();
+    $builder = $db->table('FiscalYears');
+    $builder->select('FiscalYearID');
+    $builder->where('FiscalYear', $fiscalYear);
+
+    // Run the query
+    $results = $builder->get()->getNumRows();
+
+    // Return the number of rows
+    return $results;
+  }
+
+  /**
+   * Name: getFiscalYearID
+   * Purpose: Gets the FiscalYearID of the specified fiscal year
+   *
+   * Parameters:
+   *   string $fiscalYear - The fiscal year to search for
+   *
+   * Returns: The FiscalYearID
+   */
+  private function getFiscalYearID(string $fiscalYear) {
+    // Create the query builder object
+    $db = \Config\Database::connect();
+    $builder = $db->table('FiscalYears');
+    $builder->select('FiscalYearID');
+    $builder->where('FiscalYear', $fiscalYear);
+
+    // Run the query
+    $results = $builder->get()->getRow();
+
+    // Return the result
+    return $results->FiscalYearID;
   }
 
   /**

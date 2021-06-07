@@ -29,7 +29,11 @@ class PublicationsKeywords extends Controller {
 
     // Does the keyword already exist?
     if ($this->publicationsKeywordsCount($publicationID, $keywordID) > 0) {
-      echo json_encode(array("statusCode"=>202));
+      $keyword=$this->getKeyword($keywordID);
+      echo json_encode(array("statusCode"=>202,
+      "keywordEnglish"=>$keyword['KeywordEnglish'],
+      "keywordFrench"=>$keyword['KeywordFrench'],
+      ));
       return;
     }
 

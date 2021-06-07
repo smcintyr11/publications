@@ -400,6 +400,57 @@ class People extends Controller {
   }
 
   /**
+   * Name: add
+   * Purpose: Adds a new person using variables from the POST
+   *
+   * Parameters: None
+   *
+   * Returns: json encoded array with status code (200 = success, 201 = failure)
+   *  and the PersonID andn DisplayName of the newly inserted row
+   */
+  public function add() {
+    // Create a new Model
+    $model = new PersonModel();
+
+    // Get the POST variables
+    $lastName = $this->request->getPost('lastName');
+    $firstName = $this->request->getPost('firstName');
+    $displayName = $this->request->getPost('displayName');
+    $organizationID = $this->request->getPost('organizationID');
+
+    // Make sure the variables are valid
+    if (empty($displayName)) {
+      echo json_encode(array("statusCode"=>201));
+      return;
+    }
+
+    // Does the person already exist?
+    if ($this->isDuplicate($lastName, $firstName, $displayName, $organizationID)) {
+      $personID = $this->getPersonID($displayName, $organizationID);
+
+      echo json_encode(array("statusCode"=>202, "personID"=>$personID, "DisplayName"=>$displayName));
+      return;
+    }
+
+    // Do the insert
+    $model->save([
+      'LastName' => empty($lastName) ? null : $lastName,
+      'FirstName' => empty($firstName) ? null : $firstName,
+      'DisplayName' => $displayName,
+      'OrganizationID' => empty($organizationID) ? null : $organizationID,
+    ]);
+
+    // Get the ID of the insert
+    $personID = $this->getPersonID($displayName, $organizationID);
+
+    // Get the full display name (since it has an organization typically)
+    $displayName = $this->getPersonDisplayName($personID);
+
+    // Return the success
+    echo json_encode(array("statusCode"=>200, "personID"=>$personID, "displayName"=>$displayName));
+  }
+
+  /**
    * Name: searchPerson
    * Purpose: Uses a query variable passed to the URL to search for a person
    *  that is like the search term.
@@ -437,6 +488,118 @@ class People extends Controller {
 
     // Output JSON response
     echo json_encode($autoComplete);
+  }
+
+  /**
+   * Name: searchExactDisplayName
+   * Purpose: Uses a query variable passed to the URL to search for a person
+   *  that matches the search term
+   *
+   * Parameters: None
+   *
+   * Returns: Outputs JSON - An array of data
+   */
+  public function searchExactDisplayName() {
+    // Variable declaration
+    $searchString = $this->request->getVar('displayName');
+
+    // Is there an exact match
+    if ($this->exactDisplayNameCount($searchString) > 0) {
+      // Create optional search string
+      $searchString2 = $searchString . " (No affiliation)";
+
+      // Build the query
+      $db = \Config\Database::connect();
+      $builder = $db->table('vPeopleDropDown');
+      $builder->select('PersonID, DisplayName');
+      $builder->where('DisplayName', $searchString);
+      $builder->orWhere('DisplayName', $searchString2);
+
+      // Run the query
+      $result = $builder->get()->getRow();
+
+      // Return success
+      echo json_encode(array("statusCode"=>200, "personID"=>$result->PersonID, "displayName"=>$result->DisplayName));
+      return;
+    }
+
+    // Return failure
+    echo json_encode(array("statusCode"=>201));
+  }
+
+  /**
+   * Name: exactDisplayNameCount
+   * Purpose: Finds out how many rows have a person's displayName that exactly
+   * matches the search string passed in
+   *
+   * Parameters:
+   *  string $searchString - The person to search for
+   *
+   * Returns: Number of matching rows
+   */
+  private function exactDisplayNameCount(string $searchString) {
+    // Create optional search string
+    $searchString2 = $searchString . " (No affiliation)";
+
+    // Build the query
+    $db = \Config\Database::connect();
+    $builder = $db->table('vPeopleDropDown');
+    $builder->select('PersonID');
+    $builder->where('DisplayName', $searchString);
+    $builder->orWhere('DisplayName', $searchString2);
+
+    // Run the query
+    $result = $builder->get()->getNumRows();
+
+    // Return the number of rows
+    return $result;
+  }
+
+  /**
+   * Name: getPersonID
+   * Purpose: Gets the PersonID of the specified person
+   *
+   * Parameters:
+   *   string $searchString - The person to search for
+   *
+   * Returns: The PersonID
+   */
+  private function getPersonID(string $displayName, ?string $organizationID) {
+    // Build the query
+    $db = \Config\Database::connect();
+    $builder = $db->table('People');
+    $builder->select('PersonID');
+    $builder->where('DisplayName', $displayName);
+    $builder->where('OrganizationID', (empty($organizationID) ? null : $organizationID) );
+
+    // Run the query
+    $results = $builder->get()->getRow();
+
+    // Return the result
+    return $results->PersonID;
+  }
+
+  /**
+   * Name: getPersonDisplayName
+   * Purpose: Gets the DisplayName of the specified PersonID
+   *
+   * Parameters:
+   *   string $searchString - The PersonID to search for
+   *
+   * Returns: The DisplayName
+   */
+  private function getPersonDisplayName(string $searchString) {
+    // Build the query
+    $db = \Config\Database::connect();
+    $builder = $db->table('vPeopleDropDown');
+    $builder->select('DisplayName');
+    $builder->where('PersonID', $searchString);
+
+    // Run the query
+    $results = $builder->get()->getRow();
+
+    // Return the result
+    return $results->DisplayName;
   }
 
   /**
@@ -486,12 +649,12 @@ class People extends Controller {
    }
 
    return false;
- }
+  }
 
   /**
     * Name: isDuplicate
     * Purpose: Searches for a Person with identical information for LastName,
-    *   FirstName, DisplaName, OrganizationID
+    *   FirstName, DisplayName, OrganizationID
     *
     * Parameters:
     *  string $lastName - The last name to search for

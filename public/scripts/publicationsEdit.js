@@ -239,7 +239,1102 @@ function removeComment(rowID, pcID) {
     });
 }
 
+/* Name: checkLookups
+ *
+ * Purpose: Function to check each lookup field for new lookup values
+ *
+ * Parameters:
+ *  event - The event parameters
+ *
+ * Returns:
+ *  None
+ */
+function checkLookups(event) {
+  // Check the report type
+  if (checkReportType(event)) { return; }
+
+  // Check the fiscal year
+  if (checkFiscalYear(event)) { return; }
+
+  // Check the organization
+  if (checkOrganization(event)) { return; }
+
+  // Check the client/publisher
+  if (checkClient(event)) { return; }
+
+  // Check the journal
+  if (checkJournal(event)) { return; }
+
+  // Check the status person
+  if (checkAssignedTo(event)) { return; }
+}
+
+/* Name: checkReportType
+ *
+ * Purpose: Checks to see if the ReportType textbox is filled in, and ReportTypeID
+ * is empty.  If so, that means what was typed in the ReportType field, does
+ * not exist in the database, and we need to offer the user a chance to create
+ * a new ReportType
+ *
+ * Parameters:
+ *  event - The event parameters
+ *
+ * Returns:
+ *  None
+ */
+function checkReportType(event) {
+  // Get the fields
+  var reportType = $("#reportType").val();
+  var reportTypeID = $("#reportTypeID").val();
+
+  // Check if reportType is not empty
+  if ((reportType != "") && (reportTypeID == "")) {
+    // Stop saving temporarily
+    event.preventDefault();
+
+    // Check if the reportType has an reportTypeID (e.g. the user didn't
+    // select the reportType from the drop down)
+    $.ajax({
+        url: "/reportTypes/searchReportTypeID",
+        type: "POST",
+        data: {
+          reportType: reportType,
+        },
+        cache: false,
+        success: function(dataResult){
+          var dataResult = JSON.parse(dataResult);
+          if(dataResult.statusCode==200) {  // Success
+            // Get the new reportTypeID
+            var ReportTypeID = dataResult.reportTypeID;
+
+            // Update the reportTypeID field
+            $("#reportTypeID").val(ReportTypeID);
+
+            // Submit again
+            $("#btnSubmit").click();
+
+          } else {
+            // Stop saving temporarily
+            event.preventDefault();
+
+            // Trigger the new report type dialog
+            $("#newReportType").val(reportType);
+            btnNewReportType.click();
+          }
+        }
+      });
+    return true;
+  }
+  return false;
+}
+
+/* Name: addReportType
+ *
+ * Purpose: Function to add a report type to the database
+ *
+ * Parameters:
+ *  None
+ *
+ * Returns:
+ *  None
+ */
+function addReportType() {
+ // Make sure report type and abbreviation are filled in
+ if (($("#newReportType").val() == "") || ($("#newAbbreviation").val() == "")) {
+   alert("You must enter both a Report Type and an Abbreviation.");
+   return;
+ }
+
+ // Add the report type
+ $.ajax({
+     url: "/reportTypes/add",
+     type: "POST",
+     data: {
+       reportType: $("#newReportType").val(),
+       abbreviation: $("#newAbbreviation").val(),
+     },
+     cache: false,
+     success: function(dataResult){
+       var dataResult = JSON.parse(dataResult);
+       if(dataResult.statusCode==200) {  // Success
+         // Get the new ReportTypeID
+         var ReportTypeID = dataResult.reportTypeID;
+
+         // Update the reportTypeID field
+         $("#reportTypeID").val(ReportTypeID);
+
+         // Close the dialog
+         $("#btnCloseRTModal").click();
+
+         // Click the save button again
+         $("#btnSubmit").click();
+       }
+       else if(dataResult.statusCode==201) {  // Error
+         alert("Error adding report type.  Try adding it manually first, and then try saving the publication again.");
+         $("#btnCloseRTModal").click();
+       } else if (dataResult.statusCode==202) {  // Duplicate organization
+         // Get the new ReportTypeID
+         var ReportTypeID = dataResult.reportTypeID;
+
+         // Update the ReportTypeID field
+         $("#reportTypeID").val(ReportTypeID);
+
+         // Click the save button again
+         $("#btnSubmit").click();
+       }
+     }
+   });
+}
+
+/* Name: checkFiscalYear
+ *
+ * Purpose: Checks to see if the FiscalYear textbox is filled in, and FiscalYearID
+ * is empty.  If so, that means what was typed in the FiscalYear field, does
+ * not exist in the database, and we need to offer the user a chance to create
+ * a new FiscalYear
+ *
+ * Parameters:
+ *  event - The event parameters
+ *
+ * Returns:
+ *  None
+ */
+function checkFiscalYear(event) {
+  // Get the fields
+  var fiscalYear = $("#fiscalYear").val();
+  var fiscalYearID = $("#fiscalYearID").val();
+
+  // Check if fiscalYear is not empty
+  if ((fiscalYear != "") && (fiscalYearID == "")) {
+    // Stop saving temporarily
+    event.preventDefault();
+
+    // Check if the fiscalYear has a fiscalYearID (e.g. the user didn't
+    // select the fiscalYear from the drop down)
+    $.ajax({
+        url: "/fiscalYears/searchFiscalYearID",
+        type: "POST",
+        data: {
+          fiscalYear: fiscalYear,
+        },
+        cache: false,
+        success: function(dataResult){
+          var dataResult = JSON.parse(dataResult);
+          if(dataResult.statusCode==200) {  // Success
+            // Get the new fiscalYearID
+            var FiscalYearID = dataResult.fiscalYearID;
+
+            // Update the fiscalYearID field
+            $("#fiscalYearID").val(FiscalYearID);
+
+            // Submit again
+            $("#btnSubmit").click();
+          } else {
+            // Stop saving temporarily
+            event.preventDefault();
+
+            // Check to see if the fiscal year is in the correct format before
+            // trying to add it to the database
+            if (checkFiscalYearFormat()) {
+              // Trigger the new report type dialog
+              $("#newFiscalYear").val(fiscalYear);
+              btnNewFiscalYear.click();
+            } else {
+              // Tell the user that fiscal year is not even in the correct format
+              alert('Fiscal year must be in the format "#### / ####"\nFor example "2021 / 2022".');
+            }
+          }
+        }
+      });
+    return true;
+  }
+  return false;
+}
+
+/* Name: checkFiscalYearFormat
+ *
+ * Purpose: Checks to see if the supplied fiscal year is in the correct format
+ *  "#### / ####"
+ *
+ * Parameters:
+ *  None
+ *
+ * Returns:
+ *  true - If the fiscal year is in the correct format
+ *  false - If the fiscal year is in the incorrect format
+ */
+function checkFiscalYearFormat() {
+  // Get the fiscal year field
+  var fy = $("#fiscalYear").val();
+
+  // Creat the regex and test it
+  let re = /\d{4} \/ \d{4}/;
+
+  return re.test(fy);
+}
+
+/* Name: addFiscalYear
+ *
+ * Purpose: Function to add a fiscal year to the database
+ *
+ * Parameters:
+ *  None
+ *
+ * Returns:
+ *  None
+ */
+function addFiscalYear() {
+ // Add the fiscal year
+ $.ajax({
+     url: "/fiscalYears/add",
+     type: "POST",
+     data: {
+       fiscalYear: $("#newFiscalYear").val(),
+     },
+     cache: false,
+     success: function(dataResult){
+       var dataResult = JSON.parse(dataResult);
+       if(dataResult.statusCode==200) {  // Success
+         // Get the new FiscalYearID
+         var FiscalYearID = dataResult.fiscalYearID;
+
+         // Update the fiscalYearID field
+         $("#fiscalYearID").val(FiscalYearID);
+
+         // Close the dialog
+         $("#btnCloseFYModal").click();
+
+         // Click the save button again
+         $("#btnSubmit").click();
+       }
+       else if(dataResult.statusCode==201) {  // Error
+         alert("Error adding fiscal year.  Try adding it manually first, and then try saving the publication again.");
+         $("#btnCloseFYModal").click();
+       } else if (dataResult.statusCode==202) {  // Duplicate organization
+         // Get the new FiscalYearID
+         var FiscalYearID = dataResult.fiscalYearID;
+
+         // Update the FiscalYearID field
+         $("#fiscalYearID").val(FiscalYearID);
+
+         // Click the save button again
+         $("#btnSubmit").click();
+       }
+     }
+   });
+}
+
+/* Name: checkOrganization
+ *
+ * Purpose: Checks to see if the Organization textbox is filled in, and OrganizationID
+ * is empty.  If so, that means what was typed in the Organization field, does
+ * not exist in the database, and we need to offer the user a chance to create
+ * a new Organization
+ *
+ * Parameters:
+ *  event - The event parameters
+ *
+ * Returns:
+ *  None
+ */
+function checkOrganization(event) {
+  // Get the fields
+  var organization = $("#organization").val();
+  var organizationID = $("#organizationID").val();
+
+  // Check if organization is not empty
+  if ((organization != "") && (organizationID == "")) {
+    // Stop saving temporarily
+    event.preventDefault();
+
+    // Check if the organization has a organizationID (e.g. the user didn't
+    // select the organization from the drop down)
+    $.ajax({
+        url: "/organizations/searchOrganizationID",
+        type: "POST",
+        data: {
+          organization: organization,
+        },
+        cache: false,
+        success: function(dataResult){
+          var dataResult = JSON.parse(dataResult);
+          if(dataResult.statusCode==200) {  // Success
+            // Get the new organizationID
+            var OrganizationID = dataResult.organizationID;
+
+            // Update the organizationID field
+            $("#organizationID").val(OrganizationID);
+
+            // Submit again
+            $("#btnSubmit").click();
+          } else {
+            // Stop saving temporarily
+            event.preventDefault();
+
+            // Trigger the new report type dialog
+            $("#newOrganization").val(organization);
+            btnNewOrganization.click();
+          }
+        }
+      });
+    return true;
+  }
+  return false;
+}
+
+/* Name: addOrganization
+ *
+ * Purpose: Function to add an organization to the database
+ *
+ * Parameters:
+ *  None
+ *
+ * Returns:
+ *  None
+ */
+function addOrganization() {
+ // Add the organization
+ $.ajax({
+     url: "/organizations/add",
+     type: "POST",
+     data: {
+       organization: $("#newOrganization").val(),
+     },
+     cache: false,
+     success: function(dataResult){
+       var dataResult = JSON.parse(dataResult);
+       if(dataResult.statusCode==200) {  // Success
+         // Get the new FiscalYearID
+         var OrganizationID = dataResult.organizationID;
+
+         // Update the organizationID field
+         $("#organizationID").val(OrganizationID);
+
+         // Close the dialog
+         $("#btnCloseOrgModal").click();
+
+         // Click the save button again
+         $("#btnSubmit").click();
+       }
+       else if(dataResult.statusCode==201) {  // Error
+         alert("Error adding organization.  Try adding it manually first, and then try saving the publication again.");
+         $("#btnCloseOrgModal").click();
+       } else if (dataResult.statusCode==202) {  // Duplicate organization
+         // Get the new FiscalYearID
+         var OrganizationID = dataResult.organizationID;
+
+         // Update the organizationID field
+         $("#organizationID").val(OrganizationID);
+
+         // Click the save button again
+         $("#btnSubmit").click();
+       }
+     }
+   });
+}
+
+/* Name: checkClient
+ *
+ * Purpose: Checks to see if the Client textbox is filled in, and ClientID
+ * is empty.  If so, that means what was typed in the Client field, does
+ * not exist in the database, and we need to offer the user a chance to create
+ * a new Client
+ *
+ * Parameters:
+ *  event - The event parameters
+ *
+ * Returns:
+ *  None
+ */
+function checkClient(event) {
+  // Get the fields
+  var client = $("#client").val();
+  var clientID = $("#clientID").val();
+
+  // Check if client is not empty
+  if ((client != "") && (clientID == "")) {
+    // Stop saving temporarily
+    event.preventDefault();
+
+    // Check if the client has an clientID (e.g. the user didn't
+    // select the client from the drop down)
+    $.ajax({
+        url: "/clients/searchClientID",
+        type: "POST",
+        data: {
+          client: client,
+        },
+        cache: false,
+        success: function(dataResult){
+          var dataResult = JSON.parse(dataResult);
+          if(dataResult.statusCode==200) {  // Success
+            // Get the new clientID
+            var ClientID = dataResult.clientID;
+
+            // Update the clientID field
+            $("#clientID").val(ClientID);
+
+            // Submit again
+            $("#btnSubmit").click();
+
+          } else {
+            // Stop saving temporarily
+            event.preventDefault();
+
+            // Trigger the new client dialog
+            $("#newClient").val(client);
+            btnNewClient.click();
+          }
+        }
+      });
+    return true;
+  }
+  return false;
+}
+
+/* Name: addClient
+ *
+ * Purpose: Function to add a client to the database
+ *
+ * Parameters:
+ *  None
+ *
+ * Returns:
+ *  None
+ */
+function addClient() {
+  // Add the client
+  $.ajax({
+      url: "/clients/add",
+      type: "POST",
+      data: {
+        client: $("#newClient").val(),
+      },
+      cache: false,
+      success: function(dataResult){
+        var dataResult = JSON.parse(dataResult);
+        if(dataResult.statusCode==200) {  // Success
+          // Get the new clientID
+          var ClientID = dataResult.clientID;
+
+          // Update the clientID field
+          $("#clientID").val(ClientID);
+
+          // Close the dialog
+          $("#btnCloseClientModal").click();
+
+          // Click the save button again
+          $("#btnSubmit").click();
+        }
+        else if(dataResult.statusCode==201) {  // Error
+          alert("Error adding client.  Try adding it manually first, and then try saving the publication again.");
+          $("#btnCloseClientModal").click();
+        } else if (dataResult.statusCode==202) {  // Duplicate client
+          // Get the new clientID
+          var ClientID = dataResult.clientID;
+
+          // Update the clientID field
+          $("#clientID").val(ClientID);
+
+          // Click the save button again
+          $("#btnSubmit").click();
+        }
+      }
+    });
+}
+
+/* Name: checkJournal
+ *
+ * Purpose: Checks to see if the Journal textbox is filled in, and JournalID
+ * is empty.  If so, that means what was typed in the Journal field, does
+ * not exist in the database, and we need to offer the user a chance to create
+ * a new Journal
+ *
+ * Parameters:
+ *  event - The event parameters
+ *
+ * Returns:
+ *  None
+ */
+function checkJournal(event) {
+  // Get the fields
+  var journal = $("#journal").val();
+  var journalID = $("#journalID").val();
+
+  // Check if journal is not empty
+  if ((journal != "") && (journalID == "")) {
+    // Stop saving temporarily
+    event.preventDefault();
+
+    // Check if the journal has an journalID (e.g. the user didn't
+    // select the journal from the drop down)
+    $.ajax({
+        url: "/journals/searchJournalID",
+        type: "POST",
+        data: {
+          journal: journal,
+        },
+        cache: false,
+        success: function(dataResult){
+          var dataResult = JSON.parse(dataResult);
+          if(dataResult.statusCode==200) {  // Success
+            // Get the new journalID
+            var JournalID = dataResult.journalID;
+
+            // Update the journalID field
+            $("#journalID").val(JournalID);
+
+            // Submit again
+            $("#btnSubmit").click();
+
+          } else {
+            // Stop saving temporarily
+            event.preventDefault();
+
+            // Trigger the new journal dialog
+            $("#newJournal").val(journal);
+            btnNewJournal.click();
+          }
+        }
+      });
+    return true;
+  }
+  return false;
+}
+
+/* Name: addJournal
+ *
+ * Purpose: Function to add a journal to the database
+ *
+ * Parameters:
+ *  None
+ *
+ * Returns:
+ *  None
+ */
+function addJournal() {
+  // Add the journal
+  $.ajax({
+      url: "/journals/add",
+      type: "POST",
+      data: {
+        journal: $("#newJournal").val(),
+      },
+      cache: false,
+      success: function(dataResult){
+        var dataResult = JSON.parse(dataResult);
+        if(dataResult.statusCode==200) {  // Success
+          // Get the new journalID
+          var JournalID = dataResult.journalID;
+
+          // Update the journalID field
+          $("#journalID").val(JournalID);
+
+          // Close the dialog
+          $("#btnCloseJournalModal").click();
+
+          // Click the save button again
+          $("#btnSubmit").click();
+        }
+        else if(dataResult.statusCode==201) {  // Error
+          alert("Error adding journal.  Try adding it manually first, and then try saving the publication again.");
+          $("#btnCloseJournalModal").click();
+        } else if (dataResult.statusCode==202) {  // Duplicate journal
+          // Get the new journalID
+          var JournalID = dataResult.journalID;
+
+          // Update the journalID field
+          $("#journalID").val(JournalID);
+
+          // Click the save button again
+          $("#btnSubmit").click();
+        }
+      }
+    });
+}
+
+/* Name: checkKeyword
+ *
+ * Purpose: Checks to see if the Keyword textbox is filled in, and KeywordID
+ * is empty.  If so, that means what was typed in the Keyword field, does
+ * not exist in the database, and we need to offer the user a chance to create
+ * a new Keyword
+ *
+ * Parameters:
+ *  None
+ *
+ * Returns:
+ *  Array:
+ *    boolean (T/F) - Keyword exits
+ *    string - keywordID (or null)
+ *    string - keyword (or null)
+ */
+function checkKeyword() {
+  // Get the fields
+  var keyword = $("#newKeyword").val();
+  var keywordID = $("#keywordID").val();
+
+  // Check if keyword is not empty
+  if ((keyword != "") && (keywordID == "")) {
+    // Check if the keyword has an keywordID (e.g. the user didn't
+    // select the keyword from the drop down)
+    $.ajax({
+        url: "/keywords/searchExactKeyword",
+        type: "POST",
+        data: {
+          keyword: keyword,
+        },
+        cache: false,
+        success: function(dataResult){
+          var dataResult = JSON.parse(dataResult);
+          if(dataResult.statusCode==200) {  // Success
+            AddPublicationKeyword(dataResult.keywordID, $("#publicationID").val());
+
+            // Clear the keyword boxes
+            $("#newKeyword").val("");
+            $("#keywordID").val("");
+          } else {  // No exact match
+            // Fill in and launch the new keyword form
+            $("#newKeywordE").val(keyword);
+            $("#newKeywordF").val(keyword);
+            $("#btnNewKeyword").click();
+          }
+        }
+      });
+  }
+}
+
+/* Name: AddPublicationKeyword
+ *
+ * Purpose: Function to add a keyword to the publication
+ *
+ * Parameters:
+ *  keywordID - The KeywordID to add
+ *  publicationID - The PublicationID to add
+ *
+ * Returns:
+ *  None
+ */
+function AddPublicationKeyword(keywordID, publicationID) {
+  // Add the keyword to the publicationn
+  $.ajax({
+      url: "/publicationsKeywords/add",
+      type: "POST",
+      data: {
+        publicationID: publicationID,
+        keywordID: keywordID,
+      },
+      cache: false,
+      success: function(dataResult){
+        var dataResult = JSON.parse(dataResult);
+        if(dataResult.statusCode==200) {
+          // Get the new publicationsAuthorsID
+          var PublicationsKeywordsID = dataResult.publicationsKeywordsID;
+          var KeywordE = dataResult.keywordEnglish;
+          var KeywordF = dataResult.keywordFrench;
+
+          // Success
+          var html = '<tr id="kl_'+PublicationsKeywordsID+'"><td>'+PublicationsKeywordsID+'</td><td>'+KeywordE+'</td><td>'+KeywordF+'</td><td><button class="btn btn-danger m-1 fas fa-trash-alt" type="button" title="Delete Keyword" onclick="removeKeyword(\'kl_'+PublicationsKeywordsID+'\', '+PublicationsKeywordsID+')" /></td></tr>';
+          $("#tblKeywords").append(html);
+          displaySuccessMessage("Keyword Added");
+          return;
+        }
+        else if(dataResult.statusCode==201) {  // Error
+          displayErrorMessage("Error occurred adding keyword");
+          return;
+        } else if(dataResult.statusCode==202) {  // Row already exists
+          var KeywordE = dataResult.keywordEnglish;
+          var KeywordF = dataResult.keywordFrench;
+          displayErrorMessage("\""+KeywordE+" | "+KeywordF+"\" already exists for this publication.");
+          return;
+        }
+      }
+    });
+}
+
+/* Name: checkAssignedTo
+ *
+ * Purpose: Checks to see if the Assigned To textbox is filled in, and statusPersonID
+ * is empty.  If so, that means what was typed in the Assigned To field, does
+ * not exist in the database, and we need to offer the user a chance to create
+ * a new Person
+ *
+ * Parameters:
+ *  None
+ *
+ * Returns:
+ *  Array:
+ *    boolean (T/F) - Person exits
+ *    string - personID (or null)
+ *    string - person displayName
+ */
+function checkAssignedTo() {
+  // Get the fields
+  var person = $("#assignedTo").val();
+  var personID = $("#statusPersonID").val();
+  var publicationID = $("#publicationID").val();
+
+  // Check if client is not empty
+  if ((person != "") && (personID == "")) {
+    // Stop saving temporarily
+    event.preventDefault();
+
+    // Check to see if the person exists, but an ID was not select
+    // (e.g. didn't select from the drop down)
+    CheckPerson(person, "Do you want to add this person to the database and assign the status to them?",
+      "addNewPerson(StatusAssignedToSuccess)", StatusAssignedToSuccess);
+
+    return true;
+  }
+  return false;
+}
+
+/* Name: AddPublicationAuthor
+ *
+ * Purpose: Function to add an author to the publication
+ *
+ * Parameters:
+ *  personID - The PersonID to add
+ *  publicationID - The PublicationID to add
+ *
+ * Returns:
+ *  None
+ */
+function AddPublicationAuthor(authorID, authorName, publicationID) {
+  $.ajax({
+      url: "/publicationsAuthors/add",
+      type: "POST",
+      data: {
+        publicationID: publicationID,
+        authorID: authorID,
+      },
+      cache: false,
+      success: function(dataResult){
+        var dataResult = JSON.parse(dataResult);
+        if(dataResult.statusCode==200) {
+          // Get the new publicationsAuthorsID
+          var PublicationsAuthorsID = dataResult.publicationsAuthorsID;
+
+          // Success
+          var html = '<tr id="al_'+PublicationsAuthorsID+'"><td>'+PublicationsAuthorsID+'</td><td>'+authorName+'</td><td id="al_pa_'+PublicationsAuthorsID+'">No</td><td><button class="btn btn-info m-1 fas fa-toggle-on" id="btnEA_'+PublicationsAuthorsID+'" type="button" title="Toggle Primary Author Flag" onClick="toggleAuthor(\'al_pa_'+PublicationsAuthorsID+'\', '+PublicationsAuthorsID+', 0)" /><button class="btn btn-danger m-1 fas fa-trash-alt" id="btnDA_'+PublicationsAuthorsID+'" type="button" title="Delete Author" onclick="removeAuthor(\'al_'+PublicationsAuthorsID+'\', '+PublicationsAuthorsID+')" /></td></tr>';
+          $("#tblAuthors").append(html);
+          displaySuccessMessage("Author Added");
+        }
+        else if(dataResult.statusCode==201) {  // Error
+          displayErrorMessage("Error occurred adding author");
+        } else if(dataResult.statusCode==202) {  // Row already exists
+          displayErrorMessage("\""+$("#newAuthor").val()+"\" is already an author for this publication.");
+        }
+
+        // Clear the author boxes
+        $("#newAuthor").val("");
+        $("#authorID").val("");
+      }
+    });
+}
+
+/* Name: AddPublicationReviewer
+ *
+ * Purpose: Function to add a reviewer to the publication
+ *
+ * Parameters:
+ *  personID - The PersonID to add
+ *  publicationID - The PublicationID to add
+ *
+ * Returns:
+ *  None
+ */
+function AddPublicationReviewer(reviewerID, reviewerName, publicationID) {
+  $.ajax({
+      url: "/publicationsReviewers/add",
+      type: "POST",
+      data: {
+        publicationID: publicationID,
+        reviewerID: reviewerID,
+      },
+      cache: false,
+      success: function(dataResult){
+        var dataResult = JSON.parse(dataResult);
+        if(dataResult.statusCode==200) {
+          // Get the new publicationsAuthorsID
+          var PublicationsReviewersID = dataResult.publicationsReviewersID;
+
+          // Success
+          var html = '<tr id="rl_'+PublicationsReviewersID+'"><td>'+PublicationsReviewersID+'</td><td>'+reviewerName+'</td><td id="rl_lr_'+PublicationsReviewersID+'">No</td><td><button class="btn btn-info m-1 fas fa-toggle-on" id="btnER_'+PublicationsReviewersID+'" type="button" title="Toggle Lead Reviewer Flag" onClick="toggleReviewer(\'rl_lr_'+PublicationsReviewersID+'\', '+PublicationsReviewersID+', 0)" /><button class="btn btn-danger m-1 fas fa-trash-alt" id="btnDR_'+PublicationsReviewersID+'" type="button" title="Delete Reviewer" onclick="removeReviewer(\'rl_'+PublicationsReviewersID+'\', '+PublicationsReviewersID+')" /></td></tr>';
+          $("#tblReviewers").append(html);
+          displaySuccessMessage("Reviewer Added");
+        }
+        else if(dataResult.statusCode==201) {  // Error
+          displayErrorMessage("Error occurred adding reviewer");
+        } else if(dataResult.statusCode==202) {  // Row already exists
+          displayErrorMessage("\""+$("#newReviewer").val()+"\" is already a reviewer for this publication.");
+        }
+
+        // Clear the reviewer boxes
+        $("#newReviewer").val("");
+        $("#reviewerID").val("");
+      }
+    });
+}
+
+/* Name: StatusAssignedTo
+ *
+ * Purpose: Function to handle success of finding a person based on name
+ *
+ * Parameters:
+ *  personID - The personID that was found
+ *  displayName - The displayname of the person that was found
+ *  publicationID - Not used in this, case but consistent with other callback functions
+ *
+ * Returns:
+ *  None
+ */
+function StatusAssignedTo(personID, displayName, publicationID) {
+  // Update the form field
+  $("#statusPersonID").val(personID);
+
+  // Submit again
+  $("#btnSubmit").click();
+}
+
+/* Name: StatusAssignedToSuccess
+ *
+ * Purpose: Function to handle success of adding a person from the Assigned To
+ *
+ * Parameters:
+ *  personID - The personID that was found
+ *  displayName - The displayname of the person that was found
+ *  publicationID - Not used in this, case but consistent with other callback functions
+ *
+ * Returns:
+ *  None
+ */
+function StatusAssignedToSuccess(personID, displayName, publicationID) {
+  // Update the form fields
+  $("#statusPersonID").val(personID);
+  $("#assignedTo").val(displayName);
+
+  // Close the dialog
+  $("#btnClosePersonModal").click();
+
+  // Click the save button again
+  $("#btnSubmit").click();
+}
+
+/* Name: CheckPerson
+ *
+ * Purpose: Checks to see if the Person textbox (multiple different ones based
+ *  on parameter passed in) is filled in, and PersonID is empty.  If so, that
+ *  means what was typed in the Person textbox, does not exist in the database,
+ *  and we need to offer the user a chance to create a new Person
+ *
+ * Parameters:
+ *  person - The person's name to search for
+ *  message - The message to populate the new person modal save question with
+ *  click - The value to change the onclick attribute to for the save button
+ *          in the new person Modal
+ *  callback - The callback function to call after the person has been added
+ *
+ * Returns:
+ *  None
+ */
+function CheckPerson(person, message, click, callback) {
+  // Get the publicationID
+  var publicationID = $("#publicationID").val();
+
+  // Check if the person exists
+  $.ajax({
+      url: "/people/searchExactDisplayName",
+      type: "POST",
+      data: {
+        displayName: person,
+      },
+      cache: false,
+      success: function(dataResult){
+        var dataResult = JSON.parse(dataResult);
+        if(dataResult.statusCode==200) {
+          // Person found
+          callback(dataResult.personID, dataResult.displayName, publicationID);
+        }
+        else {
+          // Give the user a chance to create the person
+
+          // Update the modal values & messaging
+          $("#newDisplayName").val(person);
+          $("#newPersonSaveMessage").text(message);
+
+          // Update the onclick attribute of the save button
+          $("#btnNewPersonSave").attr("onclick", click);
+
+          // Show the modal
+          $("#btnNewPerson").click();
+        }
+      }
+    });
+}
+
+/* Name: addNewKeyword
+ *
+ * Purpose: Function to add a keyword to the database, and then add it to the
+ *  publication
+ *
+ * Parameters:
+ *  None
+ *
+ * Returns:
+ *  None
+ */
+function addNewKeyword() {
+  // Make sure everything is filled in
+  keywordE = $("#newKeywordE").val();
+  keywordF = $("#newKeywordF").val();
+
+  if ((keywordE == "") || (keywordF == "")) {
+    alert ("You must fill in both the English and French translation of the keyword");
+    return;
+  }
+
+  // Add the keyword to the database
+  $.ajax({
+      url: "/keywords/add",
+      type: "POST",
+      data: {
+        keywordE: keywordE,
+        keywordF: keywordF,
+      },
+      cache: false,
+      success: function(dataResult){
+        var dataResult = JSON.parse(dataResult);
+        if ((dataResult.statusCode==200) || (dataResult.statusCode==202)) {
+          // Get the KeywordID
+          var KeywordID = dataResult.keywordID;
+          var PublicationID = $("#publicationID").val();
+
+          // Add the keyword to the publication
+          AddPublicationKeyword(KeywordID, PublicationID);
+
+          // Close the Modal
+          $("#btnCloseKeywordModal").click();
+          return;
+        }
+        else if(dataResult.statusCode==201) {  // Error
+          displayErrorMessage("Error occurred creating keyword");
+          return;
+        }
+      }
+    });
+}
+
+/* Name: addJournal
+ *
+ * Purpose: Function to add a journal to the database
+ *
+ * Parameters:
+ *  None
+ *
+ * Returns:
+ *  None
+ */
+function addJournal() {
+  // Add the journal
+  $.ajax({
+      url: "/journals/add",
+      type: "POST",
+      data: {
+        journal: $("#newJournal").val(),
+      },
+      cache: false,
+      success: function(dataResult){
+        var dataResult = JSON.parse(dataResult);
+        if(dataResult.statusCode==200) {  // Success
+          // Get the new journalID
+          var JournalID = dataResult.journalID;
+
+          // Update the journalID field
+          $("#journalID").val(JournalID);
+
+          // Close the dialog
+          $("#btnCloseJournalModal").click();
+
+          // Click the save button again
+          $("#btnSubmit").click();
+        }
+        else if(dataResult.statusCode==201) {  // Error
+          alert("Error adding journal.  Try adding it manually first, and then try saving the publication again.");
+          $("#btnCloseJournalModal").click();
+        } else if (dataResult.statusCode==202) {  // Duplicate journal
+          // Get the new journalID
+          var JournalID = dataResult.journalID;
+
+          // Update the journalID field
+          $("#journalID").val(JournalID);
+
+          // Click the save button again
+          $("#btnSubmit").click();
+        }
+      }
+    });
+}
+
+/* Name: addNewPerson
+ *
+ * Purpose: Function to add a person to the database, and then add the person
+ *  to the publication using the callback function
+ *
+ * Parameters:
+ *  callback - The function to call after the person has been successfully added
+ *             to the database
+ *
+ * Returns:
+ *  None
+ */
+function addNewPerson(callback) {
+  // Make sure everything is filled in
+  displayName = $("#newDisplayName").val();
+
+  if (displayName == "") {
+    alert ("You must enter at least a display name for the person.");
+    return;
+  }
+
+  // Add the person to the database
+  $.ajax({
+      url: "/people/add",
+      type: "POST",
+      data: {
+        lastName: $("#newLastName").val(),
+        firstName: $("#newFirstName").val(),
+        displayName: displayName,
+        organizationID: $("#newPOrganizationID").val(),
+      },
+      cache: false,
+      success: function(dataResult){
+        var dataResult = JSON.parse(dataResult);
+        if ((dataResult.statusCode==200) || (dataResult.statusCode==202)) {
+          // Get the PersonID
+          var PersonID = dataResult.personID;
+          var DisplayName = dataResult.displayName;
+          var PublicationID = $("#publicationID").val();
+
+          // Callback function
+          callback(PersonID, DisplayName, PublicationID);
+
+          // Close the Modal
+          $("#btnClosePersonModal").click();
+          return;
+        }
+        else if(dataResult.statusCode==201) {  // Error
+          displayErrorMessage("Error occurred creating person");
+          return;
+        }
+      }
+    });
+}
+
 $(document).ready(function(){
+  // Report Type autocomplete
+  lookup("#reportType", "#reportTypeID", "/reportTypes/searchReportType");
+
   // Assigned to autocomplete
   lookup("#assignedTo", "#statusPersonID", "/people/searchPerson");
 
@@ -264,132 +1359,61 @@ $(document).ready(function(){
   // Journal autocomplete
   lookup("#journal", "#journalID", "/journals/searchJournal");
 
+  // Person Modal Organization lookup
+  lookup("#newPOrganization", "#newPOrganizationID", "/organizations/searchOrganization");
+
   // Add author function
   $("#btnAddAuthor").click(function(){
+    // Get the form variables
     var authorName = $("#newAuthor").val();
     var authorID = $('#authorID').val();
     var publicationID = $("#publicationID").val();
-    if (authorID == "") {
+
+    if ((authorID == "") && (authorName == "")) {
+      // No authorn name entered
       alert("You must select an author first");
       return;
+    } else if ((authorID == "") && (authorName != "")) {
+      // Check to see if the person exists, but an ID was not select
+      // (e.g. didn't select from the drop down)
+      CheckPerson(authorName, "Do you want to add this person to the database and add them as an author?",
+        "addNewPerson(AddPublicationAuthor)", AddPublicationAuthor);
+    } else {
+      // Author name entered, ID found in lookup
+
+      // Add the Author to the publication
+      AddPublicationAuthor(authorID, authorName, publicationID);
     }
-
-    $.ajax({
-				url: "/publicationsAuthors/add",
-				type: "POST",
-				data: {
-          publicationID: publicationID,
-          authorID: authorID,
-				},
-				cache: false,
-				success: function(dataResult){
-					var dataResult = JSON.parse(dataResult);
-					if(dataResult.statusCode==200) {
-            // Get the new publicationsAuthorsID
-            var PublicationsAuthorsID = dataResult.publicationsAuthorsID;
-
-            // Success
-            var html = '<tr id="al_'+PublicationsAuthorsID+'"><td>'+PublicationsAuthorsID+'</td><td>'+authorName+'</td><td id="al_pa_'+PublicationsAuthorsID+'">No</td><td><button class="btn btn-info m-1 fas fa-toggle-on" id="btnEA_'+PublicationsAuthorsID+'" type="button" title="Toggle Primary Author Flag" onClick="toggleAuthor(\'al_pa_'+PublicationsAuthorsID+'\', '+PublicationsAuthorsID+', 0)" /><button class="btn btn-danger m-1 fas fa-trash-alt" id="btnDA_'+PublicationsAuthorsID+'" type="button" title="Delete Author" onclick="removeAuthor(\'al_'+PublicationsAuthorsID+'\', '+PublicationsAuthorsID+')" /></td></tr>';
-            $("#tblAuthors").append(html);
-            displaySuccessMessage("Author Added");
-					}
-					else if(dataResult.statusCode==201) {  // Error
-            displayErrorMessage("Error occurred adding author");
-					} else if(dataResult.statusCode==202) {  // Row already exists
-            displayErrorMessage("\""+$("#newAuthor").val()+"\" is already an author for this publication.");
-          }
-
-          // Clear the author boxes
-          $("#newAuthor").val("");
-          $("#authorID").val("");
-				}
-			});
-    });
+  });
 
   // Add reviewer function
   $("#btnAddReviewer").click(function(){
+    // Get the form variables
     var reviewerName = $("#newReviewer").val();
     var reviewerID = $('#reviewerID').val();
     var publicationID = $("#publicationID").val();
-    if (reviewerID == "") {
+
+    if ((reviewerID == "") && (reviewerName == "")) {
+      // No reviewer name entered
       alert("You must select a reviewer first");
       return;
+    } else if ((reviewerID == "") && (reviewerName != "")) {
+      // Check to see if the person exists, but an ID was not select
+      // (e.g. didn't select from the drop down)
+      CheckPerson(reviewerName, "Do you want to add this person to the database and add them as an reviewer?",
+        "addNewPerson(AddPublicationReviewer)", AddPublicationReviewer);
+    } else {
+      // Reviewer name entered, ID found in lookup
+
+      // Add the Reviewer to the publication
+      AddPublicationReviewer(reviewerID, reviewerName, publicationID);
     }
-
-    $.ajax({
-        url: "/publicationsReviewers/add",
-        type: "POST",
-        data: {
-          publicationID: publicationID,
-          reviewerID: reviewerID,
-        },
-        cache: false,
-        success: function(dataResult){
-          var dataResult = JSON.parse(dataResult);
-          if(dataResult.statusCode==200) {
-            // Get the new publicationsReviewersID
-            var PublicationsReviewersID = dataResult.publicationsReviewersID;
-
-            // Success
-            var html = '<tr id="rl_'+PublicationsReviewersID+'"><td>'+PublicationsReviewersID+'</td><td>'+reviewerName+'</td><td id="rl_lr_'+PublicationsReviewersID+'">No</td><td><button class="btn btn-info m-1 fas fa-toggle-on" id="btnER_'+PublicationsReviewersID+'" type="button" title="Toggle Lead Reviewer Flag" onClick="toggleReviewer(\'rl_lr_'+PublicationsReviewersID+'\', '+PublicationsReviewersID+', 0)" /><button class="btn btn-danger m-1 fas fa-trash-alt" id="btnDR_'+PublicationsReviewersID+'" type="button" title="Delete Reviewer" onclick="removeReviewer(\'rl_'+PublicationsReviewersID+'\', '+PublicationsReviewersID+')" /></td></tr>';
-            $("#tblReviewers").append(html);
-            displaySuccessMessage("Reviewer Added");
-          }
-          else if(dataResult.statusCode==201) {  // Error
-            displayErrorMessage("Error occurred adding reviewer");
-          } else if(dataResult.statusCode==202) {  // Row already exists
-            displayErrorMessage("\""+$("#newReviewer").val()+"\" is already a reviewer for this publication.");
-          }
-
-          // Clear the author boxes
-          $("#newReviewer").val("");
-          $("#reviewerID").val("");
-        }
-      });
-    });
+  });
 
   // Add keyword function
   $("#btnAddKeyword").click(function(){
-    var keywordID = $('#keywordID').val();
-    var publicationID = $("#publicationID").val();
-    if (keywordID == "") {
-      alert("You must select a keyword first");
-      return;
-    }
-
-    $.ajax({
-				url: "/PublicationsKeywords/add",
-				type: "POST",
-				data: {
-          publicationID: publicationID,
-          keywordID: keywordID,
-				},
-				cache: false,
-				success: function(dataResult){
-					var dataResult = JSON.parse(dataResult);
-					if(dataResult.statusCode==200) {
-            // Get the new publicationsAuthorsID
-            var PublicationsKeywordsID = dataResult.publicationsKeywordsID;
-            var KeywordE = dataResult.keywordEnglish;
-            var KeywordF = dataResult.keywordFrench;
-
-            // Success
-            var html = '<tr id="kl_'+PublicationsKeywordsID+'"><td>'+PublicationsKeywordsID+'</td><td>'+KeywordE+'</td><td>'+KeywordF+'</td><td><button class="btn btn-danger m-1 fas fa-trash-alt" type="button" title="Delete Keyword" onclick="removeKeyword(\'kl_'+PublicationsKeywordsID+'\', '+PublicationsKeywordsID+')" /></td></tr>';
-            $("#tblKeywords").append(html);
-            displaySuccessMessage("Keyword Added");
-					}
-					else if(dataResult.statusCode==201) {  // Error
-            displayErrorMessage("Error occurred adding keyword");
-					} else if(dataResult.statusCode==202) {  // Row already exists
-            displayErrorMessage("\""+$("#newKeyword").val()+"\" already exists for this publication.");
-          }
-
-          // Clear the keyword boxes
-          $("#newKeyword").val("");
-          $("#keywordID").val("");
-				}
-			});
-    });
+    checkKeyword();
+  });
 
   // Add link function
   $("#btnAddLink").click(function(){
@@ -528,6 +1552,7 @@ $(document).ready(function(){
       },
     });
   });
+
   // Select the General Tab
   $("#tbGeneralLink").className += " active";
 
@@ -610,4 +1635,7 @@ $(document).ready(function(){
       });
   });
 
+  // Intercept form submition
+  const form = document.getElementById('frmEditPublication');
+  form.addEventListener('submit', checkLookups);
 });

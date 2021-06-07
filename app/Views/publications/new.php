@@ -1,5 +1,5 @@
 <script type="text/javascript" src="/scripts/lookup.js"></script>
-<script type="text/javascript" src="/scripts/publications.js"></script>
+<script type="text/javascript" src="/scripts/publicationsNew.js"></script>
 
 <?php use App\Libraries\MyFormGeneration; ?>
 
@@ -30,7 +30,7 @@
           <form>
             <?= MyFormGeneration::generateIDTextBox("newReportType",
               null, "Report Type"); ?>
-            <?= MyFormGeneration::generateTextBox("abbreviation",
+            <?= MyFormGeneration::generateTextBox("newAbbreviation",
               null, "-- Enter the abbreviation for the report type (e.g. JJ) --", "Abbreviation"); ?>
 
             <div class="form-group row">
@@ -47,7 +47,7 @@
     </div>
   </div>
 
-  <form class="form-group" action="/publications/new" method="post" id="frmPublication">
+  <form class="form-group" action="/publications/new" method="post" id="frmNewPublication">
     <?= csrf_field() ?>
 
     <input type="hidden" name="page" value="<?= $page ?>">
@@ -56,13 +56,13 @@
       set_value('primaryTitle'),
       "-- Enter the primary title --", "Primary Title", 3); ?>
 
-    <?= MyFormGeneration::generateLookupTextBox("reportType",
-      set_value('reportType'), "-- Enter a report type --", "Report Type", "reportTypeID",
-      set_value('reportTypeID')); ?>
+    <?= MyFormGeneration::generateLookupTextBox("reportTypeN",
+      set_value('reportTypeN'), "-- Enter a report type --", "Report Type", "reportTypeNID",
+      set_value('reportTypeNID')); ?>
 
     <!-- Hidden button to trigger modal -->
     <div style="display: none;">
-      <button type="button" title="Edit Link" data-toggle="modal" data-target="#newReportTypeModal" id="btnNewReportType" />
+      <button type="button" data-toggle="modal" data-target="#newReportTypeModal" id="btnNewReportType" />
     </div>
 
     <button class="btn btn-success m-1" type="submit" name="submit" id="btnSubmit">Create Publication</button>

@@ -360,6 +360,47 @@ class Clients extends Controller {
   }
 
   /**
+   * Name: add
+   * Purpose: Adds a new client using variables from the POST
+   *
+   * Parameters: None
+   *
+   * Returns: json encoded array with status code (200 = success, 201 = failure)
+   *  and the ClientID of the newly inserted row
+   */
+  public function add() {
+    // Create a new Model
+    $model = new ClientModel();
+
+    // Get the POST variables
+    $client = $this->request->getPost('client');
+
+    // Make sure the variables are valid
+    if (empty($client)) {
+      echo json_encode(array("statusCode"=>201));
+      return;
+    }
+
+    // Does the client already exist?
+    if ($this->clientCount($client) > 0) {
+      $clientID = $this->getClientID($client);
+      echo json_encode(array("statusCode"=>202, "clientID"=>$clientID));
+      return;
+    }
+
+    // Do the insert
+    $model->save([
+      'Client' => $client,
+    ]);
+
+    // Get the ID of the insert
+    $clientID = $this->getClientID($client);
+
+    // Return the success
+    echo json_encode(array("statusCode"=>200, "clientID"=>$clientID));
+  }
+
+  /**
    * Name: searchClient
    * Purpose: Uses a query variable passed to the URL to search for a client
    *  that is like the search term.
@@ -394,6 +435,79 @@ class Clients extends Controller {
 
     // Output JSON response
     echo json_encode($autoComplete);
+  }
+
+  /**
+   * Name: searchClientID
+   * Purpose: Uses a query variable passed to the URL to search for a client
+   *  that matches the client passed in
+   *
+   * Parameters: None
+   *
+   * Returns: Outputs JSON - An array of data
+   */
+  public function searchClientID() {
+    // Get the POST variables
+    $client = $this->request->getPost('client');
+
+    // See if the client actually exists
+    if ($this->clientCount($client) > 0) {
+      // Get the clientID
+      $clientID = $this->getClientID($client);
+
+      // Return the success
+      echo json_encode(array("statusCode"=>200, "clientID"=>$clientID));
+      return;
+    }
+
+    // Return the failure
+    echo json_encode(array("statusCode"=>201));
+  }
+
+  /**
+   * Name: clientCount
+   * Purpose: Gets the number of rows with the matching client
+   *
+   * Parameters:
+   *   string $client - The client to search for
+   *
+   * Returns: The number of rows that match the client
+   */
+  private function clientCount(string $client) {
+    // Create the query builder object
+    $db = \Config\Database::connect();
+    $builder = $db->table('Clients');
+    $builder->select('ClientID');
+    $builder->where('Client', $client);
+
+    // Run the query
+    $results = $builder->get()->getNumRows();
+
+    // Return the number of rows
+    return $results;
+  }
+
+  /**
+   * Name: getClientID
+   * Purpose: Gets the ClientID of the specified client
+   *
+   * Parameters:
+   *   string $client - The client to search for
+   *
+   * Returns: The ClientID
+   */
+  private function getClientID(string $client) {
+    // Create the query builder object
+    $db = \Config\Database::connect();
+    $builder = $db->table('Clients');
+    $builder->select('ClientID');
+    $builder->where('Client', $client);
+
+    // Run the query
+    $results = $builder->get()->getRow();
+
+    // Return the result
+    return $results->ClientID;
   }
 
   /**

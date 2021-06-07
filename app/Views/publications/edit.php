@@ -3,8 +3,9 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.widgets.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/css/theme.bootstrap_4.min.css" integrity="sha512-2C6AmJKgt4B+bQc08/TwUeFKkq8CsBNlTaNcNgUmsDJSU1Fg+R6azDbho+ZzuxEkJnCjLZQMozSq3y97ZmgwjA==" crossorigin="anonymous" />
 <script type="text/javascript" src="/scripts/lookup.js"></script>
-<script type="text/javascript" src="/scripts/publications.js"></script>
 <script type="text/javascript" src="/scripts/publicationsEdit.js"></script>
+
+
 
 <?php use App\Libraries\MyFormGeneration; ?>
 
@@ -75,9 +76,233 @@
     </div>
   </div>
 
+  <!-- New Report Type Modal -->
+  <div class="modal fade" id="newReportTypeModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">New Report Type</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <?= MyFormGeneration::generateIDTextBox("newReportType",
+              null, "Report Type"); ?>
+            <?= MyFormGeneration::generateTextBox("newAbbreviation",
+              null, "-- Enter the abbreviation for the report type (e.g. JJ) --", "Abbreviation"); ?>
+
+            <div class="form-group row">
+              <p class="mx-3">The report type you enetred does not exist in the database.</p>
+              <p class="mx-3">Do you want to add this report type to the database and continue saving the publication?</p>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="btnNewReportTypeSave" class="btn btn-success" onclick="addReportType()">Yes</button>
+          <button type="button" class="btn btn-info" data-dismiss="modal" id="btnCloseRTModal">No</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- New Fiscal Year Modal -->
+  <div class="modal fade" id="newFiscalYearModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">New Fiscal Year</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <?= MyFormGeneration::generateIDTextBox("newFiscalYear",
+              null, "Fiscal Year"); ?>
+
+            <div class="form-group row">
+              <p class="mx-3">The fiscal year you enetred does not exist in the database.</p>
+              <p class="mx-3">Do you want to add this fiscal year to the database and continue saving the publication?</p>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="btnNewFiscalYearSave" class="btn btn-success" onclick="addFiscalYear()">Yes</button>
+          <button type="button" class="btn btn-info" data-dismiss="modal" id="btnCloseFYModal">No</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- New Organization Modal -->
+  <div class="modal fade" id="newOrganizationModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">New Organization</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <?= MyFormGeneration::generateIDTextBox("newOrganization",
+              null, "Organization"); ?>
+
+            <div class="form-group row">
+              <p class="mx-3">The organization you enetred does not exist in the database.</p>
+              <p class="mx-3">Do you want to add this organization to the database and continue saving the publication?</p>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="btnNewOrganizationSave" class="btn btn-success" onclick="addOrganization()">Yes</button>
+          <button type="button" class="btn btn-info" data-dismiss="modal" id="btnCloseOrgModal">No</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- New Client Modal -->
+  <div class="modal fade" id="newClientModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">New Client / Publisher</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <?= MyFormGeneration::generateIDTextBox("newClient",
+              null, "Client / Publisher"); ?>
+
+            <div class="form-group row">
+              <p class="mx-3">The client / publisher you enetred does not exist in the database.</p>
+              <p class="mx-3">Do you want to add this client / publisher to the database and continue saving the publication?</p>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="btnNewClientSave" class="btn btn-success" onclick="addClient()">Yes</button>
+          <button type="button" class="btn btn-info" data-dismiss="modal" id="btnCloseClientModal">No</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- New Journal Modal -->
+  <div class="modal fade" id="newJournalModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">New Journal</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <?= MyFormGeneration::generateIDTextBox("newJournal", null, "Journal"); ?>
+
+            <div class="form-group row">
+              <p class="mx-3">The journal you enetred does not exist in the database.</p>
+              <p class="mx-3">Do you want to add this journal to the database and continue saving the publication?</p>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="btnNewJournalSave" class="btn btn-success" onclick="addJournal()">Yes</button>
+          <button type="button" class="btn btn-info" data-dismiss="modal" id="btnCloseJournalModal">No</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- New Keyword Modal -->
+  <div class="modal fade" id="newKeywordModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">New Keyword</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <?= MyFormGeneration::generateTextBox("newKeywordE",
+              null, "-- Enter the keyword in English --", "Keyword (English)"); ?>
+
+            <?= MyFormGeneration::generateTextBox("newKeywordF",
+              null, "-- Enter the keyword in French --", "Keyword (French)"); ?>
+
+            <div class="form-group row">
+              <p class="mx-3">The keyword you enetred does not exist in the database.</p>
+              <p class="mx-3">Do you want to add this keyword to the database and add it to the publication?</p>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="btnNewKeywordSave" class="btn btn-success" onclick="addNewKeyword()">Yes</button>
+          <button type="button" class="btn btn-info" data-dismiss="modal" id="btnCloseKeywordModal">No</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- New Person Modal -->
+  <div class="modal fade" id="newPersonModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">New Person</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body ui-front">
+          <form>
+            <?= MyFormGeneration::generateTextBox("newLastName",
+              null, "-- Enter the person's last name --", "Last Name"); ?>
+
+            <?= MyFormGeneration::generateTextBox("newFirstName",
+              null, "-- Enter the person's first name --", "First Name"); ?>
+
+            <?= MyFormGeneration::generateTextBox("newDisplayName",
+              null, "-- How the person's name appears as an author or reviewer. --", "Display Name"); ?>
+
+            <?= MyFormGeneration::generateLookupTextBox("newPOrganization",
+              null, "-- Enter an organization and select it from the list that appears --", "Organization",
+              "newPOrganizationID", null); ?>
+
+            <div class="form-group row">
+              <p class="mx-3">The person you enetred does not exist in the database.</p>
+              <p class="mx-3" id="newPersonSaveMessage">Do you want to add this person to the database?</p>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="btnNewPersonSave" class="btn btn-success" onclick="">Yes</button>
+          <button type="button" class="btn btn-info" data-dismiss="modal" id="btnClosePersonModal">No</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 <!-- Main Form -->
 <div class="container my-3 py-3">
+  <div class="form-row">
+    <button class="btn btn-success m-1" type="submit" name="submit" value="save" id="btnSubmit" form="frmEditPublication" >Save Publication</button>
+    <a class="btn btn-info m-1" href="/publications/index/<?= $page ?>">Back to Publications</a>
+  </div>
+  <br />
   <h1><?= esc($title); ?></h1>
+
+
 
 	<!-- Error List -->
 	<?php
@@ -143,7 +368,7 @@
   </ul>
 
 
-  <form class="form-group" action="/publications/edit" method="post">
+  <form class="form-group" action="/publications/edit" method="post" id="frmEditPublication">
     <?= csrf_field() ?>
     <input type="hidden" name="page" value="<?= $page ?>">
 
@@ -168,6 +393,11 @@
         "-- Enter a report type --", "Report Type",
         "reportTypeID", set_value('reportTypeID', $publication['ReportTypeID'])); ?>
 
+      <!-- Hidden button to trigger modal -->
+      <div style="display: none;">
+        <button type="button" data-toggle="modal" data-target="#newReportTypeModal" id="btnNewReportType" />
+      </div>
+
       <?= MyFormGeneration::generateCheckBox("rushPublication",
           set_value('rushPublication', $publication['RushPublication']), "Rush Publication"); ?>
 
@@ -184,10 +414,20 @@
         "-- Enter a fiscal year (e.g. 2020 / 2021) --", "Fiscal Year",
         "fiscalYearID", set_value('fiscalYearID', $publication['FiscalYearID'])); ?>
 
+      <!-- Hidden button to trigger modal -->
+      <div style="display: none;">
+        <button type="button" data-toggle="modal" data-target="#newFiscalYearModal" id="btnNewFiscalYear" />
+      </div>
+
       <?= MyFormGeneration::generateLookupTextBox("organization",
         set_value('organization', $publication['Organization']),
         "-- Enter an organization --", "Organization",
         "organizationID", set_value('organizationID', $publication['OrganizationID'])); ?>
+
+      <!-- Hidden button to trigger modal -->
+      <div style="display: none;">
+        <button type="button" data-toggle="modal" data-target="#newOrganizationModal" id="btnNewOrganization" />
+      </div>
 
       <?= MyFormGeneration::generateSelect("costCentreID",
         set_value('costCentreID', $publication['CostCentreID']),
@@ -215,6 +455,11 @@
         set_value('originalStatusID', $publication['OriginalStatusPersonID'])); ?>
       <?= MyFormGeneration::generateHiddenInput('originalStatusDueDate',
         set_value('originalStatusID', $publication['OriginalStatusDueDate'])); ?>
+
+      <!-- Hidden button to trigger modal -->
+      <div style="display: none;">
+        <button type="button" data-toggle="modal" data-target="#newPersonModal" id="btnNewPerson" />
+      </div>
 
       <?= MyFormGeneration::generateSelect("statusID",
         set_value('statusID', $publication['StatusID']),
@@ -268,7 +513,7 @@
     <div id="tbAuthors" class="tabcontent" style="display: none;">
 
       <?= MyFormGeneration::generateLookupTextBoxWithButton("newAuthor",
-        null, "-- Enter a person --", "Author", null, "authorID", null, "btnAddAuthor"); ?>
+        null, "-- Enter a person --", "Author", null, "authorID", null, "btnAddAuthor", "Add to Publication"); ?>
 
       <div class="form-group row">
       <h3>Authors</h3>
@@ -306,7 +551,7 @@
     <div id="tbReviewers" class="tabcontent" style="display: none;">
 
       <?= MyFormGeneration::generateLookupTextBoxWithButton("newReviewer",
-        null, "-- Enter a person --", "Reviewer", null, "reviewerID", null, "btnAddReviewer"); ?>
+        null, "-- Enter a person --", "Reviewer", null, "reviewerID", null, "btnAddReviewer", "Add to Publication"); ?>
 
       <div class="form-group row">
       <h3>Reviewers</h3>
@@ -377,7 +622,12 @@
     <div id="tbKeywords" class="tabcontent" style="display: none;">
 
       <?= MyFormGeneration::generateLookupTextBoxWithButton("newKeyword",
-        null, "-- Enter a keyword --", "Keyword", null, "keywordID", null, "btnAddKeyword"); ?>
+        null, "-- Enter a keyword --", "Keyword", null, "keywordID", null, "btnAddKeyword", "Add to Publication"); ?>
+
+      <!-- Hidden button to trigger modal -->
+      <div style="display: none;">
+        <button type="button" data-toggle="modal" data-target="#newKeywordModal" id="btnNewKeyword" />
+      </div>
 
       <div class="form-group row">
       <h3>Keywords</h3>
@@ -418,10 +668,20 @@
         "-- Enter a client / publisher --", "Client / Publisher",
         "clientID", set_value('clientID', $publication['ClientID'])); ?>
 
+      <!-- Hidden button to trigger modal -->
+      <div style="display: none;">
+        <button type="button" data-toggle="modal" data-target="#newClientModal" id="btnNewClient" />
+      </div>
+
       <?= MyFormGeneration::generateLookupTextBox("journal",
         set_value('journal', $publication['Journal']),
         "-- Enter a journal --", "Journal",
         "journalID", set_value('journalID', $publication['JournalID'])); ?>
+
+      <!-- Hidden button to trigger modal -->
+      <div style="display: none;">
+        <button type="button" data-toggle="modal" data-target="#newJournalModal" id="btnNewJournal" />
+      </div>
 
       <?= MyFormGeneration::generateTextBox("manuscriptNumber",
           set_value('manuscriptNumber', $publication['ManuscriptNumber']),
@@ -501,7 +761,7 @@
           <br />
         </div>
         <div class="col-2">
-          <button type="button" class="btn btn-success" id="btnAddLink">Add Link</button>
+          <button type="button" class="btn btn-success" id="btnAddLink">Add to Publication</button>
         </div>
       </div>
 
@@ -558,7 +818,7 @@
           <br />
         </div>
         <div class="col-2">
-          <button type="button" class="btn btn-success" id="btnAddComment">Add Comment</button>
+          <button type="button" class="btn btn-success" id="btnAddComment">Add to Publication</button>
         </div>
       </div>
 
@@ -596,7 +856,5 @@
 
     </div>
 
-    <button class="btn btn-success m-1" type="submit" name="submit" value="save" >Save Publication</button>
-    <a class="btn btn-info m-1" href="/publications/index/<?= $page ?>">Back to Publications</a>
   </form>
 </div>

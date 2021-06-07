@@ -360,6 +360,47 @@ class Journals extends Controller {
   }
 
   /**
+   * Name: add
+   * Purpose: Adds a new journal using variables from the POST
+   *
+   * Parameters: None
+   *
+   * Returns: json encoded array with status code (200 = success, 201 = failure)
+   *  and the JournalID of the newly inserted row
+   */
+  public function add() {
+    // Create a new Model
+    $model = new JournalModel();
+
+    // Get the POST variables
+    $journal = $this->request->getPost('journal');
+
+    // Make sure the variables are valid
+    if (empty($journal)) {
+      echo json_encode(array("statusCode"=>201));
+      return;
+    }
+
+    // Does the journal already exist?
+    if ($this->journalCount($journal) > 0) {
+      $journalID = $this->getJournalID($journal);
+      echo json_encode(array("statusCode"=>202, "journalID"=>$journalID));
+      return;
+    }
+
+    // Do the insert
+    $model->save([
+      'Journal' => $journal,
+    ]);
+
+    // Get the ID of the insert
+    $journalID = $this->getJournalID($journal);
+
+    // Return the success
+    echo json_encode(array("statusCode"=>200, "journalID"=>$journalID));
+  }
+
+  /**
    * Name: searchJournal
    * Purpose: Uses a query variable passed to the URL to search for a Journal
    *  that is like the search term.
@@ -394,6 +435,79 @@ class Journals extends Controller {
 
     // Output JSON response
     echo json_encode($autoComplete);
+  }
+
+  /**
+   * Name: searchJournalID
+   * Purpose: Uses a query variable passed to the URL to search for a journal
+   *  that matches the journal passed in
+   *
+   * Parameters: None
+   *
+   * Returns: Outputs JSON - An array of data
+   */
+  public function searchJournalID() {
+    // Get the POST variables
+    $journal = $this->request->getPost('journal');
+
+    // See if the journal actually exists
+    if ($this->journalCount($journal) > 0) {
+      // Get the journalID
+      $journalID = $this->getJournalID($journal);
+
+      // Return the success
+      echo json_encode(array("statusCode"=>200, "journalID"=>$journalID));
+      return;
+    }
+
+    // Return the failure
+    echo json_encode(array("statusCode"=>201));
+  }
+
+  /**
+   * Name: journalCount
+   * Purpose: Gets the number of rows with the matching journal
+   *
+   * Parameters:
+   *   string $journal - The journal to search for
+   *
+   * Returns: The number of rows that match the journal
+   */
+  private function journalCount(string $journal) {
+    // Create the query builder object
+    $db = \Config\Database::connect();
+    $builder = $db->table('Journals');
+    $builder->select('JournalID');
+    $builder->where('Journal', $journal);
+
+    // Run the query
+    $results = $builder->get()->getNumRows();
+
+    // Return the number of rows
+    return $results;
+  }
+
+  /**
+   * Name: getJournalID
+   * Purpose: Gets the JournalID of the specified journal
+   *
+   * Parameters:
+   *   string $journal - The journal to search for
+   *
+   * Returns: The JournalID
+   */
+  private function getJournalID(string $journal) {
+    // Create the query builder object
+    $db = \Config\Database::connect();
+    $builder = $db->table('Journals');
+    $builder->select('JournalID');
+    $builder->where('Journal', $journal);
+
+    // Run the query
+    $results = $builder->get()->getRow();
+
+    // Return the result
+    return $results->JournalID;
   }
 
   /**
