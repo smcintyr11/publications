@@ -1,6 +1,7 @@
 <?php namespace App\Libraries;
 
 class MyFormGeneration {
+
   /**
    * Name: generateNewButtonURL
    * Purpose: Generates a URL for the new button based on the current URL
@@ -25,16 +26,27 @@ class MyFormGeneration {
     *  string $textboxID   - The value to use for the input name field
     *  string $value       - The value to populate the textbox with
     *  string $textboxLabel  - The text for the label
+    *  bool $hidden - A boolean value indicating whether to hide the html element with the display style element
     *
     * Returns: string - The HTML for these form elements
     */
-  public static function generateIDTextBox(string $textboxID, ?string $value, string $textboxLabel) {
+  public static function generateIDTextBox(string $textboxID, ?string $value, string $textboxLabel, bool $hidden=false) {
+    // Variable declaration
+    $html = '';
+
     // Generate the HTML
-   $html = '<div class="form-group row">
+    if ($hidden) {
+      $html = '<div style="display: none;">';
+    }
+
+   $html = $html . '<div class="form-group row">
     <label for="' . $textboxID . '" class="col-2 col-form-label font-weight-bold">' . $textboxLabel . ':</label>
     <div class="col-10">
     <input type="text" readonly class="form-control-plaintext" name="' . $textboxID . '" id="' . $textboxID . '" value="' . $value . '" />
     <br /></div></div>';
+    if ($hidden) {
+      $html = $html . '</div>';
+    }
 
     // Return the resulting HTML
     return $html;
@@ -49,16 +61,27 @@ class MyFormGeneration {
    *  string $value       - The value to populate the textbox with
    *  string $placeholder - The placeholder text
    *  string $textboxLabel  - The text for the label
+   *  bool $hidden - A boolean value indicating whether to hide the html element with the display style element
    *
    * Returns: string - The HTML for these form elements
    */
- public static function generateTextBox(string $textboxID, ?string $value, string $placeholder, string $textboxLabel) {
+ public static function generateTextBox(string $textboxID, ?string $value, string $placeholder, string $textboxLabel, bool $hidden=false) {
+   // Variable declaration
+   $html = '';
+
    // Generate the HTML
-   $html = '<div class="form-group row">
+   if ($hidden) {
+     $html = '<div style="display: none;">';
+   }
+
+   $html = $html . '<div class="form-group row">
     <label for="' . $textboxID . '" class="col-2 col-form-label font-weight-bold">' . $textboxLabel . ':</label>
     <div class="col-10">
     <input class="form-control" type="input" name="' . $textboxID . '" value="' . $value . '" placeholder="' . $placeholder . '" id="' . $textboxID . '"  />
     <br /></div></div>';
+    if ($hidden) {
+      $html = $html . '</div>';
+    }
 
    // Return the resulting HTML
    return $html;
@@ -73,16 +96,27 @@ class MyFormGeneration {
   *  string $value       - The value to populate the textbox with
   *  string $placeholder - The placeholder text
   *  string $textboxLabel  - The text for the label
+  *  bool $hidden - A boolean value indicating whether to hide the html element with the display style element
   *
   * Returns: string - The HTML for these form elements
   */
- public static function generateNumberTextBox(string $textboxID, ?string $value, string $placeholder, string $textboxLabel) {
-  // Generate the HTML
-  $html = '<div class="form-group row">
+ public static function generateNumberTextBox(string $textboxID, ?string $value, string $placeholder, string $textboxLabel, bool $hidden=false) {
+   // Variable declaration
+   $html = '';
+
+   // Generate the HTML
+   if ($hidden) {
+     $html = '<div style="display: none;">';
+   }
+
+  $html = $html . '<div class="form-group row">
    <label for="' . $textboxID . '" class="col-2 col-form-label font-weight-bold">' . $textboxLabel . ':</label>
    <div class="col-10">
    <input class="form-control" type="number" name="' . $textboxID . '" value="' . $value . '" placeholder="' . $placeholder . '" id="' . $textboxID . '"  />
    <br /></div></div>';
+   if ($hidden) {
+     $html = $html . '</div>';
+   }
 
   // Return the resulting HTML
   return $html;
@@ -96,16 +130,27 @@ class MyFormGeneration {
   *  string $textboxID   - The value to use for the input name field
   *  string $value       - The value to populate the textbox with
   *  string $textboxLabel  - The text for the label
+  *  bool $hidden - A boolean value indicating whether to hide the html element with the display style element
   *
   * Returns: string - The HTML for these form elements
   */
- public static function generateDateTextBox(string $textboxID, ?string $value, string $textboxLabel) {
-  // Generate the HTML
-  $html = '<div class="form-group row">
+ public static function generateDateTextBox(string $textboxID, ?string $value, string $textboxLabel, bool $hidden=false) {
+   // Variable declaration
+   $html = '';
+
+   // Generate the HTML
+   if ($hidden) {
+     $html = '<div style="display: none;">';
+   }
+
+  $html = $html . '<div class="form-group row">
    <label for="' . $textboxID . '" class="col-2 col-form-label font-weight-bold">' . $textboxLabel . ':</label>
    <div class="col-10">
    <input class="form-control" type="Date" name="' . $textboxID . '" value="' . $value . '" id="' . $textboxID . '"  />
    <br /></div></div>';
+   if ($hidden) {
+     $html = $html . '</div>';
+   }
 
   // Return the resulting HTML
   return $html;
@@ -139,12 +184,20 @@ class MyFormGeneration {
     *  string $placeholder - The placeholder text
     *  string $textboxLabel  - The text for the label
     *  int $rows            - The number of rows for the textbox
+    *  bool $hidden - A boolean value indicating whether to hide the html element with the display style element
     *
     * Returns: string - The HTML for these form elements
     */
-  public static function generateMultilineTextBox(string $textboxID, ?string $value, string $placeholder, string $textboxLabel, int $rows = 5, bool $readonly = false) {
+  public static function generateMultilineTextBox(string $textboxID, ?string $value, string $placeholder, string $textboxLabel, int $rows = 5, bool $readonly = false, bool $hidden=false) {
+    // Variable declaration
+    $html = '';
+
     // Generate the HTML
-    $html = '<div class="form-group row">
+    if ($hidden) {
+      $html = '<div style="display: none;">';
+    }
+
+    $html = $html . '<div class="form-group row">
      <label for="' . $textboxID . '" class="col-2 col-form-label font-weight-bold">' . $textboxLabel . ':</label>
      <div class="col-10">
      <textarea class="form-control" rows="' . $rows . '" name="' . $textboxID . '" placeholder="' . $placeholder . '" id="' . $textboxID . '" ';
@@ -153,6 +206,9 @@ class MyFormGeneration {
      }
      $html = $html . ' >' . $value . '</textarea>
      <br /></div></div>';
+     if ($hidden) {
+       $html = $html . '</div>';
+     }
 
     // Return the resultinng HTML
     return $html;
@@ -172,12 +228,20 @@ class MyFormGeneration {
     *  string $lookupValue  - The value to populate the lookupID with
     *  string $buttonID     - The ID for the button
     *  string $buttonText   - The text for the button (if you want to specify something other than the default)
+    *  bool $hidden - A boolean value indicating whether to hide the html element with the display style element
     *
     * Returns: string - The HTML for these form elements
     */
-  public static function generateLookupTextBoxWithButton(string $textboxID, ?string $textboxValue, string $placeholder, string $textboxLabel, ?string $newButtonURL, string $lookupID, ?string $lookupValue, ?string $buttonID = null, ?string $buttonText = null) {
+  public static function generateLookupTextBoxWithButton(string $textboxID, ?string $textboxValue, string $placeholder, string $textboxLabel, ?string $newButtonURL, string $lookupID, ?string $lookupValue, ?string $buttonID = null, ?string $buttonText = null, bool $hidden=false) {
+    // Variable declaration
+    $html = '';
+
     // Generate the HTML
-    $html = '<div class="form-group row">
+    if ($hidden) {
+      $html = '<div style="display: none;">';
+    }
+
+    $html = $html . '<div class="form-group row">
       <label for="' . $textboxID . '" class="col-2 col-form-label font-weight-bold">' . $textboxLabel . ':</label>
       <div class="col-8">
       <input class="form-control" type="input" id="' . $textboxID . '" name="' . $textboxID . '" value="' . $textboxValue . '" placeholder="' . $placeholder . '" />
@@ -200,6 +264,9 @@ class MyFormGeneration {
     $html = $html . '</div>
     <input type="hidden" id="' . $lookupID . '" name="' . $lookupID . '" value="' . $lookupValue . '">
     </div>';
+    if ($hidden) {
+      $html = $html . '</div>';
+    }
 
     // Return the resultinng HTML
     return $html;
@@ -216,12 +283,20 @@ class MyFormGeneration {
      *  string $textboxLabel  - The text for the label
      *  string $lookupID     - The ID for the lookup value
      *  string $lookupValue  - The value to populate the lookupID with
+     *  bool $hidden - A boolean value indicating whether to hide the html element with the display style element
      *
      * Returns: string - The HTML for these form elements
      */
-   public static function generateLookupTextBox(string $textboxID, ?string $textboxValue, string $placeholder, string $textboxLabel, string $lookupID, ?string $lookupValue) {
+   public static function generateLookupTextBox(string $textboxID, ?string $textboxValue, string $placeholder, string $textboxLabel, string $lookupID, ?string $lookupValue, bool $hidden=false) {
+     // Variable declaration
+     $html = '';
+
      // Generate the HTML
-     $html = '<div class="form-group row">
+     if ($hidden) {
+       $html = '<div style="display: none;">';
+     }
+
+     $html = $html . '<div class="form-group row">
        <label for="' . $textboxID . '" class="col-2 col-form-label font-weight-bold">' . $textboxLabel . ':</label>
        <div class="col-10">
          <input class="form-control" type="input" id="' . $textboxID . '" name="' . $textboxID . '" value="' . $textboxValue . '" placeholder="' . $placeholder . '" />
@@ -229,6 +304,9 @@ class MyFormGeneration {
          <br />
        </div>
      </div>';
+     if ($hidden) {
+       $html = $html . '</div>';
+     }
 
      // Return the resultinng HTML
      return $html;
@@ -244,20 +322,31 @@ class MyFormGeneration {
      *  string $placeholder - The placeholder text for the first option
      *  string $textboxLabel  - The text for the label
      *  array $optionList  - The array of rows to be converted to options
+     *  bool $hidden - A boolean value indicating whether to hide the html element with the display style element
      *
      * Returns: string - The HTML for these form elements
      */
- public static function generateSelect(string $selectID, ?string $value, string $placeholder, string $selectLabel, array $options) {
+ public static function generateSelect(string $selectID, ?string $value, string $placeholder, string $selectLabel, array $options, bool $hidden=false) {
    // Convert the options to html
    $optionList = MyFormGeneration::generateOptions($options, $value);
 
+   // Variable declaration
+   $html = '';
+
    // Generate the HTML
-  $html = '<div class="form-group row">
+   if ($hidden) {
+     $html = '<div style="display: none;">';
+   }
+
+  $html = $html . '<div class="form-group row">
     <label for="' . $selectID . '" class="col-2 col-form-label font-weight-bold">' . $selectLabel . ':</label>
     <div class="col-10">
     <select class="form-control" id="' . $selectID . '" name="' . $selectID . '" value="' . $value . '" >
     <option value="">' . $placeholder . '</option>' . $optionList . '
     </select><br /></div></div>';
+    if ($hidden) {
+      $html = $html . '</div>';
+    }
 
    // Return the resultinng HTML
    return $html;
@@ -308,12 +397,20 @@ class MyFormGeneration {
       *  string $checkboxID   - The value to use for the checkbox
       *  bool $value       - The value to populate the checkbox with
       *  string $checkboxLabel  - The text for the label
+      *  bool $hidden - A boolean value indicating whether to hide the html element with the display style element
       *
       * Returns: string - The HTML for these form elements
       */
-  public static function generateCheckBox(string $checkboxID, ?bool $value, string $checkboxLabel) {
+  public static function generateCheckBox(string $checkboxID, ?bool $value, string $checkboxLabel, bool $hidden=false) {
+    // Variable declaration
+    $html = '';
+
     // Generate the HTML
-    $html = '<div class="form-group row">
+    if ($hidden) {
+      $html = '<div style="display: none;">';
+    }
+
+    $html = $html . '<div class="form-group row">
     <label for="' . $checkboxID . '" class="col-2 col-form-label font-weight-bold">' . $checkboxLabel . ':</label>
     <div class="col-10">
     <input class="custom-control custom-checkbox" type="checkbox" name="' . $checkboxID . '" ';
@@ -321,6 +418,9 @@ class MyFormGeneration {
       $html = $html . " checked ";
     }
     $html = $html . '/><br /></div></div>';
+    if ($hidden) {
+      $html = $html . '</div>';
+    }
 
     // Return the resultinng HTML
     return $html;
@@ -468,7 +568,7 @@ class MyFormGeneration {
      *  string $page         - The current page number
      *  string $id           - The id (e.g. PublicationID) of the current row of
      *                         the table
-     *  bool $$renderDelete  - Should the delete button be rendered
+     *  bool $renderDelete  - Should the delete button be rendered
      *
      * Returns: string - The HTML for these form elements
      */

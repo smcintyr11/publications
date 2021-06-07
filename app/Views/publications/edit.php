@@ -8,6 +8,7 @@
 
 
 <?php use App\Libraries\MyFormGeneration; ?>
+<?php $hideDetailedFields = true; ?>
 
 <!-- Edit Link Modal -->
  <div class="modal fade" id="linkModal" tabindex="-1" role="dialog">
@@ -302,8 +303,6 @@
   <br />
   <h1><?= esc($title); ?></h1>
 
-
-
 	<!-- Error List -->
 	<?php
     $errorList = \Config\Services::validation()->listErrors();
@@ -319,6 +318,7 @@
   <div id="alertFail"></div>
   <div id="alertSuccess"></div>
 
+  <!-- Rush publication alert -->
   <?php
     if ($publication['RushPublication'] == 1) {
       echo ('<div class="alert alert-primary" role="alert">
@@ -341,22 +341,22 @@
     <li class="nav-item">
       <a class="nav-link tablink" onclick="openTab(event, 'tbReviewers')">Reviewers</a>
     </li>
-    <li class="nav-item">
+    <li class="nav-item" <?= ($hideDetailedFields ? 'style="display: none;"' : '') ?> >
       <a class="nav-link tablink" onclick="openTab(event, 'tbAbstract')">Abstract</a>
     </li>
-    <li class="nav-item">
+    <li class="nav-item" <?= ($hideDetailedFields ? 'style="display: none;"' : '') ?> >
       <a class="nav-link tablink" onclick="openTab(event, 'tbPLS')">PLS</a>
     </li>
-    <li class="nav-item">
+    <li class="nav-item" <?= ($hideDetailedFields ? 'style="display: none;"' : '') ?> >
       <a class="nav-link tablink" onclick="openTab(event, 'tbPRS')">PRS</a>
     </li>
-    <li class="nav-item">
+    <li class="nav-item" <?= ($hideDetailedFields ? 'style="display: none;"' : '') ?> >
       <a class="nav-link tablink" onclick="openTab(event, 'tbKeywords')">Keywords</a>
     </li>
     <li class="nav-item">
       <a class="nav-link tablink" onclick="openTab(event, 'tbPublishing')">Publishing</a>
     </li>
-    <li class="nav-item">
+    <li class="nav-item" <?= ($hideDetailedFields ? 'style="display: none;"' : '') ?> >
       <a class="nav-link tablink" onclick="openTab(event, 'tbDates')">Dates</a>
     </li>
     <li class="nav-item">
@@ -386,7 +386,7 @@
 
       <?= MyFormGeneration::generateMultilineTextBox("secondaryTitle",
         set_value('secondaryTitle', $publication['SecondaryTitle']),
-        "-- Enter the secondary title --", "Secondary Title", 3); ?>
+        "-- Enter the secondary title --", "Secondary Title", 3, false, $hideDetailedFields); ?>
 
       <?= MyFormGeneration::generateLookupTextBox("reportType",
         set_value('reportType', $publication['ReportType']),
@@ -407,12 +407,12 @@
 
       <?= MyFormGeneration::generateTextBox("agreementNumber",
         set_value('agreementNumber', $publication['AgreementNumber']),
-        "-- Enter the agreement number --", "Agreement Number"); ?>
+        "-- Enter the agreement number --", "Agreement Number", $hideDetailedFields); ?>
 
       <?= MyFormGeneration::generateLookupTextBox("fiscalYear",
         set_value('fiscalYear', $publication['FiscalYear']),
         "-- Enter a fiscal year (e.g. 2020 / 2021) --", "Fiscal Year",
-        "fiscalYearID", set_value('fiscalYearID', $publication['FiscalYearID'])); ?>
+        "fiscalYearID", set_value('fiscalYearID', $publication['FiscalYearID']), $hideDetailedFields); ?>
 
       <!-- Hidden button to trigger modal -->
       <div style="display: none;">
@@ -422,7 +422,7 @@
       <?= MyFormGeneration::generateLookupTextBox("organization",
         set_value('organization', $publication['Organization']),
         "-- Enter an organization --", "Organization",
-        "organizationID", set_value('organizationID', $publication['OrganizationID'])); ?>
+        "organizationID", set_value('organizationID', $publication['OrganizationID']), $hideDetailedFields); ?>
 
       <!-- Hidden button to trigger modal -->
       <div style="display: none;">
@@ -435,15 +435,15 @@
 
       <?= MyFormGeneration::generateTextBox("projectCode",
         set_value('projectCode', $publication['ProjectCode']),
-        "-- Enter the project code --", "Project Code"); ?>
+        "-- Enter the project code --", "Project Code", $hideDetailedFields); ?>
 
       <?= MyFormGeneration::generateTextBox("ipdNumber",
         set_value('ipdNumber', $publication['IPDNumber']),
-        "-- Enter the ipd number --", "IPD Number"); ?>
+        "-- Enter the ipd number --", "IPD Number", $hideDetailedFields); ?>
 
       <?= MyFormGeneration::generateTextBox("crossReferenceNumber",
         set_value('crossReferenceNumber', $publication['CrossReferenceNumber']),
-        "-- Enter the cross reference number --", "Cross Reference Number"); ?>
+        "-- Enter the cross reference number --", "Cross Reference Number", $hideDetailedFields); ?>
     </div>
 
     <!-- Status Tab -->
@@ -676,7 +676,7 @@
       <?= MyFormGeneration::generateLookupTextBox("journal",
         set_value('journal', $publication['Journal']),
         "-- Enter a journal --", "Journal",
-        "journalID", set_value('journalID', $publication['JournalID'])); ?>
+        "journalID", set_value('journalID', $publication['JournalID']), $hideDetailedFields); ?>
 
       <!-- Hidden button to trigger modal -->
       <div style="display: none;">
@@ -685,27 +685,27 @@
 
       <?= MyFormGeneration::generateTextBox("manuscriptNumber",
           set_value('manuscriptNumber', $publication['ManuscriptNumber']),
-          "-- Enter the manuscript number --", "Manuscript Number"); ?>
+          "-- Enter the manuscript number --", "Manuscript Number", $hideDetailedFields); ?>
 
       <?= MyFormGeneration::generateTextBox("volume",
           set_value('volume', $publication['Volume']),
-          "-- Enter the volume --", "Volume"); ?>
+          "-- Enter the volume --", "Volume", $hideDetailedFields); ?>
 
       <?= MyFormGeneration::generateTextBox("startPage",
           set_value('startPage', $publication['StartPage']),
-          "-- Enter the start page --", "Start Page"); ?>
+          "-- Enter the start page --", "Start Page", $hideDetailedFields); ?>
 
       <?= MyFormGeneration::generateTextBox("endPage",
           set_value('endPage', $publication['EndPage']),
-          "-- Enter the end page --", "End Page"); ?>
+          "-- Enter the end page --", "End Page", $hideDetailedFields); ?>
 
       <?= MyFormGeneration::generateTextBox("isbn",
           set_value('isbn', $publication['ISBN']),
-          "-- Enter the ISBN or ISSN --", "ISBN / ISSN"); ?>
+          "-- Enter the ISBN or ISSN --", "ISBN / ISSN", $hideDetailedFields); ?>
 
       <?= MyFormGeneration::generateTextBox("doi",
           set_value('doi', $publication['DOI']),
-          "-- Enter the DOI --", "DOI"); ?>
+          "-- Enter the DOI --", "DOI", $hideDetailedFields); ?>
 
     </div>
 

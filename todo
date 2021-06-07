@@ -10,7 +10,3 @@
       - Report #, Report Type, Status, Due Date, Assigned To
     - View 2:
       - Report #, Report Type, Title, Authors, Status, Due Date, Cost Centre, Project Code
-- MyFormGeneration
-  - Add code to hide fields
-- Publications edit
-  - Hide fields that we won't be using right away
