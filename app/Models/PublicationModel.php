@@ -31,7 +31,7 @@ class PublicationModel extends Model {
       p.ProjectCode, p.ReportNumber, p.ManuscriptNumber, p.CostCentreID, cc.CostCentre, p.JournalID, j.Journal, p.ReportTypeID,
       CONCAT (rt.ReportType, " (", rt.Abbreviation, ")") AS ReportType, p.StatusID, s.Status, p.StatusPersonID, pe.DisplayName AS StatusPerson, p.StatusDueDate, p.DOI,
       p.JournalSubmissionDate, p.JournalAcceptanceDate, p.ConferenceSubmissionDate, p.ConferenceAcceptanceDate, p.EmbargoPeriod,
-      p.EmbargoEndDate, p.WebPublicationDate, p.SentToClient, p.SentToClientDate, p.ReportFormatted, p.RecordNumber, p.RushPublication
+      p.EmbargoEndDate, p.WebPublicationDate, p.SentToClient, p.SentToClientDate, p.ReportFormatted, p.RecordNumber, p.RushPublication, DATEDIFF(p.StatusDueDate, CURDATE()) AS DueDateDelta
       FROM (((((((Publications AS p LEFT JOIN FiscalYears AS fy ON p.FiscalYearID = fy.FiscalYearID)
       LEFT JOIN Clients AS c ON p.ClientID = c.ClientID)
       LEFT JOIN Organizations AS o ON p.OrganizationID = o.OrganizationID)
@@ -97,6 +97,7 @@ class PublicationModel extends Model {
         "ReportFormatted" => $row->ReportFormatted,
         "RecordNumber" => $row->RecordNumber,
         "RushPublication" => $row->RushPublication,
+        "DueDateDelta" => $row->DueDateDelta,
       );
     }
 

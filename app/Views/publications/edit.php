@@ -327,6 +327,21 @@
     }
    ?>
 
+   <!-- Upcoming publication alert -->
+   <?php
+     if (empty($publication['DueDateDelta']) == false) {
+       $delta = intval($publication['DueDateDelta']);
+       if ($delta <= 1) {
+         echo ('<div class="alert alert-danger" role="alert">Status Due Date in ' . $delta . ' days.</div>');
+       } else if ($delta <= 3) {
+         echo ('<div class="alert alert-warning" role="alert">Status Due Date in ' . $delta . ' days.</div>');
+       } else if ($delta <= 5) {
+         echo ('<div class="alert alert-info" role="alert">Status Due Date in ' . $delta . ' days.</div>');
+       }
+     }
+    ?>
+
+
   <!-- Tab links -->
   <ul class="nav nav-tabs">
     <li class="nav-item">
