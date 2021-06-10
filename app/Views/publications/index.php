@@ -4,15 +4,15 @@
 
   // Calculate sort parameters
   $rn_sort_param = "rn_asc";
-  $abbr_sort_param = "abbr_asc";
+  $rt_sort_param = "rt_asc";
   $status_sort_param = "status_asc";
   $dd_sort_param = "dd_asc";
   $at_sort_param = "at_asc";
 
   if ($_SESSION["currentSort"] == "rn_asc") {
     $rn_sort_param = "rn_desc";
-  } elseif ($_SESSION["currentSort"] == "abbr_asc") {
-    $abbr_sort_param = "abbr_desc";
+  } elseif ($_SESSION["currentSort"] == "rt_asc") {
+    $rt_sort_param = "rt_desc";
   } elseif ($_SESSION["currentSort"] == "status_asc") {
     $status_sort_param = "status_desc";
   } elseif ($_SESSION["currentSort"] == "pa_asc") {
@@ -48,7 +48,7 @@
           $rn_sort_param, $_SESSION["currentSort"], "rn_asc", "rn_desc"); ?>
 
         <?= MyFormGeneration::generateColumnHeaderWithFilter("publications", "Report Type",
-          $abbr_sort_param, $_SESSION["currentSort"], "abbr_asc", "abbr_desc",
+          $rt_sort_param, $_SESSION["currentSort"], "rt_asc", "rt_desc",
           "reportTypeID", set_value('reportTypeID'), "---", "frmSearch", $reportTypes); ?>
 
         <?= MyFormGeneration::generateColumnHeaderWithFilter("publications", "Status",
@@ -79,7 +79,7 @@
             <tr class="<?= $highlighting ?>" >
               <?= MyFormGeneration::generateIndexRowButtons("publications", $page, $publication->PublicationID, true, $publication->RushPublication); ?>
               <td><?= $publication->ReportNumber; ?></td>
-              <td><?= $publication->Abbreviation; ?></td>
+              <td><?= $publication->ReportType; ?></td>
               <td><?= $publication->Status; ?></td>
               <td><?= $publication->StatusDueDate; ?></td>
               <td><?= $publication->StatusPerson; ?></td>

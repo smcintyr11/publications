@@ -6,7 +6,7 @@
   $cc_sort_param = "cc_asc";
   $pc_sort_param = "pc_asc";
   $rn_sort_param = "rn_asc";
-  $abbr_sort_param = "abbr_asc";
+  $rt_sort_param = "rt_asc";
   $pt_sort_param = "pt_asc";
   $status_sort_param = "status_asc";
   $pa_sort_param = "pa_asc";
@@ -18,8 +18,8 @@
     $pc_sort_param = "pc_desc";
   } elseif ($_SESSION["currentSort"] == "rn_asc") {
     $rn_sort_param = "rn_desc";
-  } elseif ($_SESSION["currentSort"] == "abbr_asc") {
-    $abbr_sort_param = "abbr_desc";
+  } elseif ($_SESSION["currentSort"] == "rt_asc") {
+    $rt_sort_param = "rt_desc";
   } elseif ($_SESSION["currentSort"] == "pt_asc") {
     $pt_sort_param = "pt_desc";
   } elseif ($_SESSION["currentSort"] == "status_asc") {
@@ -54,7 +54,7 @@
           $rn_sort_param, $_SESSION["currentSort"], "rn_asc", "rn_desc"); ?>
 
         <?= MyFormGeneration::generateColumnHeaderWithFilter("publications", "Report Type",
-          $abbr_sort_param, $_SESSION["currentSort"], "abbr_asc", "abbr_desc",
+          $rt_sort_param, $_SESSION["currentSort"], "rt_asc", "rt_desc",
           "reportTypeID", set_value('reportTypeID'), "---", "frmSearch", $reportTypes); ?>
 
         <?= MyFormGeneration::generateColumnHeader("publications", "Primary Title",
@@ -95,7 +95,7 @@
             <tr class="<?= $highlighting ?>" >
               <?= MyFormGeneration::generateIndexRowButtons("publications", $page, $publication->PublicationID, true, $publication->RushPublication); ?>
               <td><?= $publication->ReportNumber; ?></td>
-              <td><?= $publication->Abbreviation; ?></td>
+              <td><?= $publication->ReportType; ?></td>
               <td><?= $publication->PrimaryTitle; ?></td>
               <td><?= $publication->PublicationAuthors; ?></td>
               <td><?= $publication->Status; ?></td>

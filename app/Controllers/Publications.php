@@ -26,7 +26,7 @@ class Publications extends Controller {
 
     // Generate the builder object
     if ($detailed) {
-      $builder->select("Publications.PublicationID, CostCentre, ProjectCode, ReportNumber, Abbreviation, PrimaryTitle, Status, PublicationAuthors, StatusDueDate, IFNULL((DATEDIFF(StatusDueDate, CURDATE())), 10000) AS DueDateDelta, Publications.RushPublication, vPeopleDropDown.DisplayName AS StatusPerson");
+      $builder->select("Publications.PublicationID, CostCentre, ProjectCode, ReportNumber, Abbreviation, ReportType, PrimaryTitle, Status, PublicationAuthors, StatusDueDate, IFNULL((DATEDIFF(StatusDueDate, CURDATE())), 10000) AS DueDateDelta, Publications.RushPublication, vPeopleDropDown.DisplayName AS StatusPerson");
     } else {
       $builder->select('Publications.PublicationID');
     }
@@ -45,6 +45,7 @@ class Publications extends Controller {
       $builder->orLike('ReportNumber', $filter);
       if (empty($reportTypeID)) {
         $builder->orLike('Abbreviation', $filter);
+        $builder->orLike('ReportType', $filter);
       }
       $builder->orLike('PrimaryTitle', $filter);
       if (empty($statusID)) {
@@ -76,10 +77,10 @@ class Publications extends Controller {
         $builder->orderBy("ReportNumber", "ASC");
       } elseif ($sorting == "rn_desc") {
         $builder->orderBy("ReportNumber", "DESC");
-      } elseif ($sorting == "abbr_asc") {
-        $builder->orderBy("Abbreviation", "ASC");
-      } elseif ($sorting == "abbr_desc") {
-        $builder->orderBy("Abbreviation", "DESC");
+      } elseif ($sorting == "rt_asc") {
+        $builder->orderBy("ReportType", "ASC");
+      } elseif ($sorting == "rt_desc") {
+        $builder->orderBy("ReportType", "DESC");
       } elseif ($sorting == "pt_asc") {
         $builder->orderBy("PrimaryTitle", "ASC");
       } elseif ($sorting == "pt_desc") {
