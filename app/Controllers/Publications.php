@@ -19,42 +19,52 @@ class Publications extends Controller {
 	 *
 	 * Returns: QueryBuilder object
 	 */
-  public function generateIndexQB(string $filter, bool $detailed = false, string $sorting = '') {
+  public function generateIndexQB(string $filter, ?string $reportTypeID, ?string $statusID, ?string $costCentreID, bool $detailed = false, string $sorting = '') {
     // Load the query builder
     $db = \Config\Database::connect();
     $builder = $db->table('Publications');
 
     // Generate the builder object
     if ($detailed) {
-      $builder->select("Publications.PublicationID, CostCentre, ProjectCode, IPDNumber, CrossReferenceNumber, ReportNumber, Abbreviation, PrimaryTitle, Status, PublicationAuthors, PublicationReviewers");
+      $builder->select("Publications.PublicationID, CostCentre, ProjectCode, ReportNumber, Abbreviation, PrimaryTitle, Status, PublicationAuthors, StatusDueDate, IFNULL((DATEDIFF(StatusDueDate, CURDATE())), 10000) AS DueDateDelta, Publications.RushPublication, vPeopleDropDown.DisplayName AS StatusPerson");
     } else {
       $builder->select('Publications.PublicationID');
     }
     $builder->join('CostCentres', 'Publications.CostCentreID = CostCentres.CostCentreID', 'left');
     $builder->join('ReportTypes', 'Publications.ReportTypeID = ReportTypes.ReportTypeID', 'left');
     $builder->join('Statuses', 'Publications.StatusID = Statuses.StatusID', 'left');
+    $builder->join('vPeopleDropDown', 'Publications.StatusPersonID = vPeopleDropDown.PersonID', 'left');
     $builder->join('vPublicationAuthors', 'Publications.PublicationID = vPublicationAuthors.PublicationID', 'left');
-    $builder->join('vPublicationReviewers', 'Publications.PublicationID = vPublicationReviewers.PublicationID', 'left');
 
     // Are we filtering
     if ($filter != '') {
-      $builder->like('CostCentre', $filter);
+      if (empty($costCentreID)) {
+        $builder->like('CostCentre', $filter);
+      }
       $builder->orLike('ProjectCode', $filter);
-      $builder->orLike('IPDNumber', $filter);
-      $builder->orLike('CrossReferenceNumber', $filter);
       $builder->orLike('ReportNumber', $filter);
-      $builder->orLike('Abbreviation', $filter);
+      if (empty($reportTypeID)) {
+        $builder->orLike('Abbreviation', $filter);
+      }
       $builder->orLike('PrimaryTitle', $filter);
-      $builder->orLike('Status', $filter);
+      if (empty($statusID)) {
+        $builder->orLike('Status', $filter);
+      }
       $builder->orLike('PublicationAuthors', $filter);
-      $builder->orLike('PublicationReviewers', $filter);
     }
 
+    if (empty($reportTypeID) == false) {
+      $builder->where('Publications.ReportTypeID', $reportTypeID);
+    }
+    if (empty($statusID) == false) {
+      $builder->where('Publications.StatusID', $statusID);
+    }
+    if (empty($costCentreID) == false) {
+      $builder->where('Publications.CostCentreID', $costCentreID);
+    }
     // Are we sorting
     if ($detailed and $sorting != '') {
-      if ($sorting == "id_desc") {
-        $builder->orderBy("PublicationID", "DESC");
-      } elseif ($sorting == "cc_asc") {
+      if ($sorting == "cc_asc") {
         $builder->orderBy("CostCentre", "ASC");
       } elseif ($sorting == "cc_desc") {
         $builder->orderBy("CostCentre", "DESC");
@@ -62,14 +72,6 @@ class Publications extends Controller {
         $builder->orderBy("ProjectCode", "ASC");
       } elseif ($sorting == "pc_desc") {
         $builder->orderBy("ProjectCode", "DESC");
-      } elseif ($sorting == "ipd_asc") {
-        $builder->orderBy("IPDNumber", "ASC");
-      } elseif ($sorting == "ipd_desc") {
-        $builder->orderBy("IPDNumber", "DESC");
-      } elseif ($sorting == "xref_asc") {
-        $builder->orderBy("CrossReferenceNumber", "ASC");
-      } elseif ($sorting == "xref_desc") {
-        $builder->orderBy("CrossReferenceNumber", "DESC");
       } elseif ($sorting == "rn_asc") {
         $builder->orderBy("ReportNumber", "ASC");
       } elseif ($sorting == "rn_desc") {
@@ -86,16 +88,18 @@ class Publications extends Controller {
         $builder->orderBy("Status", "ASC");
       } elseif ($sorting == "status_desc") {
         $builder->orderBy("Status", "DESC");
+      } elseif ($sorting == "at_asc") {
+        $builder->orderBy("StatusPerson", "ASC");
+      } elseif ($sorting == "at_desc") {
+        $builder->orderBy("StatusPerson", "DESC");
       } elseif ($sorting == "pa_asc") {
         $builder->orderBy("PublicationAuthors", "ASC");
       } elseif ($sorting == "pa_desc") {
         $builder->orderBy("PublicationAuthors", "DESC");
-      } elseif ($sorting == "pr_asc") {
-        $builder->orderBy("PublicationReviewers", "ASC");
-      } elseif ($sorting == "pr_desc") {
-        $builder->orderBy("PublicationReviewers", "DESC");
+      } elseif ($sorting == "dd_asc") {
+        $builder->orderBy("DueDateDelta", "DESC");
       } else {
-        $builder->orderBy("PublicationID", "ASC");
+        $builder->orderBy("DueDateDelta", "ASC");
       }
     }
 
@@ -115,7 +119,7 @@ class Publications extends Controller {
    */
   public function getMaxRows(string $filter = '') {
     // Get the maximum number of rows
-    return $this->generateIndexQB($filter)->get()->getNumRows();
+    return $this->generateIndexQB($filter, null, null, null)->get()->getNumRows();
   }
 
   /**
@@ -123,11 +127,12 @@ class Publications extends Controller {
 	 * Purpose: Processes the session data populating any mission session settings.
 	 *
 	 * Parameters:
-   *  session $session - Session object
+   *  $session - Session object
+   *  $detailed - boolean indicating whether it's the detailed index
 	 *
 	 * Returns: None
 	 */
-  public function processIndexSession($session) {
+  public function processIndexSession($session, $detailed) {
     // Setup rows per page if it doesn't exist
     if ($session->has('rowsPerPage') == false) {
       $session->set('rowsPerPage', 25);
@@ -151,11 +156,16 @@ class Publications extends Controller {
       // Setup the filter and max rows
       $session->set('maxRows', $this->getMaxRows(''));
       $session->set('filter', '');
-      $session->set('currentSort', 'id_asc');
+      $session->set('currentSort', 'dd_desc');
     }
 
     // Last Page
-    $session->set('lastPage', 'Publications::index');
+    if ($detailed) {
+      $session->set('lastPage', 'Publications::indexDetailed');
+    } else {
+      $session->set('lastPage', 'Publications::index');
+    }
+
   }
 
   /**
@@ -167,12 +177,15 @@ class Publications extends Controller {
    * Returns: None
    */
    public function index() {
+     // Load helpers
+     helper(['form']);
+
      // Get the services
      $uri = service('uri');
      $session = session();
 
      // Process the session data
-     $this->processIndexSession($session);
+     $this->processIndexSession($session, false);
 
      // Parse the URI
      $page = $uri->setSilent()->getSegment(3, 1);
@@ -201,7 +214,7 @@ class Publications extends Controller {
      }
 
      // Generate the pager object
-     $builder = $this-> generateIndexQB($session->get('filter'), true, $session->get('currentSort'));
+     $builder = $this-> generateIndexQB($session->get('filter'), $this->request->getPost('reportTypeID'), $this->request->getPost('statusID'), $this->request->getPost('costCentreID'), true, $session->get('currentSort'));
      $this->pager = new \App\Libraries\MyPager(current_url(true), $builder->getCompiledSelect(), $session->get('rowsPerPage'), $session->get('maxRows'), $page);
 
      // Get the publication model
@@ -212,6 +225,9 @@ class Publications extends Controller {
        'publications' => $this->pager->getCurrentRows(),
        'links' => $this->pager->createLinks(),
        'title' => 'Publications',
+       'reportTypes' => $this->getReportTypes(),
+       'statuses' => $this->getStatuses(),
+       'costCentres' => $this->getCostCentres(),
        'page' => $page,
      ];
 
@@ -222,6 +238,77 @@ class Publications extends Controller {
  		echo view('publications/index.php', $data);
  		echo view('templates/footer.php', $data);
    }
+
+   /**
+    * Name: indexDetailed
+    * Purpose: Generates the index page
+    *
+    * Parameters: None
+    *
+    * Returns: None
+    */
+    public function indexDetailed() {
+      // Load helpers
+      helper(['form']);
+
+      // Get the services
+      $uri = service('uri');
+      $session = session();
+
+      // Process the session data
+      $this->processIndexSession($session, true);
+
+      // Parse the URI
+      $page = $uri->setSilent()->getSegment(3, 1);
+
+      // Get the sort parameter
+      $sort = $uri->getQuery(['only' => ['sort']]);
+      if ($sort != '') {
+        $sort = substr($sort, 5);
+        $session->set('currentSort', $sort);
+        $page = 1;
+      }
+
+      // Get the filter parameter
+      $filter = $uri->getQuery(['only' => ['filter']]);
+      if ($filter != '') {
+        $filter = substr($filter, 7);
+        $session->set('filter', $filter);
+      }
+
+      // Check for a post
+      if ($this->request->getMethod() === "post") {
+        $session->set('filter', $this->request->getPost('filter'));
+        if ($this->request->getPost('rowsPerPage') != $session->get('rowsPerPage')) {
+          $session->set('rowsPerPage', $this->request->getPost('rowsPerPage'));
+        }
+      }
+
+      // Generate the pager object
+      $builder = $this-> generateIndexQB($session->get('filter'), $this->request->getPost('reportTypeID'), $this->request->getPost('statusID'), $this->request->getPost('costCentreID'), true, $session->get('currentSort'));
+      $this->pager = new \App\Libraries\MyPager(current_url(true), $builder->getCompiledSelect(), $session->get('rowsPerPage'), $session->get('maxRows'), $page);
+
+      // Get the publication model
+      $model = new PublicationModel();
+
+      // Populate the data going to the view
+      $data = [
+        'publications' => $this->pager->getCurrentRows(),
+        'links' => $this->pager->createLinks(),
+        'title' => 'Publications',
+        'reportTypes' => $this->getReportTypes(),
+        'statuses' => $this->getStatuses(),
+        'costCentres' => $this->getCostCentres(),
+        'page' => $page,
+      ];
+
+
+      // Generate the view
+      echo view('templates/header.php', $data);
+  		echo view('templates/menu.php', $data);
+  		echo view('publications/indexDetailed.php', $data);
+  		echo view('templates/footer.php', $data);
+    }
 
    /**
     * Name: new

@@ -494,7 +494,7 @@ class MyFormGeneration {
   */
   public static function generateColumnHeader(string $controller, string $columnTitle, string $sortParam, string $currentSort, string $upID, string $downID) {
     // Generate the html
-    $html = '<th scope="col">
+    $html = '<th scope="col" class="align-top">
       <a class="btn btn-link" href="/' . $controller . '/index/1?sort=' . $sortParam . '">' . $columnTitle . '</a>';
       if ($currentSort == $upID) {
         $html = $html . '<i class="fas fa-sort-up"></i>';
@@ -506,6 +506,47 @@ class MyFormGeneration {
     // Return the html
     return $html;
   }
+
+  /**
+   * Name: generateColumnHeaderWithFilter
+   * Purpose: Generates the column header for the index page
+   *
+   * Parameters:
+   *  string $contoller - The name of the controller this delete page is for
+   *  string $columnTitle - The title of the column
+   *  string $sortParam - The sort parameter to pass to the link
+   *  string $currentSort - The session's current sort parameter
+   *  string $upID - The id for sorting up
+   *  string $downID - The id for sorting down
+   *  string $selectID - The value to use for the select name field
+   *  string $value - The value to populate the select with
+   *  string $placeholder - The placeholder text for the first option
+   *  string $formName - The form to associate the select control with
+   *  array $options - The array of rows to be converted to options
+   *
+   * Returns: string - The HTML for the form part
+   */
+   public static function generateColumnHeaderWithFilter(string $controller, string $columnTitle, string $sortParam, string $currentSort, string $upID, string $downID, string $selectID, ?string $value, string $placeholder, ?string $formName, array $options) {
+     // Convert the options to html
+     $optionList = MyFormGeneration::generateOptions($options, $value);
+
+     // Generate the html
+     $html = '<th scope="col" class="align-top">
+       <a class="btn btn-link" href="/' . $controller . '/index/1?sort=' . $sortParam . '">' . $columnTitle . '</a>';
+       if ($currentSort == $upID) {
+         $html = $html . '<i class="fas fa-sort-up"></i>';
+       } elseif ($currentSort == $downID) {
+         $html = $html . '<i class="fas fa-sort-down"></i>';
+       }
+       $html = $html . '<i class="fas fa-filter"></i><select class="form-control" id="' . $selectID . '" name="' . $selectID . '" value="' . $value . '"';
+       if (empty($formName) == false) {
+         $html = $html . 'form="' . $formName . '"  onchange="this.form.submit()"';
+       }
+       $html = $html . ' ><option value="">' . $placeholder . '</option>' . $optionList . '</select></th>';
+
+     // Return the html
+     return $html;
+   }
 
   /**
    * Name: generateRowsPerPage
@@ -572,10 +613,13 @@ class MyFormGeneration {
      *
      * Returns: string - The HTML for these form elements
      */
- public static function generateIndexRowButtons(string $controller, string $page, string $id, bool $renderDelete=true) {
+ public static function generateIndexRowButtons(string $controller, string $page, string $id, bool $renderDelete=true, bool $showRush=false) {
    // Generate the HTML
-  $html = '<td>
-    <a href="/' . $controller . '/edit/' . $page . '/' . $id . '" class="btn btn-info m-1 fas fa-edit"></a>';
+  $html = '<td>';
+  if ($showRush) {
+    $html = $html . '<br><div class="alert alert-primary" role="alert">* RUSH *</div>';
+  }
+  $html = $html . '<a href="/' . $controller . '/edit/' . $page . '/' . $id . '" class="btn btn-info m-1 fas fa-edit"></a>';
   if ($renderDelete) {
     $html = $html . ' <a href="/' . $controller . '/delete/1/' . $id . '" class="btn btn-danger m-1 fas fa-trash-alt"></a>';
   }

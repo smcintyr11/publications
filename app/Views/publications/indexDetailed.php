@@ -3,24 +3,31 @@
   use App\Libraries\MyFormGeneration;
 
   // Calculate sort parameters
+  $cc_sort_param = "cc_asc";
+  $pc_sort_param = "pc_asc";
   $rn_sort_param = "rn_asc";
   $abbr_sort_param = "abbr_asc";
+  $pt_sort_param = "pt_asc";
   $status_sort_param = "status_asc";
+  $pa_sort_param = "pa_asc";
   $dd_sort_param = "dd_asc";
-  $at_sort_param = "at_asc";
 
-  if ($_SESSION["currentSort"] == "rn_asc") {
+  if ($_SESSION["currentSort"] == "cc_asc") {
+    $cc_sort_param = "cc_desc";
+  } elseif ($_SESSION["currentSort"] == "pc_asc") {
+    $pc_sort_param = "pc_desc";
+  } elseif ($_SESSION["currentSort"] == "rn_asc") {
     $rn_sort_param = "rn_desc";
   } elseif ($_SESSION["currentSort"] == "abbr_asc") {
     $abbr_sort_param = "abbr_desc";
+  } elseif ($_SESSION["currentSort"] == "pt_asc") {
+    $pt_sort_param = "pt_desc";
   } elseif ($_SESSION["currentSort"] == "status_asc") {
     $status_sort_param = "status_desc";
   } elseif ($_SESSION["currentSort"] == "pa_asc") {
     $pa_sort_param = "pa_desc";
   } elseif ($_SESSION["currentSort"] == "dd_asc") {
     $dd_sort_param = "dd_desc";
-  } elseif ($_SESSION["currentSort"] == "at_asc") {
-    $at_sort_param = "at_desc";
   }
 ?>
 
@@ -28,18 +35,17 @@
 <div class="container my-3 my-3">
   <h1><?= esc($title); ?></h1>
 
-  <form class="form-inline" action="/publications/index/1" method="post" id="frmSearch">
+  <form class="form-inline" action="/publications/indexDetailed/1" method="post" id="frmSearch">
     <?= csrf_field() ?>
     <input class="form-control mr-2" type="text" name="filter" placeholder="Search">
     <button class="btn btn-success m-1" type="submit">Search</button>
-    <a class="btn btn-info m-1" href="/publications/index/1?filter=">Reset</a>
+    <a class="btn btn-info m-1" href="/publications/indexDetailed/1?filter=">Reset</a>
   </form>
 
   <a class="btn btn-primary my-3" href="/publications/new/<?= $page ?>">Create Publication</a>
 
   <div class="table-fluid">
     <table class="table table-bordered">
-
 
       <thead class="thead-light">
         <th scope="col" class="align-top"><div class="btn">Edit / Delete</div></th>
@@ -51,6 +57,12 @@
           $abbr_sort_param, $_SESSION["currentSort"], "abbr_asc", "abbr_desc",
           "reportTypeID", set_value('reportTypeID'), "---", "frmSearch", $reportTypes); ?>
 
+        <?= MyFormGeneration::generateColumnHeader("publications", "Primary Title",
+          $pt_sort_param, $_SESSION["currentSort"], "pt_asc", "pt_desc"); ?>
+
+        <?= MyFormGeneration::generateColumnHeader("publications", "Authors",
+          $pa_sort_param, $_SESSION["currentSort"], "pa_asc", "pa_desc"); ?>
+
         <?= MyFormGeneration::generateColumnHeaderWithFilter("publications", "Status",
           $status_sort_param, $_SESSION["currentSort"], "status_asc", "status_desc",
           "statusID", set_value('statusID'), "---", "frmSearch", $statuses); ?>
@@ -58,8 +70,12 @@
         <?= MyFormGeneration::generateColumnHeader("publications", "Due Date",
           $dd_sort_param, $_SESSION["currentSort"], "dd_asc", "dd_desc"); ?>
 
-          <?= MyFormGeneration::generateColumnHeader("publications", "Assigned To",
-            $at_sort_param, $_SESSION["currentSort"], "at_asc", "at_desc"); ?>
+        <?= MyFormGeneration::generateColumnHeaderWithFilter("publications", "Cost Centre",
+          $cc_sort_param, $_SESSION["currentSort"], "cc_asc", "cc_desc",
+          "costCentreID", set_value('costCentreID'), "---", "frmSearch", $costCentres); ?>
+
+        <?= MyFormGeneration::generateColumnHeader("publications", "Project Code",
+          $pc_sort_param, $_SESSION["currentSort"], "pc_asc", "pc_desc"); ?>
 
       </thead>
 
@@ -80,9 +96,12 @@
               <?= MyFormGeneration::generateIndexRowButtons("publications", $page, $publication->PublicationID, true, $publication->RushPublication); ?>
               <td><?= $publication->ReportNumber; ?></td>
               <td><?= $publication->Abbreviation; ?></td>
+              <td><?= $publication->PrimaryTitle; ?></td>
+              <td><?= $publication->PublicationAuthors; ?></td>
               <td><?= $publication->Status; ?></td>
               <td><?= $publication->StatusDueDate; ?></td>
-              <td><?= $publication->StatusPerson; ?></td>
+              <td><?= $publication->CostCentre; ?></td>
+              <td><?= $publication->ProjectCode; ?></td>
             </tr>
           <?php endforeach; ?>
         <?php endif ?>

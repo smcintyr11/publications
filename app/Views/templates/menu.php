@@ -3,8 +3,14 @@
       <li class="nav-item">
           <a class="nav-link" href="/">Home</a>
       </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/publications/index">Publications</a>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+              Publications
+          </a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="/publications/indexDetailed">Publications Dashboard</a>
+            <a class="dropdown-item" href="/publications/index">Publications Status Dashboard</a>
+          </div>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="#">Reports</a>
