@@ -616,12 +616,12 @@ class MyFormGeneration {
  public static function generateIndexRowButtons(string $controller, string $page, string $id, bool $renderDelete=true, bool $showRush=false) {
    // Generate the HTML
   $html = '<td>';
-  if ($showRush) {
-    $html = $html . '<br><div class="alert alert-primary" role="alert">* RUSH *</div>';
-  }
   $html = $html . '<a href="/' . $controller . '/edit/' . $page . '/' . $id . '" class="btn btn-info m-1 fas fa-edit"></a>';
   if ($renderDelete) {
     $html = $html . ' <a href="/' . $controller . '/delete/1/' . $id . '" class="btn btn-danger m-1 fas fa-trash-alt"></a>';
+  }
+  if ($showRush) {
+    $html = $html . '<br><i class="btn btn-warning m-1 far fa-star"></i></div>';
   }
   $html = $html . '</td>';
 

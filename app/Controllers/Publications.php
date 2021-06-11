@@ -240,181 +240,161 @@ class Publications extends Controller {
  		echo view('templates/footer.php', $data);
    }
 
-   /**
-    * Name: indexDetailed
-    * Purpose: Generates the index page
-    *
-    * Parameters: None
-    *
-    * Returns: None
-    */
-    public function indexDetailed() {
-      // Load helpers
-      helper(['form']);
+  /**
+  * Name: indexDetailed
+  * Purpose: Generates the index page
+  *
+  * Parameters: None
+  *
+  * Returns: None
+  */
+  public function indexDetailed() {
+    // Load helpers
+    helper(['form']);
 
-      // Get the services
-      $uri = service('uri');
-      $session = session();
+    // Get the services
+    $uri = service('uri');
+    $session = session();
 
-      // Process the session data
-      $this->processIndexSession($session, true);
+    // Process the session data
+    $this->processIndexSession($session, true);
 
-      // Parse the URI
-      $page = $uri->setSilent()->getSegment(3, 1);
+    // Parse the URI
+    $page = $uri->setSilent()->getSegment(3, 1);
 
-      // Get the sort parameter
-      $sort = $uri->getQuery(['only' => ['sort']]);
-      if ($sort != '') {
-        $sort = substr($sort, 5);
-        $session->set('currentSort', $sort);
-        $page = 1;
-      }
-
-      // Get the filter parameter
-      $filter = $uri->getQuery(['only' => ['filter']]);
-      if ($filter != '') {
-        $filter = substr($filter, 7);
-        $session->set('filter', $filter);
-      }
-
-      // Check for a post
-      if ($this->request->getMethod() === "post") {
-        $session->set('filter', $this->request->getPost('filter'));
-        if ($this->request->getPost('rowsPerPage') != $session->get('rowsPerPage')) {
-          $session->set('rowsPerPage', $this->request->getPost('rowsPerPage'));
-        }
-      }
-
-      // Generate the pager object
-      $builder = $this-> generateIndexQB($session->get('filter'), $this->request->getPost('reportTypeID'), $this->request->getPost('statusID'), $this->request->getPost('costCentreID'), true, $session->get('currentSort'));
-      $this->pager = new \App\Libraries\MyPager(current_url(true), $builder->getCompiledSelect(), $session->get('rowsPerPage'), $session->get('maxRows'), $page);
-
-      // Get the publication model
-      $model = new PublicationModel();
-
-      // Populate the data going to the view
-      $data = [
-        'publications' => $this->pager->getCurrentRows(),
-        'links' => $this->pager->createLinks(),
-        'title' => 'Publications',
-        'reportTypes' => $this->getReportTypes(),
-        'statuses' => $this->getStatuses(),
-        'costCentres' => $this->getCostCentres(),
-        'page' => $page,
-      ];
-
-
-      // Generate the view
-      echo view('templates/header.php', $data);
-  		echo view('templates/menu.php', $data);
-  		echo view('publications/indexDetailed.php', $data);
-  		echo view('templates/footer.php', $data);
+    // Get the sort parameter
+    $sort = $uri->getQuery(['only' => ['sort']]);
+    if ($sort != '') {
+      $sort = substr($sort, 5);
+      $session->set('currentSort', $sort);
+      $page = 1;
     }
 
-   /**
-    * Name: new
-    * Purpose: Generates the new page
-    *
-    * Parameters: None
-    *
-    * Returns: None
-    */
-    public function new() {
-      // Create a new Model
-      $model = new PublicationModel();
+    // Get the filter parameter
+    $filter = $uri->getQuery(['only' => ['filter']]);
+    if ($filter != '') {
+      $filter = substr($filter, 7);
+      $session->set('filter', $filter);
+    }
 
-      // Load the lookup tables
-      $statuses = $this->getStatuses();
-      $reportTypes = $this->getReportTypes();
+    // Check for a post
+    if ($this->request->getMethod() === "post") {
+      $session->set('filter', $this->request->getPost('filter'));
+      if ($this->request->getPost('rowsPerPage') != $session->get('rowsPerPage')) {
+        $session->set('rowsPerPage', $this->request->getPost('rowsPerPage'));
+      }
+    }
 
-      // Load helpers
-      helper(['url', 'form']);
-      $validation = \Config\Services::validation();
+    // Generate the pager object
+    $builder = $this-> generateIndexQB($session->get('filter'), $this->request->getPost('reportTypeID'), $this->request->getPost('statusID'), $this->request->getPost('costCentreID'), true, $session->get('currentSort'));
+    $this->pager = new \App\Libraries\MyPager(current_url(true), $builder->getCompiledSelect(), $session->get('rowsPerPage'), $session->get('maxRows'), $page);
 
-      // Set the session last page
-      $session = session();
-      $session->set('lastPage', 'Publications::new');
+    // Get the publication model
+    $model = new PublicationModel();
 
-      // If this is a post and valid save it and go back to index
-      if ($this->request->getMethod() === 'post') {
-        // Get the view data from the form
-        $page = $this->request->getPost('page');
+    // Populate the data going to the view
+    $data = [
+      'publications' => $this->pager->getCurrentRows(),
+      'links' => $this->pager->createLinks(),
+      'title' => 'Publications',
+      'reportTypes' => $this->getReportTypes(),
+      'statuses' => $this->getStatuses(),
+      'costCentres' => $this->getCostCentres(),
+      'page' => $page,
+    ];
 
-        // Set validation rules
-        $validation->setRule('primaryTitle', 'Primary Title', 'required');
-        $validation->setRule('reportTypeNID', 'Report Type', 'required');
-        if ($validation->withRequest($this->request)->run()) {
-          // Get the default statusID
-          $statusID = $this->getDefaultStatus();
-          if (empty($statusID) == false) {
-            // Save
-            $model->save([
-              'PrimaryTitle' => $this->request->getPost('primaryTitle'),
-              'ReportTypeID' => $this->request->getPost('reportTypeNID'),
-              'StatusID' => $statusID,
-            ]);
 
-            // Get the publication id
-            $publicationID = $this->getLastPublicationID($this->request->getPost('primaryTitle'), $this->request->getPost('reportTypeNID'));
+    // Generate the view
+    echo view('templates/header.php', $data);
+		echo view('templates/menu.php', $data);
+		echo view('publications/indexDetailed.php', $data);
+		echo view('templates/footer.php', $data);
+  }
 
-            // Add the new publications statuses entry
-            $this->newStatus($publicationID, $statusID, null, null);
+  /**
+  * Name: new
+  * Purpose: Generates the new page
+  *
+  * Parameters: None
+  *
+  * Returns: None
+  */
+  public function new() {
+    // Create a new Model
+    $model = new PublicationModel();
 
-            // Open the newly added publication
-            $data = [
-              'title' => 'Edit Publication',
-              'publication' => $model->getPublication($publicationID),
-              'publication' => $model->getPublication($publicationID),
-              'page' => $page,
-              'statuses' => $this->getStatuses(),
-              'reportTypes' => $this->getReportTypes(),
-              'costCentres' => $this->getCostCentres(),
-              'statusLog' => $this->getStatusLog($publicationID),
-              'authorsList' => $this->getAuthors($publicationID),
-              'reviewersList' => $this->getReviewers($publicationID),
-              'keywordsList' => $this->getKeywords($publicationID),
-              'linkTypes' => $this->getLinkTypes(),
-              'linksList' => $this->getLinks($publicationID),
-              'commentsList'=> $this->getComments($publicationID),
-            ];
-            echo view('templates/header.php', $data);
-            echo view('templates/menu.php', $data);
-            echo view('publications/edit.php', $data);
-            echo view('templates/footer.php', $data);
-          } else { // Tell the user no default status exists
-            $data = [
-              'title' => 'Error',
-              'message' => '<p>There is no default status defined in the system.  Please visit the
-              <a href="/statuses/index">Statuses</a> lookup table and either modify an existing
-              status to be the default, or create a new status that is assigned the default status flag.</p>',
-            ];
-            echo view('templates/header.php', $data);
-            echo view('templates/menu.php', $data);
-            echo view('errors/customError.php', $data);
-            echo view('templates/footer.php', $data);
+    // Load the lookup tables
+    $statuses = $this->getStatuses();
+    $reportTypes = $this->getReportTypes();
 
-          }
-        } else {  // Invalid - Redisplay the form
-          // Generate the create view
+    // Load helpers
+    helper(['url', 'form']);
+    $validation = \Config\Services::validation();
+
+    // Set the session last page
+    $session = session();
+    $session->set('lastPage', 'Publications::new');
+
+    // If this is a post and valid save it and go back to index
+    if ($this->request->getMethod() === 'post') {
+      // Get the view data from the form
+      $page = $this->request->getPost('page');
+
+      // Set validation rules
+      $validation->setRule('primaryTitle', 'Primary Title', 'required');
+      $validation->setRule('reportTypeNID', 'Report Type', 'required');
+      if ($validation->withRequest($this->request)->run()) {
+        // Get the default statusID
+        $statusID = $this->getDefaultStatus();
+        if (empty($statusID) == false) {
+          // Save
+          $model->save([
+            'PrimaryTitle' => $this->request->getPost('primaryTitle'),
+            'ReportTypeID' => $this->request->getPost('reportTypeNID'),
+            'StatusID' => $statusID,
+          ]);
+
+          // Get the publication id
+          $publicationID = $this->getLastPublicationID($this->request->getPost('primaryTitle'), $this->request->getPost('reportTypeNID'));
+
+          // Add the new publications statuses entry
+          $this->newStatus($publicationID, $statusID, null, null);
+
+          // Open the newly added publication
           $data = [
-            'title' => 'Create New Publication',
+            'title' => 'Edit Publication',
+            'publication' => $model->getPublication($publicationID),
+            'publication' => $model->getPublication($publicationID),
             'page' => $page,
-            'statuses' => $statuses,
-            'reportTypes' => $reportTypes,
+            'statuses' => $this->getStatuses(),
+            'reportTypes' => $this->getReportTypes(),
+            'costCentres' => $this->getCostCentres(),
+            'statusLog' => $this->getStatusLog($publicationID),
+            'authorsList' => $this->getAuthors($publicationID),
+            'reviewersList' => $this->getReviewers($publicationID),
+            'keywordsList' => $this->getKeywords($publicationID),
+            'linkTypes' => $this->getLinkTypes(),
+            'linksList' => $this->getLinks($publicationID),
+            'commentsList'=> $this->getComments($publicationID),
           ];
-
           echo view('templates/header.php', $data);
           echo view('templates/menu.php', $data);
-          echo view('publications/new.php', $data);
+          echo view('publications/edit.php', $data);
           echo view('templates/footer.php', $data);
+        } else { // Tell the user no default status exists
+          $data = [
+            'title' => 'Error',
+            'message' => '<p>There is no default status defined in the system.  Please visit the
+            <a href="/statuses/index">Statuses</a> lookup table and either modify an existing
+            status to be the default, or create a new status that is assigned the default status flag.</p>',
+          ];
+          echo view('templates/header.php', $data);
+          echo view('templates/menu.php', $data);
+          echo view('errors/customError.php', $data);
+          echo view('templates/footer.php', $data);
+
         }
-      } else {  // HTTP GET request
-        // Get the URI service
-        $uri = service('uri');
-
-        // Parse the URI
-        $page = $uri->setSilent()->getSegment(3, 1);
-
+      } else {  // Invalid - Redisplay the form
         // Generate the create view
         $data = [
           'title' => 'Create New Publication',
@@ -428,7 +408,27 @@ class Publications extends Controller {
         echo view('publications/new.php', $data);
         echo view('templates/footer.php', $data);
       }
+    } else {  // HTTP GET request
+      // Get the URI service
+      $uri = service('uri');
+
+      // Parse the URI
+      $page = $uri->setSilent()->getSegment(3, 1);
+
+      // Generate the create view
+      $data = [
+        'title' => 'Create New Publication',
+        'page' => $page,
+        'statuses' => $statuses,
+        'reportTypes' => $reportTypes,
+      ];
+
+      echo view('templates/header.php', $data);
+      echo view('templates/menu.php', $data);
+      echo view('publications/new.php', $data);
+      echo view('templates/footer.php', $data);
     }
+  }
 
    /**
     * Name: edit

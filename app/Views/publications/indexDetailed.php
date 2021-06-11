@@ -88,7 +88,7 @@
               if ($publication->DueDateDelta < 3) {
                 $highlighting= 'text-danger';
               } else if ($publication->DueDateDelta < 5) {
-                $highlighting= 'text-warning';
+                $highlighting= 'text-primary';
               }
             ?>
 
@@ -113,13 +113,16 @@
       <thead>
         <th class="font-weight-bold text-center">Legend</th>
       </thead>
-
+      <tr>
+        <td class="px-5"><i class="btn btn-warning m-1 far fa-star"></i></td>
+        <td>Rush publication</td>
+      </tr>
       <tr>
         <td class='text-danger px-5'>Red Text</td>
         <td>Status Due Date < 3 days away</td>
       </tr>
       <tr>
-        <td class='text-warning px-5'>Yellow Text</td>
+        <td class='text-primary px-5'>Blue Text</td>
         <td>Status Due Date < 5 days away</td>
       </tr>
     </table>

@@ -298,7 +298,7 @@
 <div class="container my-3 py-3">
   <div class="form-row">
     <button class="btn btn-success m-1" type="submit" name="submit" value="save" id="btnSubmit" form="frmEditPublication" >Save Publication</button>
-    <a class="btn btn-info m-1" href="/publications/index/<?= $page ?>">Back to Publications</a>
+    <a class="btn btn-info m-1" href="/publications/indexDetailed/<?= $page ?>">Back to Publications</a>
   </div>
   <br />
   <h1><?= esc($title); ?></h1>
@@ -450,7 +450,7 @@
 
       <?= MyFormGeneration::generateTextBox("projectCode",
         set_value('projectCode', $publication['ProjectCode']),
-        "-- Enter the project code --", "Project Code", $hideDetailedFields); ?>
+        "-- Enter the project code --", "Project Code"); ?>
 
       <?= MyFormGeneration::generateTextBox("ipdNumber",
         set_value('ipdNumber', $publication['IPDNumber']),

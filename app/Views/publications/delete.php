@@ -5,6 +5,7 @@
 <script type="text/javascript" src="/scripts/publicationDelete.js"></script>
 
 <?php use App\Libraries\MyFormGeneration; ?>
+<?php $hideDetailedFields = true; ?>
 
 <!-- View Comment Modal -->
  <div class="modal fade" id="commentModal" tabindex="-1" role="dialog">
@@ -65,22 +66,22 @@
      <li class="nav-item">
        <a class="nav-link tablink" onclick="openTab(event, 'tbReviewers')">Reviewers</a>
      </li>
-     <li class="nav-item">
+     <li class="nav-item" <?= ($hideDetailedFields ? 'style="display: none;"' : '') ?> >
        <a class="nav-link tablink" onclick="openTab(event, 'tbAbstract')">Abstract</a>
      </li>
-     <li class="nav-item">
+     <li class="nav-item" <?= ($hideDetailedFields ? 'style="display: none;"' : '') ?> >
        <a class="nav-link tablink" onclick="openTab(event, 'tbPLS')">PLS</a>
      </li>
-     <li class="nav-item">
+     <li class="nav-item" <?= ($hideDetailedFields ? 'style="display: none;"' : '') ?> >
        <a class="nav-link tablink" onclick="openTab(event, 'tbPRS')">PRS</a>
      </li>
-     <li class="nav-item">
+     <li class="nav-item" <?= ($hideDetailedFields ? 'style="display: none;"' : '') ?> >
        <a class="nav-link tablink" onclick="openTab(event, 'tbKeywords')">Keywords</a>
      </li>
      <li class="nav-item">
        <a class="nav-link tablink" onclick="openTab(event, 'tbPublishing')">Publishing</a>
      </li>
-     <li class="nav-item">
+     <li class="nav-item" <?= ($hideDetailedFields ? 'style="display: none;"' : '') ?> >
        <a class="nav-link tablink" onclick="openTab(event, 'tbDates')">Dates</a>
      </li>
      <li class="nav-item">
@@ -106,7 +107,7 @@
          $publication['PrimaryTitle'], "Primary Title"); ?>
 
        <?= MyFormGeneration::generateIDTextBox("secondaryTitle",
-         $publication['SecondaryTitle'], "Secondary Title"); ?>
+         $publication['SecondaryTitle'], "Secondary Title", $hideDetailedFields); ?>
 
        <?= MyFormGeneration::generateIDTextBox("reportType",
          $publication['ReportType'], "Report Type"); ?>
@@ -118,13 +119,13 @@
          $publication['ReportNumber'], "Report Number"); ?>
 
        <?= MyFormGeneration::generateIDTextBox("agreementNumber",
-         $publication['AgreementNumber'], "Agreement Number"); ?>
+         $publication['AgreementNumber'], "Agreement Number", $hideDetailedFields); ?>
 
        <?= MyFormGeneration::generateIDTextBox("fiscalYear",
-         $publication['FiscalYear'], "Fiscal Year"); ?>
+         $publication['FiscalYear'], "Fiscal Year", $hideDetailedFields); ?>
 
        <?= MyFormGeneration::generateIDTextBox("organization",
-         $publication['Organization'], "Organization"); ?>
+         $publication['Organization'], "Organization", $hideDetailedFields); ?>
 
        <?= MyFormGeneration::generateIDTextBox("costCentre",
          $publication['CostCentre'], "Cost Centre"); ?>
@@ -133,10 +134,10 @@
          $publication['ProjectCode'], "Project Code"); ?>
 
        <?= MyFormGeneration::generateIDTextBox("ipdNumber",
-         $publication['IPDNumber'], "IPD Number"); ?>
+         $publication['IPDNumber'], "IPD Number", $hideDetailedFields); ?>
 
        <?= MyFormGeneration::generateIDTextBox("crossReferenceNumber",
-         $publication['CrossReferenceNumber'], "Cross Reference Number"); ?>
+         $publication['CrossReferenceNumber'], "Cross Reference Number", $hideDetailedFields); ?>
      </div>
 
      <!-- Status Tab -->
@@ -303,25 +304,25 @@
          $publication['Client'], "Client"); ?>
 
        <?= MyFormGeneration::generateIDTextBox("journal",
-         $publication['Journal'], "Journal"); ?>
+         $publication['Journal'], "Journal", $hideDetailedFields); ?>
 
        <?= MyFormGeneration::generateIDTextBox("manuscriptNumber",
-         $publication['ManuscriptNumber'], "Manuscript Number"); ?>
+         $publication['ManuscriptNumber'], "Manuscript Number", $hideDetailedFields); ?>
 
        <?= MyFormGeneration::generateIDTextBox("volume",
-         $publication['Volume'], "Volume"); ?>
+         $publication['Volume'], "Volume", $hideDetailedFields); ?>
 
        <?= MyFormGeneration::generateIDTextBox("startPage",
-         $publication['StartPage'], "Start Page"); ?>
+         $publication['StartPage'], "Start Page", $hideDetailedFields); ?>
 
        <?= MyFormGeneration::generateIDTextBox("endPage",
-         $publication['EndPage'], "End Page"); ?>
+         $publication['EndPage'], "End Page", $hideDetailedFields); ?>
 
        <?= MyFormGeneration::generateIDTextBox("isbn",
-         $publication['ISBN'], "ISBN / ISSN"); ?>
+         $publication['ISBN'], "ISBN / ISSN", $hideDetailedFields); ?>
 
        <?= MyFormGeneration::generateIDTextBox("doi",
-         $publication['DOI'], "DOI"); ?>
+         $publication['DOI'], "DOI", $hideDetailedFields); ?>
 
      </div>
 
