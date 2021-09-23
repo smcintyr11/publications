@@ -198,7 +198,7 @@ class FiscalYears extends Controller {
       $page = $this->request->getPost('page');
 
       // Set validation rules
-      $validation->setRule('fiscalYear', 'Fiscal Year', 'required|max_length[11]|is_unique[FiscalYears.FiscalYear,fiscalYearID,{fiscalYearID}]');
+      $validation->setRule('fiscalYear', 'Fiscal Year', 'required|regex_match[\d{4} \/ \d{4}]|is_unique[FiscalYears.FiscalYear,fiscalYearID,{fiscalYearID}]');
       if ($validation->withRequest($this->request)->run()) {
         // Save
         $model->save([
