@@ -4,6 +4,7 @@ use CodeIgniter\Model;
 
 class OrganizationModel extends Model {
   // Member variables
+  protected $DBGroup  = 'publications';
   protected $table = "Organizations";
   protected $primaryKey = "OrganizationID";
   protected $allowedFields = ["Organization"];

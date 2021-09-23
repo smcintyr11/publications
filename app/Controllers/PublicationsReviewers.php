@@ -120,7 +120,7 @@ class PublicationsReviewers extends Controller {
    */
   private function getMaxPublicationsReviewersID($publicationID, $personID) {
     // Create the query builder object
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('PublicationsReviewers');
     $builder->selectMax('PublicationsReviewersID');
     $builder->where('PublicationID', $publicationID);
@@ -146,7 +146,7 @@ class PublicationsReviewers extends Controller {
    */
   private function publicationsReviewersCount($publicationID, $personID) {
     // Create the query builder object
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('PublicationsReviewers');
     $builder->select('PublicationsReviewersID');
     $builder->where('PublicationID', $publicationID);

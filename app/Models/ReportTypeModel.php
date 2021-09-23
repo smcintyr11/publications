@@ -4,6 +4,7 @@ use CodeIgniter\Model;
 
 class ReportTypeModel extends Model {
   // Member variables
+  protected $DBGroup  = 'publications';
   protected $table = "ReportTypes";
   protected $primaryKey = "ReportTypeID";
   protected $allowedFields = ["ReportType", "Abbreviation"];

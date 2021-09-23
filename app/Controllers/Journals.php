@@ -21,7 +21,7 @@ class Journals extends Controller {
    */
   public function generateIndexQB(string $filter, bool $detailed = false, string $sorting = '') {
     // Load the query builder
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('Journals');
 
     // Generate the builder object
@@ -199,7 +199,7 @@ class Journals extends Controller {
 
       // Set validation rules
       $validation->setRule('journal', 'Journal', 'required|max_length[256]|is_unique[Journals.Journal,journalID,{journalID}]');
-      if ($validation->withRequest($this->request)->run()) {
+      if ($validation->withRequest($this->request)->run(null, null, 'publications')) {
         // Save
         $model->save([
           'Journal' => $this->request->getPost('journal'),
@@ -317,7 +317,7 @@ class Journals extends Controller {
 
       // Validate the data
       $validation->setRule('journal', 'Journal', 'required|max_length[256]|is_unique[Journals.Journal,journalID,{journalID}]');
-      if ($validation->withRequest($this->request)->run()) {  // Valid
+      if ($validation->withRequest($this->request)->run(null, null, 'publications')) {  // Valid
         // Save
         $model->save([
           'JournalID' => $this->request->getPost('journalID'),
@@ -415,7 +415,7 @@ class Journals extends Controller {
 
     // Build the query
     $searchString = $this->request->getVar('term');
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('Journals');
     $builder->select('*');
     $builder->like('Journal', $searchString);
@@ -475,7 +475,7 @@ class Journals extends Controller {
    */
   private function journalCount(string $journal) {
     // Create the query builder object
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('Journals');
     $builder->select('JournalID');
     $builder->where('Journal', $journal);
@@ -498,7 +498,7 @@ class Journals extends Controller {
    */
   private function getJournalID(string $journal) {
     // Create the query builder object
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('Journals');
     $builder->select('JournalID');
     $builder->where('Journal', $journal);
@@ -523,7 +523,7 @@ class Journals extends Controller {
    */
    private function findDependentRecords(string $journalID) {
      // Build the query for the Publications table
-     $db = \Config\Database::connect();
+     $db = \Config\Database::connect('publications');
      $builder = $db->table('Publications');
      $builder->select("PublicationID");
      $builder->where('JournalID', $journalID);

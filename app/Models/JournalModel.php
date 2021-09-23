@@ -4,6 +4,7 @@ use CodeIgniter\Model;
 
 class JournalModel extends Model {
   // Member variables
+  protected $DBGroup  = 'publications';
   protected $table = "Journals";
   protected $primaryKey = "JournalID";
   protected $allowedFields = ["Journal"];

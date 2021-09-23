@@ -4,6 +4,7 @@ use CodeIgniter\Model;
 
 class PublicationModel extends Model {
   // Member variables
+  protected $DBGroup  = 'publications';
   protected $table = "Publications";
   protected $primaryKey = "PublicationID";
   protected $allowedFields = ["PrimaryTitle", "SecondaryTitle", "PublicationDate", "FiscalYearID", "Volume", "StartPage",
@@ -24,7 +25,7 @@ class PublicationModel extends Model {
    */
   public function getPublication(int $publicationID) {
     // Create the query
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $query = $db->query('SELECT p.PublicationID, p.PrimaryTitle, p.SecondaryTitle, p.PublicationDate, p.FiscalYearID, fy.FiscalYear,
       p.Volume, p.StartPage, p.EndPage, p.ClientID, c.Client, p.OrganizationID, o.Organization, p.AbstractEnglish, p.AbstractFrench,
       p.PLSEnglish, p.PLSFrench, p.PRSEnglish, p.PRSFrench, p.ISBN, p.AgreementNumber, p.IPDNumber, p.CrossReferenceNumber,
@@ -139,7 +140,7 @@ class PublicationModel extends Model {
    */
   public function deletePublicationsStatuses($publicationID) {
     // Load the query builder
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('PublicationsStatuses');
 
     // Generate and execute the delete
@@ -159,7 +160,7 @@ class PublicationModel extends Model {
    */
   public function deletePublicationsAuthors($publicationID) {
     // Load the query builder
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('PublicationsAuthors');
 
     // Generate and execute the delete
@@ -179,7 +180,7 @@ class PublicationModel extends Model {
    */
   public function deletePublicationsReviewers($publicationID) {
     // Load the query builder
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('PublicationsReviewers');
 
     // Generate and execute the delete
@@ -199,7 +200,7 @@ class PublicationModel extends Model {
    */
   public function deletePublicationsKeywords($publicationID) {
     // Load the query builder
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('PublicationsKeywords');
 
     // Generate and execute the delete
@@ -219,7 +220,7 @@ class PublicationModel extends Model {
    */
   public function deletePulibcationsLinks($publicationID) {
     // Load the query builder
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('PublicationsLinks');
 
     // Generate and execute the delete
@@ -239,7 +240,7 @@ class PublicationModel extends Model {
    */
   public function deletePublicationsComments($publicationID) {
     // Load the query builder
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('PublicationsComments');
 
     // Generate and execute the delete

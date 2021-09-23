@@ -21,7 +21,7 @@ class Keywords extends Controller {
    */
   public function generateIndexQB(string $filter, bool $detailed = false, string $sorting = '') {
     // Load the query builder
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('Keywords');
 
     // Generate the builder object
@@ -205,7 +205,7 @@ class Keywords extends Controller {
       // Set validation rules
       $validation->setRule('keywordEnglish', 'Keyword English', 'required|max_length[128]|is_unique[Keywords.KeywordEnglish,keywordID,{keywordID}]');
       $validation->setRule('keywordFrench', 'Keyword French', 'required|max_length[128]|is_unique[Keywords.KeywordFrench,keywordID,{keywordID}]');
-      if ($validation->withRequest($this->request)->run()) {
+      if ($validation->withRequest($this->request)->run(null, null, 'publications')) {
         // Save
         $model->save([
           'KeywordEnglish' => $this->request->getPost('keywordEnglish'),
@@ -325,7 +325,7 @@ class Keywords extends Controller {
       // Validate the data
       $validation->setRule('keywordEnglish', 'Keyword English', 'required|max_length[128]|is_unique[Keywords.KeywordEnglish,keywordID,{keywordID}]');
       $validation->setRule('keywordFrench', 'Keyword French', 'required|max_length[128]|is_unique[Keywords.KeywordFrench,keywordID,{keywordID}]');
-      if ($validation->withRequest($this->request)->run()) {  // Valid
+      if ($validation->withRequest($this->request)->run(null, null, 'publications')) {  // Valid
         // Save
         $model->save([
           'KeywordID' => $this->request->getPost('keywordID'),
@@ -427,7 +427,7 @@ class Keywords extends Controller {
 
     // Build the query
     $searchString = $this->request->getVar('term');
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('Keywords');
     $builder->select('KeywordID, CONCAT(KeywordEnglish, " | ", KeywordFrench) AS Keyword');
     $builder->like('KeywordEnglish', $searchString);
@@ -466,7 +466,7 @@ class Keywords extends Controller {
     // Is there an exact match
     if ($this->exactKeywordCount($searchString) > 0) {
       // Build the query
-      $db = \Config\Database::connect();
+      $db = \Config\Database::connect('publications');
       $builder = $db->table('Keywords');
       $builder->select('KeywordID, CONCAT(KeywordEnglish, " | ", KeywordFrench) AS Keyword');
       $builder->where('KeywordEnglish', $searchString);
@@ -498,7 +498,7 @@ class Keywords extends Controller {
    */
   private function exactKeywordCount(string $searchString) {
     // Build the query
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('Keywords');
     $builder->select('KeywordID');
     $builder->where('KeywordEnglish', $searchString);
@@ -523,7 +523,7 @@ class Keywords extends Controller {
    */
   private function getKeywordID(string $searchString) {
     // Build the query
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('Keywords');
     $builder->select('KeywordID, CONCAT(KeywordEnglish, " | ", KeywordFrench) AS Keyword, KeywordEnglish, KeywordFrench');
     $builder->where('KeywordEnglish', $searchString);
@@ -550,7 +550,7 @@ class Keywords extends Controller {
    */
    private function findDependentRecords(string $keywordID) {
      // Build the query for the Publications table
-     $db = \Config\Database::connect();
+     $db = \Config\Database::connect('publications');
      $builder = $db->table('PublicationsKeywords');
      $builder->select("PublicationID");
      $builder->where('KeywordID', $keywordID);

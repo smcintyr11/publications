@@ -4,6 +4,7 @@ use CodeIgniter\Model;
 
 class CostCentreModel extends Model {
   // Member variables
+  protected $DBGroup  = 'publications';
   protected $table = "CostCentres";
   protected $primaryKey = "CostCentreID";
   protected $allowedFields = ["CostCentre","Description"];

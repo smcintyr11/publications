@@ -21,7 +21,7 @@ class FiscalYears extends Controller {
    */
   public function generateIndexQB(string $filter, bool $detailed = false, string $sorting = '') {
     // Load the query builder
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('FiscalYears');
 
     // Generate the builder object
@@ -199,7 +199,7 @@ class FiscalYears extends Controller {
 
       // Set validation rules
       $validation->setRule('fiscalYear', 'Fiscal Year', 'required|regex_match[\d{4} \/ \d{4}]|is_unique[FiscalYears.FiscalYear,fiscalYearID,{fiscalYearID}]');
-      if ($validation->withRequest($this->request)->run()) {
+      if ($validation->withRequest($this->request)->run(null, null, 'publications')) {
         // Save
         $model->save([
           'FiscalYear' => $this->request->getPost('fiscalYear'),
@@ -317,7 +317,7 @@ class FiscalYears extends Controller {
 
       // Validate the data
       $validation->setRule('fiscalYear', 'Fiscal Year', 'required|max_length[11]|is_unique[FiscalYears.FiscalYear,fiscalYearID,{fiscalYearID}]');
-      if ($validation->withRequest($this->request)->run()) {  // Valid
+      if ($validation->withRequest($this->request)->run(null, null, 'publications')) {  // Valid
         // Save
         $model->save([
           'FiscalYearID' => $this->request->getPost('fiscalYearID'),
@@ -415,7 +415,7 @@ class FiscalYears extends Controller {
 
     // Build the query
     $searchString = $this->request->getVar('term');
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('FiscalYears');
     $builder->like('FiscalYear', $searchString);
 
@@ -474,7 +474,7 @@ class FiscalYears extends Controller {
    */
   private function fiscalYearCount(string $fiscalYear) {
     // Create the query builder object
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('FiscalYears');
     $builder->select('FiscalYearID');
     $builder->where('FiscalYear', $fiscalYear);
@@ -497,7 +497,7 @@ class FiscalYears extends Controller {
    */
   private function getFiscalYearID(string $fiscalYear) {
     // Create the query builder object
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('FiscalYears');
     $builder->select('FiscalYearID');
     $builder->where('FiscalYear', $fiscalYear);
@@ -522,7 +522,7 @@ class FiscalYears extends Controller {
    */
    private function findDependentRecords(string $fiscalYearID) {
      // Build the query for the Publications table
-     $db = \Config\Database::connect();
+     $db = \Config\Database::connect('publications');
      $builder = $db->table('Publications');
      $builder->select("PublicationID");
      $builder->where('FiscalYearID', $fiscalYearID);

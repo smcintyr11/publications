@@ -21,7 +21,7 @@ class LinkTypes extends Controller {
    */
   public function generateIndexQB(string $filter, bool $detailed = false, string $sorting = '') {
     // Load the query builder
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('LinkTypes');
 
     // Generate the builder object
@@ -199,7 +199,7 @@ class LinkTypes extends Controller {
 
       // Set validation rules
       $validation->setRule('linkType', 'Link Type', 'required|max_length[128]|is_unique[LinkTypes.LinkType,linkTypeID,{linkTypeID}]');
-      if ($validation->withRequest($this->request)->run()) {
+      if ($validation->withRequest($this->request)->run(null, null, 'publications')) {
         // Save
         $model->save([
           'LinkType' => $this->request->getPost('linkType'),
@@ -317,7 +317,7 @@ class LinkTypes extends Controller {
 
       // Validate the data
       $validation->setRule('linkType', 'Link Type', 'required|max_length[128]|is_unique[LinkTypes.LinkType,linkTypeID,{linkTypeID}]');
-      if ($validation->withRequest($this->request)->run()) {  // Valid
+      if ($validation->withRequest($this->request)->run(null, null, 'publications')) {  // Valid
         // Save
         $model->save([
           'LinkTypeID' => $this->request->getPost('linkTypeID'),
@@ -372,7 +372,7 @@ class LinkTypes extends Controller {
    */
    private function findDependentRecords(string $linkTypeID) {
      // Build the query for the Publications table
-     $db = \Config\Database::connect();
+     $db = \Config\Database::connect('publications');
      $builder = $db->table('PublicationsLinks');
      $builder->select("PublicationID");
      $builder->where('LinkTypeID', $linkTypeID);

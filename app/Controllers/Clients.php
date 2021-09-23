@@ -21,7 +21,7 @@ class Clients extends Controller {
    */
   public function generateIndexQB(string $filter, bool $detailed = false, string $sorting = '') {
     // Load the query builder
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('Clients');
 
     // Generate the builder object
@@ -199,7 +199,7 @@ class Clients extends Controller {
 
       // Set validation rules
       $validation->setRule('client', 'Client / Publisher', 'required|max_length[128]|is_unique[Clients.Client,clientID,{clientID}]');
-      if ($validation->withRequest($this->request)->run()) {
+      if ($validation->withRequest($this->request)->run(null, null, 'publications')) {
         // Save
         $model->save([
           'Client' => $this->request->getPost('client'),
@@ -317,7 +317,7 @@ class Clients extends Controller {
 
       // Validate the data
       $validation->setRule('client', 'Client / Publisher', 'required|max_length[128]|is_unique[Clients.Client,clientID,{clientID}]');
-      if ($validation->withRequest($this->request)->run()) {  // Valid
+      if ($validation->withRequest($this->request)->run(null, null, 'publications')) {  // Valid
         // Save
         $model->save([
           'ClientID' => $this->request->getPost('clientID'),
@@ -415,7 +415,7 @@ class Clients extends Controller {
 
     // Build the query
     $searchString = $this->request->getVar('term');
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('Clients');
     $builder->select('*');
     $builder->like('Client', $searchString);
@@ -475,7 +475,7 @@ class Clients extends Controller {
    */
   private function clientCount(string $client) {
     // Create the query builder object
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('Clients');
     $builder->select('ClientID');
     $builder->where('Client', $client);
@@ -498,7 +498,7 @@ class Clients extends Controller {
    */
   private function getClientID(string $client) {
     // Create the query builder object
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('Clients');
     $builder->select('ClientID');
     $builder->where('Client', $client);
@@ -523,7 +523,7 @@ class Clients extends Controller {
    */
    private function findDependentRecords(string $clientID) {
      // Build the query for the Publications table
-     $db = \Config\Database::connect();
+     $db = \Config\Database::connect('publications');
      $builder = $db->table('Publications');
      $builder->select("PublicationID");
      $builder->where('ClientID', $clientID);

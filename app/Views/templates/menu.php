@@ -1,3 +1,5 @@
+<?php helper('auth'); ?>
+
 <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
@@ -37,8 +39,14 @@
         <li class="nav-item">
             <a class="nav-link" href="#">About</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">Logout</a>
-        </li>
+        <?php
+          if (logged_in() == false) {
+            echo ('<a class="nav-link" href="/login">Login</a>');
+          } else {
+            $user = user();
+            echo ('<a class="nav-link">Welcome ' . $user->username . "</a>");
+            echo ('<a class="nav-link" href="/logout">Logout</a>');
+          }
+         ?>
     </ul>
 </nav>

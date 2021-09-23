@@ -67,7 +67,7 @@ class MyPager {
     if ($this->currentPage > 1) {
        $sql = $sql . " OFFSET " . ($this->rowsPerPage * ($this->currentPage - 1));
     }
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $query = $db->query($sql);
 
     // Return the result

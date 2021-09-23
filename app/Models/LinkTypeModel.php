@@ -4,6 +4,7 @@ use CodeIgniter\Model;
 
 class LinkTypeModel extends Model {
   // Member variables
+  protected $DBGroup  = 'publications';
   protected $table = "LinkTypes";
   protected $primaryKey = "LinkTypeID";
   protected $allowedFields = ["LinkType"];

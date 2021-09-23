@@ -21,7 +21,7 @@ class Organizations extends Controller {
    */
   public function generateIndexQB(string $filter, bool $detailed = false, string $sorting = '') {
     // Load the query builder
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('Organizations');
 
     // Generate the builder object
@@ -199,7 +199,7 @@ class Organizations extends Controller {
 
       // Set validation rules
       $validation->setRule('organization', 'Organization', 'required|max_length[128]|is_unique[Organizations.Organization,organizationID,{organizationID}]');
-      if ($validation->withRequest($this->request)->run()) {
+      if ($validation->withRequest($this->request)->run(null, null, 'publications')) {
         // Save
         $model->save([
           'Organization' => $this->request->getPost('organization'),
@@ -317,7 +317,7 @@ class Organizations extends Controller {
 
       // Validate the data
       $validation->setRule('organization', 'Organization', 'required|max_length[128]|is_unique[Organizations.Organization,organizationID,{organizationID}]');
-      if ($validation->withRequest($this->request)->run()) {  // Valid
+      if ($validation->withRequest($this->request)->run(null, null, 'publications')) {  // Valid
         // Save
         $model->save([
           'OrganizationID' => $this->request->getPost('organizationID'),
@@ -415,7 +415,7 @@ class Organizations extends Controller {
 
     // Build the query
     $searchString = $this->request->getVar('term');
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('Organizations');
     $builder->like('Organization', $searchString);
 
@@ -449,7 +449,7 @@ class Organizations extends Controller {
    */
  private function findDependentRecords(string $organizationID) {
    // Build the query for the people table
-   $db = \Config\Database::connect();
+   $db = \Config\Database::connect('publications');
    $builder = $db->table('People');
    $builder->select("PersonID");
    $builder->where('OrganizationID', $organizationID);
@@ -513,7 +513,7 @@ class Organizations extends Controller {
   */
  private function organizationCount(string $organization) {
    // Create the query builder object
-   $db = \Config\Database::connect();
+   $db = \Config\Database::connect('publications');
    $builder = $db->table('Organizations');
    $builder->select('OrganizationID');
    $builder->where('Organization', $organization);
@@ -536,7 +536,7 @@ class Organizations extends Controller {
   */
  private function getOrganizationID(string $organization) {
    // Create the query builder object
-   $db = \Config\Database::connect();
+   $db = \Config\Database::connect('publications');
    $builder = $db->table('Organizations');
    $builder->select('OrganizationID');
    $builder->where('Organization', $organization);

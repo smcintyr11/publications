@@ -4,6 +4,7 @@ use CodeIgniter\Model;
 
 class PersonModel extends Model {
   // Member variables
+  protected $DBGroup  = 'publications';
   protected $table = "People";
   protected $primaryKey = "PersonID";
   protected $allowedFields = ["LastName", "FirstName", "DisplayName", "OrganizationID"];
@@ -19,7 +20,7 @@ class PersonModel extends Model {
    */
   public function getPerson(int $personID) {
     // Create the query
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $query = $db->query('SELECT p.PersonID, p.FirstName, p.LastName, p.DisplayName, p.OrganizationID, o.Organization FROM People AS p LEFT JOIN Organizations AS o ON p.OrganizationID = o.OrganizationID WHERE p.PersonID = ' . $personID);
 
     // Create the result

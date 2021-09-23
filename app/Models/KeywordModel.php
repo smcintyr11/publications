@@ -4,6 +4,7 @@ use CodeIgniter\Model;
 
 class KeywordModel extends Model {
   // Member variables
+  protected $DBGroup  = 'publications';
   protected $table = "Keywords";
   protected $primaryKey = "KeywordID";
   protected $allowedFields = ["KeywordEnglish", "KeywordFrench"];

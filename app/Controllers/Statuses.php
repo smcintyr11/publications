@@ -21,7 +21,7 @@ class Statuses extends Controller {
    */
   public function generateIndexQB(string $filter, bool $detailed = false, string $sorting = '') {
     // Load the query builder
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('Statuses');
 
     // Generate the builder object
@@ -205,7 +205,7 @@ class Statuses extends Controller {
       // Set validation rules
       $validation->setRule('status', 'Status', 'required|max_length[64]|is_unique[Statuses.Status,statusID,{statusID}]');
       $validation->setRule('expectedDuration', 'Expected Duration', 'permit_empty|integer|greater_than_equal_to[1]');
-      if ($validation->withRequest($this->request)->run()) {
+      if ($validation->withRequest($this->request)->run(null, null, 'publications')) {
         // An empty string is returned when nothing is entered, convert that to NULL
         $expectedDuration = $this->request->getPost('expectedDuration');
         if ($expectedDuration == "") {
@@ -356,7 +356,7 @@ class Statuses extends Controller {
       // Validate the data
       $validation->setRule('status', 'Status', 'required|max_length[64]|is_unique[Statuses.Status,statusID,{statusID}]');
       $validation->setRule('expectedDuration', 'Expected Duration', 'permit_empty|integer|greater_than_equal_to[1]');
-      if ($validation->withRequest($this->request)->run()) {  // Valid
+      if ($validation->withRequest($this->request)->run(null, null, 'publications')) {  // Valid
         // An empty string is returned when nothing is entered, convert that to NULL
         $expectedDuration = $this->request->getPost('expectedDuration');
         if ($expectedDuration == "") {
@@ -429,7 +429,7 @@ class Statuses extends Controller {
 
     // Build the query
     $searchString = $this->request->getVar('term');
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('Statuses');
     $builder->like('Status', $searchString);
 
@@ -471,7 +471,7 @@ class Statuses extends Controller {
 
     // Get the row
     // Create the query builder object
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('Statuses');
     $builder->select('ExpectedDuration');
     $builder->where('StatusID', $statusID);
@@ -510,7 +510,7 @@ class Statuses extends Controller {
    */
    private function findDependentRecords(string $statusID) {
      // Build the query for the Publications table
-     $db = \Config\Database::connect();
+     $db = \Config\Database::connect('publications');
      $builder = $db->table('PublicationsStatuses');
      $builder->select("PublicationID");
      $builder->where('StatusID', $statusID);
@@ -538,7 +538,7 @@ class Statuses extends Controller {
     */
    private function getLastStatusID(string $status, ?string $expectedDuration) {
      // Load the query builder
-     $db = \Config\Database::connect();
+     $db = \Config\Database::connect('publications');
 
      // Generate the query
      $builder = $db->table('Statuses');
@@ -562,7 +562,7 @@ class Statuses extends Controller {
     */
    private function getMaxStatusID() {
      // Load the query builder
-     $db = \Config\Database::connect();
+     $db = \Config\Database::connect('publications');
 
      // Generate the query
      $builder = $db->table('Statuses');
@@ -587,7 +587,7 @@ class Statuses extends Controller {
     */
    private function clearDefaultStatus() {
      // Load the query builder
-     $db = \Config\Database::connect();
+     $db = \Config\Database::connect('publications');
 
      // Generate the query
      $builder = $db->table('Statuses');
@@ -609,7 +609,7 @@ class Statuses extends Controller {
    */
   private function setDefaultStatus(string $statusID) {
     // Load the query builder
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
 
     // Generate the query
     $builder = $db->table('Statuses');

@@ -4,6 +4,7 @@ use CodeIgniter\Model;
 
 class StatusModel extends Model {
   // Member variables
+  protected $DBGroup  = 'publications';
   protected $table = "Statuses";
   protected $primaryKey = "StatusID";
   protected $allowedFields = ["Status", "ExpectedDuration", "DefaultStatus"];

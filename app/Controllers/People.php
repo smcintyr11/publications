@@ -21,7 +21,7 @@ class People extends Controller {
 	 */
   public function generateIndexQB(string $filter, bool $detailed = false, string $sorting = '') {
     // Load the query builder
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('People');
 
     // Generate the builder object
@@ -222,7 +222,7 @@ class People extends Controller {
       $duplicate = $this->isDuplicate($this->request->getPost('lastName'),
         $this->request->getPost('firstName'), $this->request->getPost('displayName'),
         $this->request->getPost('organizationID'));
-      if (($validation->withRequest($this->request)->run()) && ($duplicate == false)) {
+      if (($validation->withRequest($this->request)->run(null, null, 'publications')) && ($duplicate == false)) {
         // Save
         $model->save([
           'DisplayName' => $this->request->getPost('displayName'),
@@ -352,7 +352,7 @@ class People extends Controller {
       $duplicate = $this->isDuplicate($this->request->getPost('lastName'),
         $this->request->getPost('firstName'), $this->request->getPost('displayName'),
         $this->request->getPost('organizationID'), $this->request->getPost('personID'));
-      if (($validation->withRequest($this->request)->run()) && ($duplicate == false)) {   // Valid
+      if (($validation->withRequest($this->request)->run(null, null, 'publications')) && ($duplicate == false)) {   // Valid
         // Save
         $model->save([
           'PersonID' => $this->request->getPost('personID'),
@@ -465,7 +465,7 @@ class People extends Controller {
 
     // Build the query
     $searchString = $this->request->getVar('term');
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('People');
     $builder->join('vPeopleDropDown', 'People.PersonID = vPeopleDropDown.PersonID', 'left');
     $builder->select('People.PersonID, vPeopleDropDown.DisplayName');
@@ -509,7 +509,7 @@ class People extends Controller {
       $searchString2 = $searchString . " (No affiliation)";
 
       // Build the query
-      $db = \Config\Database::connect();
+      $db = \Config\Database::connect('publications');
       $builder = $db->table('vPeopleDropDown');
       $builder->select('PersonID, DisplayName');
       $builder->where('DisplayName', $searchString);
@@ -542,7 +542,7 @@ class People extends Controller {
     $searchString2 = $searchString . " (No affiliation)";
 
     // Build the query
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('vPeopleDropDown');
     $builder->select('PersonID');
     $builder->where('DisplayName', $searchString);
@@ -566,7 +566,7 @@ class People extends Controller {
    */
   private function getPersonID(string $displayName, ?string $organizationID) {
     // Build the query
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('People');
     $builder->select('PersonID');
     $builder->where('DisplayName', $displayName);
@@ -590,7 +590,7 @@ class People extends Controller {
    */
   private function getPersonDisplayName(string $searchString) {
     // Build the query
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('vPeopleDropDown');
     $builder->select('DisplayName');
     $builder->where('PersonID', $searchString);
@@ -615,7 +615,7 @@ class People extends Controller {
    */
   private function findDependentRecords(string $personID) {
    // Build the query for the PublicationsAuthors table
-   $db = \Config\Database::connect();
+   $db = \Config\Database::connect('publications');
    $builder = $db->table('PublicationsAuthors');
    $builder->select("PublicationID");
    $builder->where('PersonID', $personID);
@@ -668,7 +668,7 @@ class People extends Controller {
     */
   private function isDuplicate(?string $lastName, ?string $firstName, ?string $displayName, ?string $organizationID, ?string $personID = null) {
     // Build the query for the PublicationsAuthors table
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('People');
     $builder->select("PersonID");
     $builder->where('LastName', $lastName);

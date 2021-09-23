@@ -21,7 +21,7 @@ class ReportTypes extends Controller {
    */
   public function generateIndexQB(string $filter, bool $detailed = false, string $sorting = '') {
     // Load the query builder
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('ReportTypes');
 
     // Generate the builder object
@@ -205,7 +205,7 @@ class ReportTypes extends Controller {
       // Set validation rules
       $validation->setRule('reportType', 'Report Type', 'required|max_length[64]|is_unique[ReportTypes.ReportType,reportTypeID,{reportTypeID}]');
       $validation->setRule('abbreviation', 'Abbreviation', 'required|max_length[16]|is_unique[ReportTypes.Abbreviation,reportTypeID,{reportTypeID}]');
-      if ($validation->withRequest($this->request)->run()) {
+      if ($validation->withRequest($this->request)->run(null, null, 'publications')) {
         // Save
         $model->save([
           'ReportType' => $this->request->getPost('reportType'),
@@ -325,7 +325,7 @@ class ReportTypes extends Controller {
       // Validate the data
       $validation->setRule('reportType', 'Report Type', 'required|max_length[64]|is_unique[ReportTypes.ReportType,reportTypeID,{reportTypeID}]');
       $validation->setRule('abbreviation', 'Abbreviation', 'required|max_length[16]|is_unique[ReportTypes.Abbreviation,reportTypeID,{reportTypeID}]');
-      if ($validation->withRequest($this->request)->run()) {  // Valid
+      if ($validation->withRequest($this->request)->run(null, null, 'publications')) {  // Valid
         // Save
         $model->save([
           'ReportTypeID' => $this->request->getPost('reportTypeID'),
@@ -426,7 +426,7 @@ class ReportTypes extends Controller {
 
     // Build the query
     $searchString = $this->request->getVar('term');
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('ReportTypes');
     $builder->like('ReportType', $searchString);
     $builder->orLike('Abbreviation', $searchString);
@@ -488,7 +488,7 @@ class ReportTypes extends Controller {
    */
   private function reportTypeCount(string $reportType) {
     // Create the query builder object
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('ReportTypes');
     $builder->select('ReportTypeID');
     $builder->where('ReportType', $reportType);
@@ -511,7 +511,7 @@ class ReportTypes extends Controller {
    */
   private function getReportTypeID(string $reportType) {
     // Create the query builder object
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('ReportTypes');
     $builder->select('ReportTypeID');
     $builder->where('ReportType', $reportType);
@@ -536,7 +536,7 @@ class ReportTypes extends Controller {
    */
    private function findDependentRecords(string $reportTypeID) {
      // Build the query for the Publications table
-     $db = \Config\Database::connect();
+     $db = \Config\Database::connect('publications');
      $builder = $db->table('Publications');
      $builder->select("PublicationID");
      $builder->where('ReportTypeID', $reportTypeID);

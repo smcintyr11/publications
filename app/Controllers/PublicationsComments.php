@@ -25,7 +25,7 @@ class PublicationsComments extends Controller {
 
     // Get the row
     // Create the query builder object
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('PublicationsComments');
     $builder->where('PublicationsCommentsID', $publicationsCommentsID);
 
@@ -103,7 +103,7 @@ class PublicationsComments extends Controller {
    */
   private function getMaxPublicationsCommentsID($publicationID) {
     // Create the query builder object
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('PublicationsComments');
     $builder->selectMax('PublicationsCommentsID');
     $builder->where('PublicationID', $publicationID);

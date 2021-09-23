@@ -22,7 +22,7 @@ class CostCentres extends Controller
    */
   public function generateIndexQB(string $filter, bool $detailed = false, string $sorting = '') {
     // Load the query builder
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('CostCentres');
 
     // Generate the builder object
@@ -206,7 +206,7 @@ class CostCentres extends Controller
       // Set validation rules
       $validation->setRule('costCentre', 'Cost Centre', 'required|max_length[64]|is_unique[CostCentres.CostCentre,costCentreID,{costCentreID}]');
       $validation->setRule('description', 'Description', 'required|max_length[256]');
-      if ($validation->withRequest($this->request)->run()) {
+      if ($validation->withRequest($this->request)->run(null, null, 'publications')) {
           // Save
           $model->save([
             'CostCentre' => $this->request->getPost('costCentre'),
@@ -327,7 +327,7 @@ class CostCentres extends Controller
       // Validate the data
       $validation->setRule('costCentre', 'Cost Centre', 'required|max_length[64]|is_unique[CostCentres.CostCentre,costCentreID,{costCentreID}]');
       $validation->setRule('description', 'Description', 'required|max_length[256]');
-      if ($validation->withRequest($this->request)->run()) {  // Valid
+      if ($validation->withRequest($this->request)->run(null, null, 'publications')) {  // Valid
         // Save
         $model->save([
           'CostCentreID' => $this->request->getPost('costCentreID'),
@@ -383,7 +383,7 @@ class CostCentres extends Controller
    */
    private function findDependentRecords(string $costCentreID) {
      // Build the query for the Publications table
-     $db = \Config\Database::connect();
+     $db = \Config\Database::connect('publications');
      $builder = $db->table('Publications');
      $builder->select("PublicationID");
      $builder->where('CostCentreID', $costCentreID);

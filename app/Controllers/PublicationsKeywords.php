@@ -98,7 +98,7 @@ class PublicationsKeywords extends Controller {
    */
   private function getMaxPublicationsKeywordsID($publicationID, $keywordID) {
     // Create the query builder object
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('PublicationsKeywords');
     $builder->selectMax('PublicationsKeywordsID');
     $builder->where('PublicationID', $publicationID);
@@ -124,7 +124,7 @@ class PublicationsKeywords extends Controller {
    */
   private function publicationsKeywordsCount($publicationID, $keywordID) {
     // Create the query builder object
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('PublicationsKeywords');
     $builder->select('PublicationsKeywordsID');
     $builder->where('PublicationID', $publicationID);
@@ -148,7 +148,7 @@ class PublicationsKeywords extends Controller {
    */
    public function getKeyword($keywordID) {
      // Create the query builder object
-     $db = \Config\Database::connect();
+     $db = \Config\Database::connect('publications');
      $builder = $db->table('Keywords');
      $builder->select('KeywordEnglish, KeywordFrench');
      $builder->where('KeywordID', $keywordID);

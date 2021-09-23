@@ -4,6 +4,7 @@ use CodeIgniter\Model;
 
 class FiscalYearModel extends Model {
   // Member variables
+  protected $DBGroup  = 'publications';
   protected $table = "FiscalYears";
   protected $primaryKey = "FiscalYearID";
   protected $allowedFields = ["FiscalYear"];

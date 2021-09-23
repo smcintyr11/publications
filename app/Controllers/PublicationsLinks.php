@@ -25,7 +25,7 @@ class PublicationsLinks extends Controller {
 
     // Get the row
     // Create the query builder object
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('PublicationsLinks');
     $builder->select('*');
     $builder->where('PublicationsLinksID', $publicationsLinksID);
@@ -38,7 +38,7 @@ class PublicationsLinks extends Controller {
     }
     $builder = $db->table('PublicationsLinks');
     $builder->select('*');
-    $builder->where('PublicationsLinksID', $publicationsLinksID);    
+    $builder->where('PublicationsLinksID', $publicationsLinksID);
     $results = $builder->get()->getRow();
 
     // Create the return array
@@ -107,7 +107,7 @@ class PublicationsLinks extends Controller {
    private function linkTypeExists(string $linkTypeID) {
      // Get the row
      // Create the query builder object
-     $db = \Config\Database::connect();
+     $db = \Config\Database::connect('publications');
      $builder = $db->table('LinkTypes');
      $builder->select('LinkTypeID');
      $builder->where('LinkTypeID', $linkTypeID);
@@ -208,7 +208,7 @@ class PublicationsLinks extends Controller {
     */
    private function getMaxPublicationsLinksID($publicationID, $linkTypeID, $link) {
      // Create the query builder object
-     $db = \Config\Database::connect();
+     $db = \Config\Database::connect('publications');
      $builder = $db->table('PublicationsLinks');
      $builder->selectMax('PublicationsLinksID');
      $builder->where('PublicationID', $publicationID);

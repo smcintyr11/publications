@@ -4,6 +4,7 @@ use CodeIgniter\Model;
 
 class ClientModel extends Model {
   // Member variables
+  protected $DBGroup  = 'publications';
   protected $table = "Clients";
   protected $primaryKey = "ClientID";
   protected $allowedFields = ["Client"];

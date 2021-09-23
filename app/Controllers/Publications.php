@@ -21,7 +21,7 @@ class Publications extends Controller {
 	 */
   public function generateIndexQB(string $filter, ?string $reportTypeID, ?string $statusID, ?string $costCentreID, bool $detailed = false, string $sorting = '') {
     // Load the query builder
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
     $builder = $db->table('Publications');
 
     // Generate the builder object
@@ -343,7 +343,7 @@ class Publications extends Controller {
       // Set validation rules
       $validation->setRule('primaryTitle', 'Primary Title', 'required');
       $validation->setRule('reportTypeNID', 'Report Type', 'required');
-      if ($validation->withRequest($this->request)->run()) {
+      if ($validation->withRequest($this->request)->run(null, null, 'publications')) {
         // Get the default statusID
         $statusID = $this->getDefaultStatus();
         if (empty($statusID) == false) {
@@ -506,7 +506,7 @@ class Publications extends Controller {
          $validation->setRule('sentToClientDate', 'Sent To Client Date', 'valid_date');
        }
        $validation->setRule('recordNumber', 'Record Number', 'max_length[64]');
-       if ($validation->withRequest($this->request)->run()) {  // Valid
+       if ($validation->withRequest($this->request)->run(null, null, 'publications')) {  // Valid
          // Save
          $model->save([
            'PublicationID' => $this->request->getPost('publicationID'), // **
@@ -627,7 +627,7 @@ class Publications extends Controller {
     */
    private function getStatuses() {
      // Load the query builder
-     $db = \Config\Database::connect();
+     $db = \Config\Database::connect('publications');
 
      // Generate the query
      $builder = $db->table('Statuses');
@@ -648,7 +648,7 @@ class Publications extends Controller {
     */
    private function getReportTypes() {
      // Load the query builder
-     $db = \Config\Database::connect();
+     $db = \Config\Database::connect('publications');
 
      // Generate the query
      $builder = $db->table('ReportTypes');
@@ -669,7 +669,7 @@ class Publications extends Controller {
     */
    private function getLinkTypes() {
      // Load the query builder
-     $db = \Config\Database::connect();
+     $db = \Config\Database::connect('publications');
 
      // Generate the query
      $builder = $db->table('LinkTypes');
@@ -690,7 +690,7 @@ class Publications extends Controller {
     */
    private function getCostCentres() {
      // Load the query builder
-     $db = \Config\Database::connect();
+     $db = \Config\Database::connect('publications');
 
      // Generate the query
      $builder = $db->table('CostCentres');
@@ -712,7 +712,7 @@ class Publications extends Controller {
     */
    private function getStatusLog(string $publicationID) {
      // Load the query builder
-     $db = \Config\Database::connect();
+     $db = \Config\Database::connect('publications');
 
      // Generate the query
      $builder = $db->table('PublicationsStatuses');
@@ -737,7 +737,7 @@ class Publications extends Controller {
     */
    private function getAuthors(string $publicationID) {
      // Load the query builder
-     $db = \Config\Database::connect();
+     $db = \Config\Database::connect('publications');
 
      // Generate the query
      $builder = $db->table('PublicationsAuthors');
@@ -762,7 +762,7 @@ class Publications extends Controller {
     */
    private function getReviewers(string $publicationID) {
      // Load the query builder
-     $db = \Config\Database::connect();
+     $db = \Config\Database::connect('publications');
 
      // Generate the query
      $builder = $db->table('PublicationsReviewers');
@@ -787,7 +787,7 @@ class Publications extends Controller {
     */
    private function getKeywords(string $publicationID) {
      // Load the query builder
-     $db = \Config\Database::connect();
+     $db = \Config\Database::connect('publications');
 
      // Generate the query
      $builder = $db->table('PublicationsKeywords');
@@ -811,7 +811,7 @@ class Publications extends Controller {
     */
    private function getLinks(string $publicationID) {
      // Load the query builder
-     $db = \Config\Database::connect();
+     $db = \Config\Database::connect('publications');
 
      // Generate the query
      $builder = $db->table('PublicationsLinks');
@@ -835,7 +835,7 @@ class Publications extends Controller {
     */
    private function getComments(string $publicationID) {
      // Load the query builder
-     $db = \Config\Database::connect();
+     $db = \Config\Database::connect('publications');
 
      // Generate the query
      $builder = $db->table('PublicationsComments');
@@ -863,7 +863,7 @@ class Publications extends Controller {
     $publicationsStatusesID = $this->getLastPublicationStatusesID($publicationID, $statusID);
 
     // Load the query builder
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
 
     // Generate the query
     date_default_timezone_set("America/Edmonton");
@@ -886,7 +886,7 @@ class Publications extends Controller {
    */
   private function getLastPublicationStatusesID(string $publicationID, string $statusID) {
     // Load the query builder
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
 
     // Generate the query
     $builder = $db->table('PublicationsStatuses');
@@ -913,7 +913,7 @@ class Publications extends Controller {
    */
   private function newStatus(string $publicationID, string $statusID, ?string $statusPersonID, ?string $dueDate) {
     // Load the query builder
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
 
     // Generate the query
     date_default_timezone_set("America/Edmonton");
@@ -944,7 +944,7 @@ class Publications extends Controller {
    */
   private function getLastPublicationID(string $primaryTitle, string $reportTypeID) {
     // Load the query builder
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
 
     // Generate the query
     $builder = $db->table('Publications');
@@ -970,7 +970,7 @@ class Publications extends Controller {
    */
   private function getDefaultStatus() {
     // Load the query builder
-    $db = \Config\Database::connect();
+    $db = \Config\Database::connect('publications');
 
     // Generate the query
     $builder = $db->table('Statuses');
