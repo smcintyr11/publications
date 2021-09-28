@@ -8,8 +8,5 @@
     menu bar.</p>
   </thead>
   <p>Please send any feed back to
-    <a href="mailto:scott.mcIntyre@canada.ca">Scott McIntyre</a></p>
+    <a href="mailto:scott.mcIntyre@nrcan-rncan.gc.ca">Scott McIntyre</a></p>
 </div>
-
-  </body>
-</html>

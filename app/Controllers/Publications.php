@@ -4,6 +4,9 @@ use App\Models\PublicationModel;
 use App\Libraries\MyPager;
 use CodeIgniter\Controller;
 
+// Load the authentication helper
+helper('auth');
+
 class Publications extends Controller {
   /**
 	 * Name: generateIndexQB
@@ -177,7 +180,23 @@ class Publications extends Controller {
    *
    * Returns: None
    */
-   public function index() {
+  public function index() {
+     // Check to see if the user is logged in
+     if (logged_in() == false) {
+       return redirect()->to('/login');
+
+       if (in_groups(['pubsAdmin', 'pubsRC', 'pubsAuth', 'pubsRCMan']) == false) {
+         $data = [
+           'title' => 'Not Authorized',
+         ];
+         echo view('templates/header.php', $data);
+         echo view('templates/menu.php', $data);
+         echo view('errors/notAuthorized.php', $data);
+         echo view('templates/footer.php', $data);
+         return;
+       }
+     }
+
      // Load helpers
      helper(['form']);
 
@@ -232,12 +251,11 @@ class Publications extends Controller {
        'page' => $page,
      ];
 
-
      // Generate the view
      echo view('templates/header.php', $data);
- 		echo view('templates/menu.php', $data);
- 		echo view('publications/index.php', $data);
- 		echo view('templates/footer.php', $data);
+ 		 echo view('templates/menu.php', $data);
+ 		 echo view('publications/index.php', $data);
+ 		 echo view('templates/footer.php', $data);
    }
 
   /**
@@ -249,6 +267,22 @@ class Publications extends Controller {
   * Returns: None
   */
   public function indexDetailed() {
+    // Check to see if the user is logged in
+    if (logged_in() == false) {
+      return redirect()->to('/login');
+
+      if (in_groups(['pubsAdmin', 'pubsRC', 'pubsAuth', 'pubsRCMan']) == false) {
+        $data = [
+          'title' => 'Not Authorized',
+        ];
+        echo view('templates/header.php', $data);
+        echo view('templates/menu.php', $data);
+        echo view('errors/notAuthorized.php', $data);
+        echo view('templates/footer.php', $data);
+        return;
+      }
+    }
+
     // Load helpers
     helper(['form']);
 
@@ -303,7 +337,6 @@ class Publications extends Controller {
       'page' => $page,
     ];
 
-
     // Generate the view
     echo view('templates/header.php', $data);
 		echo view('templates/menu.php', $data);
@@ -320,6 +353,22 @@ class Publications extends Controller {
   * Returns: None
   */
   public function new() {
+    // Check to see if the user is logged in
+    if (logged_in() == false) {
+      return redirect()->to('/login');
+
+      if (in_groups(['pubsAdmin', 'pubsRC', 'pubsAuth', 'pubsRCMan']) == false) {
+        $data = [
+          'title' => 'Not Authorized',
+        ];
+        echo view('templates/header.php', $data);
+        echo view('templates/menu.php', $data);
+        echo view('errors/notAuthorized.php', $data);
+        echo view('templates/footer.php', $data);
+        return;
+      }
+    }
+
     // Create a new Model
     $model = new PublicationModel();
 
@@ -994,6 +1043,23 @@ class Publications extends Controller {
    * Returns: None
    */
   public function delete() {
+    // Check to see if the user is logged in
+    if (logged_in() == false) {
+      return redirect()->to('/login');
+    }
+
+    // Check to see if the user is in the appropriate group
+    if (in_groups(['pubsRC', 'pubsAdmin']) == false) {
+      $data = [
+        'title' => 'Not Authorized',
+      ];
+      echo view('templates/header.php', $data);
+      echo view('templates/menu.php', $data);
+      echo view('errors/notAuthorized.php', $data);
+      echo view('templates/footer.php', $data);
+      return;
+    }
+
     // Get the model
     $model = new PublicationModel();
 

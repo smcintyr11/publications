@@ -93,7 +93,7 @@
             ?>
 
             <tr class="<?= $highlighting ?>" >
-              <?= MyFormGeneration::generateIndexRowButtons("publications", $page, $publication->PublicationID, true, true, false, false, $publication->RushPublication); ?>
+              <?= MyFormGeneration::generateIndexRowButtons("publications", $page, $publication->PublicationID, true, in_groups(['pubsAdmin','pubsRC']), true, true, $publication->RushPublication); ?>
               <td><?= $publication->ReportNumber; ?></td>
               <td><?= $publication->ReportType; ?></td>
               <td><?= $publication->PrimaryTitle; ?></td>

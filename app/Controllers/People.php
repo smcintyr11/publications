@@ -4,6 +4,9 @@ use App\Models\PersonModel;
 use App\Libraries\MyPager;
 use CodeIgniter\Controller;
 
+// Load the authentication helper
+helper('auth');
+
 class People extends Controller {
   /**
 	 * Name: generateIndexQB
@@ -133,6 +136,22 @@ class People extends Controller {
    * Returns: None
    */
   public function index() {
+    // Check to see if the user is logged in
+    if (logged_in() == false) {
+      return redirect()->to('/login');
+
+      if (in_groups(['pubsAdmin', 'pubsRC', 'pubsAuth', 'pubsRCMan']) == false) {
+        $data = [
+          'title' => 'Not Authorized',
+        ];
+        echo view('templates/header.php', $data);
+        echo view('templates/menu.php', $data);
+        echo view('errors/notAuthorized.php', $data);
+        echo view('templates/footer.php', $data);
+        return;
+      }
+    }
+
     // Get the services
     $uri = service('uri');
     $session = session();
@@ -198,6 +217,22 @@ class People extends Controller {
    * Returns: None
    */
   public function new() {
+    // Check to see if the user is logged in
+    if (logged_in() == false) {
+      return redirect()->to('/login');
+
+      if (in_groups(['pubsAdmin', 'pubsRC', 'pubsAuth', 'pubsRCMan']) == false) {
+        $data = [
+          'title' => 'Not Authorized',
+        ];
+        echo view('templates/header.php', $data);
+        echo view('templates/menu.php', $data);
+        echo view('errors/notAuthorized.php', $data);
+        echo view('templates/footer.php', $data);
+        return;
+      }
+    }
+
     // Create a new Model
     $model = new PersonModel();
 
@@ -277,6 +312,23 @@ class People extends Controller {
    * Returns: None
    */
   public function delete() {
+    // Check to see if the user is logged in
+    if (logged_in() == false) {
+      return redirect()->to('/login');
+    }
+
+    // Check to see if the user is in the appropriate group
+    if (in_groups(['pubsRC', 'pubsAdmin']) == false) {
+      $data = [
+        'title' => 'Not Authorized',
+      ];
+      echo view('templates/header.php', $data);
+      echo view('templates/menu.php', $data);
+      echo view('errors/notAuthorized.php', $data);
+      echo view('templates/footer.php', $data);
+      return;
+    }
+
     // Get the person model
     $model = new PersonModel();
 
@@ -328,6 +380,23 @@ class People extends Controller {
    * Returns: None
    */
   public function edit() {
+    // Check to see if the user is logged in
+    if (logged_in() == false) {
+      return redirect()->to('/login');
+    }
+
+    // Check to see if the user is in the appropriate group
+    if (in_groups(['pubsRC', 'pubsAdmin']) == false) {
+      $data = [
+        'title' => 'Not Authorized',
+      ];
+      echo view('templates/header.php', $data);
+      echo view('templates/menu.php', $data);
+      echo view('errors/notAuthorized.php', $data);
+      echo view('templates/footer.php', $data);
+      return;
+    }
+
     // Create a new Model
     $model = new PersonModel();
 
