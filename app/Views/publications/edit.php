@@ -8,6 +8,7 @@
 
 
 <?php use App\Libraries\MyFormGeneration; ?>
+<?php helper('auth'); ?>
 <?php $hideDetailedFields = true; ?>
 
 <!-- Edit Link Modal -->
@@ -476,18 +477,36 @@
         <button type="button" data-toggle="modal" data-target="#newPersonModal" id="btnNewPerson" />
       </div>
 
-      <?= MyFormGeneration::generateSelect("statusID",
-        set_value('statusID', $publication['StatusID']),
-        "-- Select a status --", "Status", $statuses); ?>
+      <?php
+        // Determine if the user has permissions to edit
+        if (in_groups(['pubsAdmin', 'pubsRC', 'pubsRCMan']) == true) {
+          echo (MyFormGeneration::generateSelect("statusID",
+            set_value('statusID', $publication['StatusID']),
+            "-- Select a status --", "Status", $statuses));
 
-      <?= MyFormGeneration::generateLookupTextBox("assignedTo",
-        set_value('assignedTo', $publication['StatusPerson']),
-        "-- Enter a person --", "Assigned To",
-        "statusPersonID", set_value('statusPersonID', $publication['StatusPersonID'])); ?>
+          echo (MyFormGeneration::generateLookupTextBox("assignedTo",
+            set_value('assignedTo', $publication['StatusPerson']),
+            "-- Enter a person --", "Assigned To",
+            "statusPersonID", set_value('statusPersonID', $publication['StatusPersonID'])));
 
-      <?= MyFormGeneration::generateDateTextBox("statusDueDate",
-          set_value('statusDueDate', $publication['StatusDueDate']),
-          "Due Date"); ?>
+          echo (MyFormGeneration::generateDateTextBox("statusDueDate",
+              set_value('statusDueDate', $publication['StatusDueDate']),
+              "Due Date"));
+        } else {
+          echo (MyFormGeneration::generateHiddenInput('statusID',
+            set_value('statusID', $publication['StatusID'])));
+          echo (MyFormGeneration::generateIDTextBox("status",
+            $publication['Status'], "Status"));
+
+          echo (MyFormGeneration::generateHiddenInput('statusPersonID',
+            set_value('statusPersonID', $publication['StatusPersonID'])));
+          echo (MyFormGeneration::generateIDTextBox("assignedTo",
+            $publication['StatusPerson'], "Assigned To"));
+
+          echo (MyFormGeneration::generateIDTextBox("statusDueDate",
+            $publication['StatusDueDate'], "Due Date"));
+        }
+       ?>
 
       <div class="form-group row">
       <h3>Status Log</h3>

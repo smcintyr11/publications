@@ -80,6 +80,7 @@ class PublicationModel extends Model {
         "ReportType" => $row->ReportType,
         "StatusID" => $row->StatusID,
         "OriginalStatusID" => $row->StatusID,
+        "Status" => $row->Status,
         "StatusPersonID" => $row->StatusPersonID,
         "OriginalStatusPersonID" => $row->StatusPersonID,
         "StatusPerson" => $row->StatusPerson,
