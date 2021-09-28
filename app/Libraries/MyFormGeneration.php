@@ -614,12 +614,16 @@ class MyFormGeneration {
      *  bool $enableEdit     - If the edit button is rendered, should it be enabled
      *  bool $enableDelete   - If the delete button is rendered, should it be enabled
      *  bool $showRush       - Should the rush button be rendered
+     *  bool $renderView     - Should the view button be rendered (only necessary with publications)
      *
      * Returns: string - The HTML for these form elements
      */
- public static function generateIndexRowButtons(string $controller, string $page, string $id, bool $renderEdit=true, bool $renderDelete=true, bool $enableEdit=true, bool $enableDelete=true, bool $showRush=false) {
+ public static function generateIndexRowButtons(string $controller, string $page, string $id, bool $renderEdit=true, bool $renderDelete=true, bool $enableEdit=true, bool $enableDelete=true, bool $showRush=false, bool $renderView=false) {
    // Generate the HTML
   $html = '<td>';
+  if ($renderView) {
+      $html = $html . '<a href="/' . $controller . '/view/' . $page . '/' . $id . '" class="btn btn-success m-1 far fa-eye"></a>';
+  }
   if ($renderEdit) {
       $html = $html . '<a href="/' . $controller . '/edit/' . $page . '/' . $id . '" class="btn btn-info m-1 fas fa-edit';
       if ($enableEdit == false) {
@@ -628,6 +632,9 @@ class MyFormGeneration {
       $html = $html . '"></a>';
   }
   if ($renderDelete) {
+    if ($renderView) {
+      $html = $html . "<br>";
+    }
     $html = $html . ' <a href="/' . $controller . '/delete/1/' . $id . '" class="btn btn-danger m-1 fas fa-trash-alt';
     if ($enableDelete == false) {
       $html = $html . ' disabled';
@@ -635,10 +642,10 @@ class MyFormGeneration {
     $html = $html . '"></a>';
   }
   if ($showRush) {
-    $html = $html . '<br><i class="btn btn-warning m-1 far fa-star"></i></div>';
+    $html = $html . '<i class="btn btn-warning m-1 far fa-star"></i></div>';
   }
-  $html = $html . '</td>';
 
+  $html = $html . '</td>';
    // Return the resulting HTML
    return $html;
  }

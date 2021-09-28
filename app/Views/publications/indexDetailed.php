@@ -48,7 +48,7 @@
     <table class="table table-bordered">
 
       <thead class="thead-light">
-        <th scope="col" class="align-top"><div class="btn">Edit / Delete</div></th>
+        <th scope="col" class="align-top"><div class="btn">View / Edit<br>Delete / Rush</div></th>
 
         <?= MyFormGeneration::generateColumnHeader("publications", "Report Number",
           $rn_sort_param, $_SESSION["currentSort"], "rn_asc", "rn_desc"); ?>
@@ -93,7 +93,7 @@
             ?>
 
             <tr class="<?= $highlighting ?>" >
-              <?= MyFormGeneration::generateIndexRowButtons("publications", $page, $publication->PublicationID, true, in_groups(['pubsAdmin','pubsRC']), true, true, $publication->RushPublication); ?>
+              <?= MyFormGeneration::generateIndexRowButtons("publications", $page, $publication->PublicationID, true, in_groups(['pubsAdmin','pubsRC']), true, true, $publication->RushPublication, true); ?>
               <td><?= $publication->ReportNumber; ?></td>
               <td><?= $publication->ReportType; ?></td>
               <td><?= $publication->PrimaryTitle; ?></td>

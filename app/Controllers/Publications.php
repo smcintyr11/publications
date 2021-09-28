@@ -1103,4 +1103,50 @@ class Publications extends Controller {
       echo view('templates/footer.php', $data);
     }
   }
+
+  /**
+   * Name: view
+   * Purpose: Generates the view page
+   *
+   * Parameters: None
+   *
+   * Returns: None
+   */
+  public function view() {
+    // Check to see if the user is logged in
+    if (logged_in() == false) {
+      return redirect()->to('/login');
+    }
+
+    // Get the model
+    $model = new PublicationModel();
+
+    // Set the session last page
+    $session = session();
+    $session->set('lastPage', 'Publications::view');
+
+    // Get the URI service
+    $uri = service('uri');
+
+    // Parse the URI
+    $page = $uri->setSilent()->getSegment(3, 1);
+    $publicationID = $uri->getSegment(4);
+
+    // Generate the delete view
+    $data = [
+      'title' => 'View Publication',
+      'publication' => $model->getPublication($publicationID),
+      'page' => $page,
+      'statusLog' => $this->getStatusLog($publicationID),
+      'authorsList' => $this->getAuthors($publicationID),
+      'reviewersList' => $this->getReviewers($publicationID),
+      'keywordsList' => $this->getKeywords($publicationID),
+      'linksList' => $this->getLinks($publicationID),
+      'commentsList'=> $this->getComments($publicationID),
+    ];
+    echo view('templates/header.php', $data);
+    echo view('templates/menu.php', $data);
+    echo view('publications/view.php', $data);
+    echo view('templates/footer.php', $data);
+  }
 }
