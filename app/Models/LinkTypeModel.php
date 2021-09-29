@@ -7,7 +7,8 @@ class LinkTypeModel extends Model {
   protected $DBGroup  = 'publications';
   protected $table = "LinkTypes";
   protected $primaryKey = "LinkTypeID";
-  protected $allowedFields = ["LinkType"];
+  protected $useSoftDeletes = true;
+  protected $allowedFields = ["CreatedBy","ModifiedBy","LinkType"];
 
   /**
    * Name: getLinkType

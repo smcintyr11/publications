@@ -7,7 +7,8 @@ class OrganizationModel extends Model {
   protected $DBGroup  = 'publications';
   protected $table = "Organizations";
   protected $primaryKey = "OrganizationID";
-  protected $allowedFields = ["Organization"];
+  protected $useSoftDeletes = true;
+  protected $allowedFields = ["CreatedBy","ModifiedBy","Organization"];
 
   /**
    * Name: getOrganization

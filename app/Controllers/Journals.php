@@ -35,6 +35,7 @@ class Journals extends Controller {
     }
 
     // Are we filtering
+    $builder->where('deleted_at', null);
     if ($filter != '') {
       $builder->like('Journal', $filter);
     }
@@ -220,7 +221,7 @@ class Journals extends Controller {
     $model = new JournalModel();
 
     // Load helpers
-    helper(['url', 'form']);
+    helper(['url', 'form', 'auth']);
     $validation = \Config\Services::validation();
 
     // Set the session last page
@@ -237,6 +238,8 @@ class Journals extends Controller {
       if ($validation->withRequest($this->request)->run(null, null, 'publications')) {
         // Save
         $model->save([
+          'CreatedBy' => user_id(),
+          'ModifiedBy' => user_id(),
           'Journal' => $this->request->getPost('journal'),
         ]);
 
@@ -372,7 +375,7 @@ class Journals extends Controller {
     $model = new JournalModel();
 
     // Load helpers
-    helper(['url', 'form']);
+    helper(['url', 'form', 'auth']);
     $validation = \Config\Services::validation();
 
     // Set the session last page
@@ -389,6 +392,7 @@ class Journals extends Controller {
       if ($validation->withRequest($this->request)->run(null, null, 'publications')) {  // Valid
         // Save
         $model->save([
+          'ModifiedBy' => user_id(),
           'JournalID' => $this->request->getPost('journalID'),
           'Journal' => $this->request->getPost('journal'),
         ]);
@@ -442,6 +446,7 @@ class Journals extends Controller {
     $model = new JournalModel();
 
     // Get the POST variables
+    $userid = $this->request->getPost('userid');
     $journal = $this->request->getPost('journal');
 
     // Make sure the variables are valid
@@ -459,6 +464,8 @@ class Journals extends Controller {
 
     // Do the insert
     $model->save([
+      'CreatedBy' => $userid,
+      'ModifiedBy' => $userid,
       'Journal' => $journal,
     ]);
 
@@ -487,6 +494,7 @@ class Journals extends Controller {
     $db = \Config\Database::connect('publications');
     $builder = $db->table('Journals');
     $builder->select('*');
+    $builder->where('deleted_at', null);
     $builder->like('Journal', $searchString);
 
     // Run the query and compile an array of organization data
@@ -547,6 +555,7 @@ class Journals extends Controller {
     $db = \Config\Database::connect('publications');
     $builder = $db->table('Journals');
     $builder->select('JournalID');
+    $builder->where('deleted_at', null);
     $builder->where('Journal', $journal);
 
     // Run the query
@@ -570,6 +579,7 @@ class Journals extends Controller {
     $db = \Config\Database::connect('publications');
     $builder = $db->table('Journals');
     $builder->select('JournalID');
+    $builder->where('deleted_at', null);
     $builder->where('Journal', $journal);
 
     // Run the query

@@ -7,7 +7,8 @@ class JournalModel extends Model {
   protected $DBGroup  = 'publications';
   protected $table = "Journals";
   protected $primaryKey = "JournalID";
-  protected $allowedFields = ["Journal"];
+  protected $useSoftDeletes = true;
+  protected $allowedFields = ["CreatedBy","ModifiedBy","Journal"];
 
   /**
    * Name: getJournal

@@ -7,7 +7,8 @@ class PersonModel extends Model {
   protected $DBGroup  = 'publications';
   protected $table = "People";
   protected $primaryKey = "PersonID";
-  protected $allowedFields = ["LastName", "FirstName", "DisplayName", "OrganizationID"];
+  protected $useSoftDeletes = true;
+  protected $allowedFields = ["CreatedBy","ModifiedBy","LastName", "FirstName", "DisplayName", "OrganizationID"];
 
   /**
    * Name: getPerson

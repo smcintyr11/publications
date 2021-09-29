@@ -35,6 +35,7 @@ class Clients extends Controller {
     }
 
     // Are we filtering
+    $builder->where('deleted_at', null);
     if ($filter != '') {
       $builder->like('Client', $filter);
     }
@@ -203,7 +204,7 @@ class Clients extends Controller {
     // Check to see if the user is logged in
     if (logged_in() == false) {
       return redirect()->to('/login');
-  
+
       if (in_groups(['pubsAdmin', 'pubsRC', 'pubsAuth', 'pubsRCMan']) == false) {
         $data = [
           'title' => 'Not Authorized',
@@ -220,7 +221,7 @@ class Clients extends Controller {
     $model = new ClientModel();
 
     // Load helpers
-    helper(['url', 'form']);
+    helper(['url', 'form', 'auth']);
     $validation = \Config\Services::validation();
 
     // Set the session last page
@@ -237,6 +238,8 @@ class Clients extends Controller {
       if ($validation->withRequest($this->request)->run(null, null, 'publications')) {
         // Save
         $model->save([
+          'CreatedBy' => user_id(),
+          'ModifiedBy' => user_id(),
           'Client' => $this->request->getPost('client'),
         ]);
 
@@ -372,7 +375,7 @@ class Clients extends Controller {
     $model = new ClientModel();
 
     // Load helpers
-    helper(['url', 'form']);
+    helper(['url', 'form', 'auth']);
     $validation = \Config\Services::validation();
 
     // Set the session last page
@@ -389,6 +392,7 @@ class Clients extends Controller {
       if ($validation->withRequest($this->request)->run(null, null, 'publications')) {  // Valid
         // Save
         $model->save([
+          'ModifiedBy' => user_id(),
           'ClientID' => $this->request->getPost('clientID'),
           'Client' => $this->request->getPost('client'),
         ]);
@@ -442,6 +446,7 @@ class Clients extends Controller {
     $model = new ClientModel();
 
     // Get the POST variables
+    $userid = $this->request->getPost('userid');
     $client = $this->request->getPost('client');
 
     // Make sure the variables are valid
@@ -459,6 +464,8 @@ class Clients extends Controller {
 
     // Do the insert
     $model->save([
+      'CreatedBy' => $userid,
+      'ModifiedBy' => $userid,
       'Client' => $client,
     ]);
 
@@ -487,6 +494,7 @@ class Clients extends Controller {
     $db = \Config\Database::connect('publications');
     $builder = $db->table('Clients');
     $builder->select('*');
+    $builder->where('deleted_at', null);
     $builder->like('Client', $searchString);
 
     // Run the query and compile an array of organization data
@@ -547,6 +555,7 @@ class Clients extends Controller {
     $db = \Config\Database::connect('publications');
     $builder = $db->table('Clients');
     $builder->select('ClientID');
+    $builder->where('deleted_at', null);
     $builder->where('Client', $client);
 
     // Run the query
@@ -570,6 +579,7 @@ class Clients extends Controller {
     $db = \Config\Database::connect('publications');
     $builder = $db->table('Clients');
     $builder->select('ClientID');
+    $builder->where('deleted_at', null);
     $builder->where('Client', $client);
 
     // Run the query

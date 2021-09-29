@@ -7,7 +7,9 @@ class ClientModel extends Model {
   protected $DBGroup  = 'publications';
   protected $table = "Clients";
   protected $primaryKey = "ClientID";
-  protected $allowedFields = ["Client"];
+  protected $useSoftDeletes = true;
+  protected $allowedFields = ["CreatedBy","ModifiedBy","Client"];
+
 
   /**
    * Name: getClient

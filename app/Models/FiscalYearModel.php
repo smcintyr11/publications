@@ -7,7 +7,8 @@ class FiscalYearModel extends Model {
   protected $DBGroup  = 'publications';
   protected $table = "FiscalYears";
   protected $primaryKey = "FiscalYearID";
-  protected $allowedFields = ["FiscalYear"];
+  protected $useSoftDeletes = true;
+  protected $allowedFields = ["CreatedBy","ModifiedBy","FiscalYear"];
 
   /**
    * Name: getFiscalYear

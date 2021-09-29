@@ -7,7 +7,8 @@ class CostCentreModel extends Model {
   protected $DBGroup  = 'publications';
   protected $table = "CostCentres";
   protected $primaryKey = "CostCentreID";
-  protected $allowedFields = ["CostCentre","Description"];
+  protected $useSoftDeletes = true;
+  protected $allowedFields = ["CreatedBy","ModifiedBy","CostCentre","Description"];
 
   /**
    * Name: getCostCentre

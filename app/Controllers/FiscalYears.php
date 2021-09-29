@@ -35,6 +35,7 @@ class FiscalYears extends Controller {
     }
 
     // Are we filtering
+    $builder->where('deleted_at', null);
     if ($filter != '') {
       $builder->like('FiscalYear', $filter);
     }
@@ -221,7 +222,7 @@ class FiscalYears extends Controller {
     $model = new FiscalYearModel();
 
     // Load helpers
-    helper(['url', 'form']);
+    helper(['url', 'form', 'auth']);
     $validation = \Config\Services::validation();
 
     // Set the session last page
@@ -238,6 +239,8 @@ class FiscalYears extends Controller {
       if ($validation->withRequest($this->request)->run(null, null, 'publications')) {
         // Save
         $model->save([
+          'CreatedBy' => user_id(),
+          'ModifiedBy' => user_id(),
           'FiscalYear' => $this->request->getPost('fiscalYear'),
         ]);
 
@@ -373,7 +376,7 @@ class FiscalYears extends Controller {
     $model = new FiscalYearModel();
 
     // Load helpers
-    helper(['url', 'form']);
+    helper(['url', 'form', 'auth']);
     $validation = \Config\Services::validation();
 
     // Set the session last page
@@ -390,6 +393,7 @@ class FiscalYears extends Controller {
       if ($validation->withRequest($this->request)->run(null, null, 'publications')) {  // Valid
         // Save
         $model->save([
+          'ModifiedBy' => user_id(),
           'FiscalYearID' => $this->request->getPost('fiscalYearID'),
           'FiscalYear' => $this->request->getPost('fiscalYear'),
         ]);
@@ -443,6 +447,7 @@ class FiscalYears extends Controller {
     $model = new FiscalYearModel();
 
     // Get the POST variables
+    $userid = $this->request->getPost('userid');
     $fiscalYear = $this->request->getPost('fiscalYear');
 
     // Make sure the variables are valid
@@ -460,6 +465,8 @@ class FiscalYears extends Controller {
 
     // Do the insert
     $model->save([
+      'CreatedBy' => $userid,
+      'ModifiedBy' => $userid,
       'FiscalYear' => $fiscalYear,
     ]);
 
@@ -487,6 +494,7 @@ class FiscalYears extends Controller {
     $searchString = $this->request->getVar('term');
     $db = \Config\Database::connect('publications');
     $builder = $db->table('FiscalYears');
+    $builder->where('deleted_at', null);
     $builder->like('FiscalYear', $searchString);
 
     // Run the query and compile an array of organization data
@@ -547,6 +555,7 @@ class FiscalYears extends Controller {
     $db = \Config\Database::connect('publications');
     $builder = $db->table('FiscalYears');
     $builder->select('FiscalYearID');
+    $builder->where('deleted_at', null);
     $builder->where('FiscalYear', $fiscalYear);
 
     // Run the query
@@ -570,6 +579,7 @@ class FiscalYears extends Controller {
     $db = \Config\Database::connect('publications');
     $builder = $db->table('FiscalYears');
     $builder->select('FiscalYearID');
+    $builder->where('deleted_at', null);
     $builder->where('FiscalYear', $fiscalYear);
 
     // Run the query

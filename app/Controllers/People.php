@@ -36,6 +36,7 @@ class People extends Controller {
     $builder->join('Organizations', 'People.OrganizationID = Organizations.OrganizationID', 'left');
 
     // Are we filtering
+    $builder->where('deleted_at', null);
     if ($filter != '') {
       $builder->like('People.Lastname', $filter);
       $builder->orLike('People.Firstname', $filter);
@@ -237,7 +238,7 @@ class People extends Controller {
     $model = new PersonModel();
 
     // Load helpers
-    helper(['url', 'form']);
+    helper(['url', 'form', 'auth']);
     $validation = \Config\Services::validation();
 
     // Set the session last page
@@ -260,6 +261,8 @@ class People extends Controller {
       if (($validation->withRequest($this->request)->run(null, null, 'publications')) && ($duplicate == false)) {
         // Save
         $model->save([
+          'CreatedBy' => user_id(),
+          'ModifiedBy' => user_id(),
           'DisplayName' => $this->request->getPost('displayName'),
           'LastName' => $this->request->getPost('lastName'),
           'FirstName' => $this->request->getPost('firstName'),
@@ -401,7 +404,7 @@ class People extends Controller {
     $model = new PersonModel();
 
     // Load helpers
-    helper(['url', 'form']);
+    helper(['url', 'form', 'auth']);
     $validation = \Config\Services::validation();
 
     // Set the session last page
@@ -424,6 +427,7 @@ class People extends Controller {
       if (($validation->withRequest($this->request)->run(null, null, 'publications')) && ($duplicate == false)) {   // Valid
         // Save
         $model->save([
+          'ModifiedBy' => user_id(),
           'PersonID' => $this->request->getPost('personID'),
           'FirstName' => $this->request->getPost('firstName'),
           'LastName' => $this->request->getPost('lastName'),
@@ -482,6 +486,7 @@ class People extends Controller {
     $model = new PersonModel();
 
     // Get the POST variables
+    $userid = $this->request->getPost('userid');
     $lastName = $this->request->getPost('lastName');
     $firstName = $this->request->getPost('firstName');
     $displayName = $this->request->getPost('displayName');
@@ -503,6 +508,8 @@ class People extends Controller {
 
     // Do the insert
     $model->save([
+      'CreatedBy' => $userid,
+      'ModifiedBy' => $userid,
       'LastName' => empty($lastName) ? null : $lastName,
       'FirstName' => empty($firstName) ? null : $firstName,
       'DisplayName' => $displayName,
@@ -538,6 +545,7 @@ class People extends Controller {
     $builder = $db->table('People');
     $builder->join('vPeopleDropDown', 'People.PersonID = vPeopleDropDown.PersonID', 'left');
     $builder->select('People.PersonID, vPeopleDropDown.DisplayName');
+    $builder->where('deleted_at', null);
     $builder->like('People.DisplayName', $searchString);
     $builder->orLike('FirstName', $searchString);
     $builder->orLike('LastName', $searchString);
@@ -581,6 +589,7 @@ class People extends Controller {
       $db = \Config\Database::connect('publications');
       $builder = $db->table('vPeopleDropDown');
       $builder->select('PersonID, DisplayName');
+      $builder->where('deleted_at', null);
       $builder->where('DisplayName', $searchString);
       $builder->orWhere('DisplayName', $searchString2);
 
@@ -614,6 +623,7 @@ class People extends Controller {
     $db = \Config\Database::connect('publications');
     $builder = $db->table('vPeopleDropDown');
     $builder->select('PersonID');
+    $builder->where('deleted_at', null);
     $builder->where('DisplayName', $searchString);
     $builder->orWhere('DisplayName', $searchString2);
 
@@ -638,6 +648,7 @@ class People extends Controller {
     $db = \Config\Database::connect('publications');
     $builder = $db->table('People');
     $builder->select('PersonID');
+    $builder->where('deleted_at', null);
     $builder->where('DisplayName', $displayName);
     $builder->where('OrganizationID', (empty($organizationID) ? null : $organizationID) );
 
@@ -662,6 +673,7 @@ class People extends Controller {
     $db = \Config\Database::connect('publications');
     $builder = $db->table('vPeopleDropDown');
     $builder->select('DisplayName');
+    $builder->where('deleted_at', null);
     $builder->where('PersonID', $searchString);
 
     // Run the query
@@ -740,6 +752,7 @@ class People extends Controller {
     $db = \Config\Database::connect('publications');
     $builder = $db->table('People');
     $builder->select("PersonID");
+    $builder->where('deleted_at', null);
     $builder->where('LastName', $lastName);
     $builder->where('FirstName', $firstName);
     $builder->where('DisplayName', $displayName);

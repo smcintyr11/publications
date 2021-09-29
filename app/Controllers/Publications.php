@@ -377,7 +377,7 @@ class Publications extends Controller {
     $reportTypes = $this->getReportTypes();
 
     // Load helpers
-    helper(['url', 'form']);
+    helper(['url', 'form', 'auth']);
     $validation = \Config\Services::validation();
 
     // Set the session last page
@@ -492,7 +492,7 @@ class Publications extends Controller {
      $model = new PublicationModel();
 
      // Load helpers
-     helper(['url', 'form']);
+     helper(['url', 'form', 'auth']);
      $validation = \Config\Services::validation();
 
      // Load the lookup tables

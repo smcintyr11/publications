@@ -36,6 +36,7 @@ class CostCentres extends Controller
     }
 
     // Are we filtering
+    $builder->where('deleted_at', null);
     if ($filter != '') {
       $builder->like('CostCentre', $filter);
       $builder->orLike('Description', $filter);
@@ -227,7 +228,7 @@ class CostCentres extends Controller
     $model = new CostCentreModel();
 
     // Load helpers
-    helper(['url', 'form']);
+    helper(['url', 'form', 'auth']);
     $validation = \Config\Services::validation();
 
     // Set the session last page
@@ -245,6 +246,8 @@ class CostCentres extends Controller
       if ($validation->withRequest($this->request)->run(null, null, 'publications')) {
           // Save
           $model->save([
+            'CreatedBy' => user_id(),
+            'ModifiedBy' => user_id(),
             'CostCentre' => $this->request->getPost('costCentre'),
             'Description' => $this->request->getPost('description'),
           ]);
@@ -382,7 +385,7 @@ class CostCentres extends Controller
     $model = new CostCentreModel();
 
     // Load helpers
-    helper(['url', 'form']);
+    helper(['url', 'form', 'auth']);
     $validation = \Config\Services::validation();
 
     // Set the session last page
@@ -400,6 +403,7 @@ class CostCentres extends Controller
       if ($validation->withRequest($this->request)->run(null, null, 'publications')) {  // Valid
         // Save
         $model->save([
+          'ModifiedBy' => user_id(),
           'CostCentreID' => $this->request->getPost('costCentreID'),
           'CostCentre' => $this->request->getPost('costCentre'),
           'Description' => $this->request->getPost('description'),

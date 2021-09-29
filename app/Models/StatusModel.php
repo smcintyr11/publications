@@ -7,7 +7,8 @@ class StatusModel extends Model {
   protected $DBGroup  = 'publications';
   protected $table = "Statuses";
   protected $primaryKey = "StatusID";
-  protected $allowedFields = ["Status", "ExpectedDuration", "DefaultStatus"];
+  protected $useSoftDeletes = true;
+  protected $allowedFields = ["CreatedBy","ModifiedBy","Status", "ExpectedDuration", "DefaultStatus"];
 
   /**
    * Name: getStatus

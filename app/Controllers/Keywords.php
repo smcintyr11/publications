@@ -35,6 +35,7 @@ class Keywords extends Controller {
     }
 
     // Are we filtering
+    $builder->where('deleted_at', null);
     if ($filter != '') {
       $builder->like('KeywordEnglish', $filter);
       $builder->orLike('KeywordFrench', $filter);
@@ -225,7 +226,7 @@ class Keywords extends Controller {
     $model = new KeywordModel();
 
     // Load helpers
-    helper(['url', 'form']);
+    helper(['url', 'form', 'auth']);
     $validation = \Config\Services::validation();
 
     // Set the session last page
@@ -243,6 +244,8 @@ class Keywords extends Controller {
       if ($validation->withRequest($this->request)->run(null, null, 'publications')) {
         // Save
         $model->save([
+          'CreatedBy' => user_id(),
+          'ModifiedBy' => user_id(),
           'KeywordEnglish' => $this->request->getPost('keywordEnglish'),
           'KeywordFrench' => $this->request->getPost('keywordFrench'),
         ]);
@@ -379,7 +382,7 @@ class Keywords extends Controller {
     $model = new KeywordModel();
 
     // Load helpers
-    helper(['url', 'form']);
+    helper(['url', 'form', 'auth']);
     $validation = \Config\Services::validation();
 
     // Set the session last page
@@ -397,6 +400,7 @@ class Keywords extends Controller {
       if ($validation->withRequest($this->request)->run(null, null, 'publications')) {  // Valid
         // Save
         $model->save([
+          'ModifiedBy' => user_id(),
           'KeywordID' => $this->request->getPost('keywordID'),
           'KeywordEnglish' => $this->request->getPost('keywordEnglish'),
           'KeywordFrench' => $this->request->getPost('keywordFrench'),
@@ -451,6 +455,7 @@ class Keywords extends Controller {
     $model = new KeywordModel();
 
     // Get the POST variables
+    $userid = $this->request->getPost('userid');
     $keywordE = $this->request->getPost('keywordE');
     $keywordF = $this->request->getPost('keywordF');
 
@@ -470,6 +475,8 @@ class Keywords extends Controller {
 
     // Do the insert
     $model->save([
+      'CreatedBy' => $userid,
+      'ModifiedBy' => $userid,
       'KeywordEnglish' => $keywordE,
       'KeywordFrench' => $keywordF,
     ]);
@@ -499,6 +506,7 @@ class Keywords extends Controller {
     $db = \Config\Database::connect('publications');
     $builder = $db->table('Keywords');
     $builder->select('KeywordID, CONCAT(KeywordEnglish, " | ", KeywordFrench) AS Keyword');
+    $builder->where('deleted_at', null);
     $builder->like('KeywordEnglish', $searchString);
     $builder->orLike('KeywordFrench', $searchString);
 
@@ -570,6 +578,7 @@ class Keywords extends Controller {
     $db = \Config\Database::connect('publications');
     $builder = $db->table('Keywords');
     $builder->select('KeywordID');
+    $builder->where('deleted_at', null);
     $builder->where('KeywordEnglish', $searchString);
     $builder->orWhere('KeywordFrench', $searchString);
     $builder->orWhere('CONCAT(KeywordEnglish, " | ", KeywordFrench)', $searchString);
@@ -595,6 +604,7 @@ class Keywords extends Controller {
     $db = \Config\Database::connect('publications');
     $builder = $db->table('Keywords');
     $builder->select('KeywordID, CONCAT(KeywordEnglish, " | ", KeywordFrench) AS Keyword, KeywordEnglish, KeywordFrench');
+    $builder->where('deleted_at', null);
     $builder->where('KeywordEnglish', $searchString);
     $builder->orWhere('KeywordFrench', $searchString);
     $builder->orWhere('CONCAT(KeywordEnglish, " | ", KeywordFrench)', $searchString);

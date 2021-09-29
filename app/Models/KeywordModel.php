@@ -7,7 +7,8 @@ class KeywordModel extends Model {
   protected $DBGroup  = 'publications';
   protected $table = "Keywords";
   protected $primaryKey = "KeywordID";
-  protected $allowedFields = ["KeywordEnglish", "KeywordFrench"];
+  protected $useSoftDeletes = true;
+  protected $allowedFields = ["CreatedBy","ModifiedBy","KeywordEnglish", "KeywordFrench"];
 
   /**
    * Name: getKeyword

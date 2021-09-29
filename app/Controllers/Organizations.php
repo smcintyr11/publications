@@ -35,6 +35,7 @@ class Organizations extends Controller {
     }
 
     // Are we filtering
+    $builder->where('deleted_at', null);
     if ($filter != '') {
       $builder->like('Organization', $filter);
     }
@@ -221,7 +222,7 @@ class Organizations extends Controller {
     $model = new OrganizationModel();
 
     // Load helpers
-    helper(['url', 'form']);
+    helper(['url', 'form', 'auth']);
     $validation = \Config\Services::validation();
 
     // Set the session last page
@@ -238,6 +239,8 @@ class Organizations extends Controller {
       if ($validation->withRequest($this->request)->run(null, null, 'publications')) {
         // Save
         $model->save([
+          'CreatedBy' => user_id(),
+          'ModifiedBy' => user_id(),
           'Organization' => $this->request->getPost('organization'),
         ]);
 
@@ -373,7 +376,7 @@ class Organizations extends Controller {
     $model = new OrganizationModel();
 
     // Load helpers
-    helper(['url', 'form']);
+    helper(['url', 'form', 'auth']);
     $validation = \Config\Services::validation();
 
     // Set the session last page
@@ -390,6 +393,7 @@ class Organizations extends Controller {
       if ($validation->withRequest($this->request)->run(null, null, 'publications')) {  // Valid
         // Save
         $model->save([
+          'ModifiedBy' => user_id(),
           'OrganizationID' => $this->request->getPost('organizationID'),
           'Organization' => $this->request->getPost('organization'),
         ]);
@@ -443,6 +447,7 @@ class Organizations extends Controller {
     $model = new OrganizationModel();
 
     // Get the POST variables
+    $userid = $this->request->getPost('userid');
     $organization = $this->request->getPost('organization');
 
     // Make sure the variables are valid
@@ -460,6 +465,8 @@ class Organizations extends Controller {
 
     // Do the insert
     $model->save([
+      'CreatedBy' => $userid,
+      'ModifiedBy' => $userid,
       'Organization' => $organization,
     ]);
 
@@ -487,6 +494,7 @@ class Organizations extends Controller {
     $searchString = $this->request->getVar('term');
     $db = \Config\Database::connect('publications');
     $builder = $db->table('Organizations');
+    $builder->where('deleted_at', null);
     $builder->like('Organization', $searchString);
 
     // Run the query and compile an array of organization data
@@ -586,6 +594,7 @@ class Organizations extends Controller {
    $db = \Config\Database::connect('publications');
    $builder = $db->table('Organizations');
    $builder->select('OrganizationID');
+   $builder->where('deleted_at', null);
    $builder->where('Organization', $organization);
 
    // Run the query
@@ -609,6 +618,7 @@ class Organizations extends Controller {
    $db = \Config\Database::connect('publications');
    $builder = $db->table('Organizations');
    $builder->select('OrganizationID');
+   $builder->where('deleted_at', null);
    $builder->where('Organization', $organization);
 
    // Run the query

@@ -35,6 +35,7 @@ class Statuses extends Controller {
     }
 
     // Are we filtering
+    $builder->where('deleted_at', null);
     if ($filter != '') {
       $builder->like('Status', $filter);
       $builder->orLike('ExpectedDuration', $filter);
@@ -226,7 +227,7 @@ class Statuses extends Controller {
     $model = new StatusModel();
 
     // Load helpers
-    helper(['url', 'form']);
+    helper(['url', 'form', 'auth']);
     $validation = \Config\Services::validation();
 
     // Set the session last page
@@ -250,6 +251,8 @@ class Statuses extends Controller {
 
         // Save
         $model->save([
+          'CreatedBy' => user_id(),
+          'ModifiedBy' => user_id(),
           'Status' => $this->request->getPost('status'),
           'ExpectedDuration' => $expectedDuration,
         ]);
@@ -411,7 +414,7 @@ class Statuses extends Controller {
     $model = new StatusModel();
 
     // Load helpers
-    helper(['url', 'form']);
+    helper(['url', 'form', 'auth']);
     $validation = \Config\Services::validation();
 
     // Set the session last page
@@ -435,6 +438,7 @@ class Statuses extends Controller {
 
         // Save
         $model->save([
+          'ModifiedBy' => user_id(),
           'StatusID' => $this->request->getPost('statusID'),
           'Status' => $this->request->getPost('status'),
           'ExpectedDuration' => $expectedDuration,
@@ -501,6 +505,7 @@ class Statuses extends Controller {
     $searchString = $this->request->getVar('term');
     $db = \Config\Database::connect('publications');
     $builder = $db->table('Statuses');
+    $builder->where('deleted_at', null);
     $builder->like('Status', $searchString);
 
     // Run the query and compile an array of status data
@@ -544,6 +549,7 @@ class Statuses extends Controller {
     $db = \Config\Database::connect('publications');
     $builder = $db->table('Statuses');
     $builder->select('ExpectedDuration');
+    $builder->where('deleted_at', null);
     $builder->where('StatusID', $statusID);
 
     // Run the query
@@ -613,6 +619,7 @@ class Statuses extends Controller {
      // Generate the query
      $builder = $db->table('Statuses');
      $builder->selectMax('StatusID');
+     $builder->where('deleted_at', null);
      $builder->where('Status', $status);
      $builder->where('ExpectedDuration', $expectedDuration);
 

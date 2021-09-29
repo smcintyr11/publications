@@ -35,6 +35,7 @@ class LinkTypes extends Controller {
     }
 
     // Are we filtering
+    $builder->where('deleted_at', null);
     if ($filter != '') {
       $builder->like('LinkType', $filter);
     }
@@ -221,7 +222,7 @@ class LinkTypes extends Controller {
     $model = new LinkTypeModel();
 
     // Load helpers
-    helper(['url', 'form']);
+    helper(['url', 'form', 'auth']);
     $validation = \Config\Services::validation();
 
     // Set the session last page
@@ -238,6 +239,8 @@ class LinkTypes extends Controller {
       if ($validation->withRequest($this->request)->run(null, null, 'publications')) {
         // Save
         $model->save([
+          'CreatedBy' => user_id(),
+          'ModifiedBy' => user_id(),
           'LinkType' => $this->request->getPost('linkType'),
         ]);
 
@@ -373,7 +376,7 @@ class LinkTypes extends Controller {
     $model = new LinkTypeModel();
 
     // Load helpers
-    helper(['url', 'form']);
+    helper(['url', 'form', 'auth']);
     $validation = \Config\Services::validation();
 
     // Set the session last page
@@ -390,6 +393,7 @@ class LinkTypes extends Controller {
       if ($validation->withRequest($this->request)->run(null, null, 'publications')) {  // Valid
         // Save
         $model->save([
+          'ModifiedBy' => user_id(),
           'LinkTypeID' => $this->request->getPost('linkTypeID'),
           'LinkType' => $this->request->getPost('linkType'),
         ]);

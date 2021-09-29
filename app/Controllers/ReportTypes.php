@@ -35,6 +35,7 @@ class ReportTypes extends Controller {
     }
 
     // Are we filtering
+    $builder->where('deleted_at', null);
     if ($filter != '') {
       $builder->like('ReportType', $filter);
       $builder->orLike('Abbreviation', $filter);
@@ -226,7 +227,7 @@ class ReportTypes extends Controller {
     $model = new ReportTypeModel();
 
     // Load helpers
-    helper(['url', 'form']);
+    helper(['url', 'form', 'auth']);
     $validation = \Config\Services::validation();
 
     // Set the session last page
@@ -244,6 +245,8 @@ class ReportTypes extends Controller {
       if ($validation->withRequest($this->request)->run(null, null, 'publications')) {
         // Save
         $model->save([
+          'CreatedBy' => user_id(),
+          'ModifiedBy' => user_id(),
           'ReportType' => $this->request->getPost('reportType'),
           'Abbreviation' => $this->request->getPost('abbreviation'),
         ]);
@@ -380,7 +383,7 @@ class ReportTypes extends Controller {
     $model = new ReportTypeModel();
 
     // Load helpers
-    helper(['url', 'form']);
+    helper(['url', 'form', 'auth']);
     $validation = \Config\Services::validation();
 
     // Set the session last page
@@ -398,6 +401,7 @@ class ReportTypes extends Controller {
       if ($validation->withRequest($this->request)->run(null, null, 'publications')) {  // Valid
         // Save
         $model->save([
+          'ModifiedBy' => user_id(),
           'ReportTypeID' => $this->request->getPost('reportTypeID'),
           'ReportType' => $this->request->getPost('reportType'),
           'Abbreviation' => $this->request->getPost('abbreviation'),
@@ -452,6 +456,7 @@ class ReportTypes extends Controller {
     $model = new ReportTypeModel();
 
     // Get the POST variables
+    $userid = $this->request->getPost('userid');
     $reportType = $this->request->getPost('reportType');
     $abbreviation = $this->request->getPost('abbreviation');
 
@@ -470,6 +475,8 @@ class ReportTypes extends Controller {
 
     // Do the insert
     $model->save([
+      'CreatedBy' => $userid,
+      'ModifiedBy' => $userid,
       'ReportType' => $reportType,
       'Abbreviation' => $abbreviation,
     ]);
@@ -498,6 +505,7 @@ class ReportTypes extends Controller {
     $searchString = $this->request->getVar('term');
     $db = \Config\Database::connect('publications');
     $builder = $db->table('ReportTypes');
+    $builder->where('deleted_at', null);
     $builder->like('ReportType', $searchString);
     $builder->orLike('Abbreviation', $searchString);
     $builder->select('ReportTypeID,CONCAT (ReportType, " (", Abbreviation, ")") AS DDValue');
@@ -561,6 +569,7 @@ class ReportTypes extends Controller {
     $db = \Config\Database::connect('publications');
     $builder = $db->table('ReportTypes');
     $builder->select('ReportTypeID');
+    $builder->where('deleted_at', null);
     $builder->where('ReportType', $reportType);
 
     // Run the query
@@ -584,6 +593,7 @@ class ReportTypes extends Controller {
     $db = \Config\Database::connect('publications');
     $builder = $db->table('ReportTypes');
     $builder->select('ReportTypeID');
+    $builder->where('deleted_at', null);
     $builder->where('ReportType', $reportType);
 
     // Run the query

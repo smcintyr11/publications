@@ -7,7 +7,8 @@ class ReportTypeModel extends Model {
   protected $DBGroup  = 'publications';
   protected $table = "ReportTypes";
   protected $primaryKey = "ReportTypeID";
-  protected $allowedFields = ["ReportType", "Abbreviation"];
+  protected $useSoftDeletes = true;
+  protected $allowedFields = ["CreatedBy","ModifiedBy","ReportType", "Abbreviation"];
 
   /**
    * Name: getReportType
