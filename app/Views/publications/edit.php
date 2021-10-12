@@ -70,6 +70,14 @@
               <?= MyFormGeneration::generateMultilineTextBox("viewPublicationsCommentsComment",
                 null, "-- Comment --", "Comment"); ?>
             </div>
+            <div class="form-group">
+              <?= MyFormGeneration::generateIDTextBox("viewPublicationsCreated",
+                null, "Created"); ?>
+            </div>
+            <div class="form-group">
+              <?= MyFormGeneration::generateIDTextBox("viewPublicationsModified",
+                null, "Modified"); ?>
+            </div>
           </form>
         </div>
         <div class="modal-footer">

@@ -1678,6 +1678,14 @@ $(document).ready(function(){
             $("#viewPublicationsCommentsID").val(dataResult.publicationComment.PublicationsCommentsID);
             $("#viewPublicationsCommentsDateEntered").val(dataResult.publicationComment.DateEntered);
             $("#viewPublicationsCommentsComment").val(dataResult.publicationComment.Comment);
+            created = String(dataResult.publicationComment.Created).concat(" by ", dataResult.publicationComment.CreatedBy);
+            $("#viewPublicationsCreated").val(created);
+            if (dataResult.publicationComment.Modified == null) {
+              modified = "Not modified";
+            } else {
+              modified = String(dataResult.publicationComment.Modified).concat(" by ", dataResult.publicationComment.ModifiedBy);
+            }
+            $("#viewPublicationsModified").val(modified);
           }
           else if(dataResult.statusCode==201) {  // Error
             $('#commentModal').modal('hide');

@@ -37,23 +37,24 @@ class PublicationsComments extends Controller {
       return;
     }
 
-    $builder = $db->table('PublicationsComments');
-    $builder->select('Created, Modified, users.username As CreatedBy,
-      users2.username As ModifiedBy, PublicationsCommentsID, PublicationID,
-      DateEntered, Comments');
-    $builder->join('users', 'PublicationsComments.CreatedBy = users.id');
-    $builder->join('users AS users2', 'PublicationsComments.ModifiedBy = user2.id');
-    $builder->where('deleted_at', null);
-    $builder->where('PublicationsCommentsID', $publicationsCommentsID);
+    $builder = $db->table('publications.PublicationsComments');
+    $builder->select('publications.PublicationsComments.Created, publications.PublicationsComments.Modified,
+      u1.displayName AS CreatedByName, u2.displayName AS ModifiedByName, publications.PublicationsComments.PublicationsCommentsID,
+      publications.PublicationsComments.PublicationID, publications.PublicationsComments.DateEntered,
+      publications.PublicationsComments.Comment');
+    $builder->join('users.users AS u1', 'publications.PublicationsComments.CreatedBy = u1.id', 'left');
+    $builder->join('users.users AS u2', 'publications.PublicationsComments.ModifiedBy = u2.id', 'left');
+    $builder->where('publications.PublicationsComments.deleted_at', null);
+    $builder->where('publications.PublicationsComments.PublicationsCommentsID', $publicationsCommentsID);
     $results = $builder->get()->getRow();
 
     // Create the return array
     $result = array(
       "statusCode"=>200,
       "publicationComment"=>array(
-        "CreatedBy"=>$results->CreatedBy,
+        "CreatedBy"=>$results->CreatedByName,
         "Created"=>$results->Created,
-        "ModifiedBy"=>$results->ModifiedBy,
+        "ModifiedBy"=>$results->ModifiedByName,
         "Modified"=>$results->Modified,
         "PublicationsCommentsID"=>$results->PublicationsCommentsID,
         "DateEntered"=>$results->DateEntered,
@@ -140,6 +141,9 @@ class PublicationsComments extends Controller {
    * Returns: json encoded array with status code (200 = success, 201 = failure)
    */
   public function remove() {
+    // Load the helper functions
+    helper(['auth']);
+
     // Create a new Model
     $model = new PublicationsCommentsModel();
 
@@ -153,7 +157,11 @@ class PublicationsComments extends Controller {
     }
 
     // Do the delete
-    $model->delete($publicationsCommentsID);
+    $model->save([
+      'DeletedBy' => user_id(),
+      'deleted_at' => date("Y-m-d H:i:s"),
+      'PublicationsCommentsID' => $publicationsCommentsID,
+    ]);
 
     // Return the success
     echo json_encode(array("statusCode"=>200));

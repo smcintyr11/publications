@@ -8,5 +8,5 @@ class PublicationsCommentsModel extends Model {
   protected $table = "PublicationsComments";
   protected $primaryKey = "PublicationsCommentsID";
   protected $useSoftDeletes = true;
-  protected $allowedFields = ["CreatedBy","ModifiedBy","PublicationID", "DateEntered", "Comment"];
+  protected $allowedFields = ["CreatedBy","ModifiedBy","Modified","DeletedBy","deleted_at","PublicationID", "DateEntered", "Comment"];
 }
