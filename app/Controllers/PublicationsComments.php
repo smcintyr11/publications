@@ -27,6 +27,7 @@ class PublicationsComments extends Controller {
     // Create the query builder object
     $db = \Config\Database::connect('publications');
     $builder = $db->table('PublicationsComments');
+    $builder->where('deleted_at', null);
     $builder->where('PublicationsCommentsID', $publicationsCommentsID);
 
     // Run the query
@@ -37,6 +38,12 @@ class PublicationsComments extends Controller {
     }
 
     $builder = $db->table('PublicationsComments');
+    $builder->select('Created, Modified, users.username As CreatedBy,
+      users2.username As ModifiedBy, PublicationsCommentsID, PublicationID,
+      DateEntered, Comments');
+    $builder->join('users', 'PublicationsComments.CreatedBy = users.id');
+    $builder->join('users AS users2', 'PublicationsComments.ModifiedBy = user2.id');
+    $builder->where('deleted_at', null);
     $builder->where('PublicationsCommentsID', $publicationsCommentsID);
     $results = $builder->get()->getRow();
 
@@ -44,6 +51,10 @@ class PublicationsComments extends Controller {
     $result = array(
       "statusCode"=>200,
       "publicationComment"=>array(
+        "CreatedBy"=>$results->CreatedBy,
+        "Created"=>$results->Created,
+        "ModifiedBy"=>$results->ModifiedBy,
+        "Modified"=>$results->Modified,
         "PublicationsCommentsID"=>$results->PublicationsCommentsID,
         "DateEntered"=>$results->DateEntered,
         "Comment"=>$results->Comment,
@@ -64,6 +75,9 @@ class PublicationsComments extends Controller {
    *  and the PublicationsCommentsID of the newly inserted row
    */
   public function add() {
+    // Load the helper functions
+    helper(['auth']);
+
     // Create a new Model
     $model = new PublicationsCommentsModel();
 
@@ -79,6 +93,7 @@ class PublicationsComments extends Controller {
 
     // Do the insert
     $model->save([
+      'CreatedBy' => user_id(),
       'PublicationID' => $publicationID,
       'DateEntered' => date("c"),
       'Comment' => $comment,
@@ -106,6 +121,7 @@ class PublicationsComments extends Controller {
     $db = \Config\Database::connect('publications');
     $builder = $db->table('PublicationsComments');
     $builder->selectMax('PublicationsCommentsID');
+    $builder->where('deleted_at', null);
     $builder->where('PublicationID', $publicationID);
 
     // Run the query

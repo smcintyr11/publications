@@ -7,5 +7,6 @@ class PublicationsKeywordsModel extends Model {
   protected $DBGroup  = 'publications';
   protected $table = "PublicationsKeywords";
   protected $primaryKey = "PublicationsKeywordsID";
-  protected $allowedFields = ["PublicationID", "KeywordID"];
+  protected $useSoftDeletes = true;
+  protected $allowedFields = ["CreatedBy","ModifiedBy","PublicationID", "KeywordID"];
 }

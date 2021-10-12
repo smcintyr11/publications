@@ -14,6 +14,9 @@ class PublicationsReviewers extends Controller {
    *  and the PublicationsReviewersID of the newly inserted row
    */
   public function add() {
+    // Load the helper functions
+    helper(['auth']);
+
     // Create a new Model
     $model = new PublicationsReviewersModel();
 
@@ -35,6 +38,7 @@ class PublicationsReviewers extends Controller {
 
     // Do the insert
     $model->save([
+      'CreatedBy' => user_id(),
       'PublicationID' => $publicationID,
       'PersonID' => $personID,
       'LeadReviewer' => 0,
@@ -84,6 +88,9 @@ class PublicationsReviewers extends Controller {
    * Returns: json encoded array with status code (200 = success, 201 = failure)
    */
   public function update() {
+    // Load the helper functions
+    helper(['auth']);
+
     // Create a new Model
     $model = new PublicationsReviewersModel();
 
@@ -99,6 +106,7 @@ class PublicationsReviewers extends Controller {
 
     // Do the update
     $model->save([
+      'ModifiedBy' => user_id(),
       'PublicationsReviewersID' => $publicationsReviewersID,
       'LeadReviewer' => $leadReviewer,
     ]);
@@ -123,6 +131,7 @@ class PublicationsReviewers extends Controller {
     $db = \Config\Database::connect('publications');
     $builder = $db->table('PublicationsReviewers');
     $builder->selectMax('PublicationsReviewersID');
+    $builder->where('deleted_at', null);
     $builder->where('PublicationID', $publicationID);
     $builder->where('PersonID', $personID);
 
@@ -149,6 +158,7 @@ class PublicationsReviewers extends Controller {
     $db = \Config\Database::connect('publications');
     $builder = $db->table('PublicationsReviewers');
     $builder->select('PublicationsReviewersID');
+    $builder->where('deleted_at', null);
     $builder->where('PublicationID', $publicationID);
     $builder->where('PersonID', $personID);
 

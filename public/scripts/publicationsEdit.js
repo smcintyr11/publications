@@ -266,7 +266,7 @@ function checkLookups(event) {
   if (checkJournal(event)) { return; }
 
   // Check the status person
-  if (checkAssignedTo(event)) { return; }
+  // if (checkAssignedTo(event)) { return; }
 }
 
 /* Name: checkReportType
@@ -861,47 +861,44 @@ function addJournal() {
  * a new Keyword
  *
  * Parameters:
- *  None
+ *  keyword - The keyword to search for
+ *  message - The message to populate the new keyword modal save question with
+ *  click - The value to change the onclick attribute to for the save button
+ *          in the new keyword Modal
+ *  callback - The callback function to call after the keyword has been added
  *
  * Returns:
- *  Array:
- *    boolean (T/F) - Keyword exits
- *    string - keywordID (or null)
- *    string - keyword (or null)
+ *  None
  */
-function checkKeyword() {
+function checkKeyword(keyword) {
+
   // Get the fields
-  var keyword = $("#newKeyword").val();
-  var keywordID = $("#keywordID").val();
+  var publicationID = $("#publicationID").val();
 
-  // Check if keyword is not empty
-  if ((keyword != "") && (keywordID == "")) {
-    // Check if the keyword has an keywordID (e.g. the user didn't
-    // select the keyword from the drop down)
-    $.ajax({
-        url: "/keywords/searchExactKeyword",
-        type: "POST",
-        data: {
-          keyword: keyword,
-        },
-        cache: false,
-        success: function(dataResult){
-          var dataResult = JSON.parse(dataResult);
-          if(dataResult.statusCode==200) {  // Success
-            AddPublicationKeyword(dataResult.keywordID, $("#publicationID").val());
+  // Check if the person exists
+  $.ajax({
+      url: "/keywords/searchExactKeyword",
+      type: "POST",
+      data: {
+        keyword: keyword,
+      },
+      cache: false,
+      success: function(dataResult){
+        var dataResult = JSON.parse(dataResult);
+        if(dataResult.statusCode==200) {  // Success
+          AddPublicationKeyword(dataResult.keywordID, publicationID);
 
-            // Clear the keyword boxes
-            $("#newKeyword").val("");
-            $("#keywordID").val("");
-          } else {  // No exact match
-            // Fill in and launch the new keyword form
-            $("#newKeywordE").val(keyword);
-            $("#newKeywordF").val(keyword);
-            $("#btnNewKeyword").click();
-          }
+          // Clear the keyword boxes
+          $("#newKeyword").val("");
+          $("#keywordID").val("");
+        } else {  // No exact match
+          // Fill in and launch the new keyword form
+          $("#newKeywordE").val(keyword);
+          $("#newKeywordF").val(keyword);
+          $("#btnNewKeyword").click();
         }
-      });
-  }
+      }
+    });
 }
 
 /* Name: AddPublicationKeyword
@@ -965,8 +962,6 @@ function AddPublicationKeyword(keywordID, publicationID) {
  * Returns:
  *  Array:
  *    boolean (T/F) - Person exits
- *    string - personID (or null)
- *    string - person displayName
  */
 function checkAssignedTo() {
   // Get the fields
@@ -976,15 +971,9 @@ function checkAssignedTo() {
 
   // Check if client is not empty
   if ((person != "") && (personID == "")) {
-    // Stop saving temporarily
-    event.preventDefault();
-
     // Check to see if the person exists, but an ID was not select
     // (e.g. didn't select from the drop down)
-    CheckPerson(person, "Do you want to add this person to the database and assign the status to them?",
-      "addNewPerson(StatusAssignedToSuccess)", StatusAssignedToSuccess);
-
-    return true;
+    return CheckUser(person);
   }
   return false;
 }
@@ -1173,6 +1162,45 @@ function CheckPerson(person, message, click, callback) {
     });
 }
 
+/* Name: CheckUser
+ *
+ * Purpose: Checks to see if the person passed in has a matching ID in the
+ *  users.users table.  If it does, then update the StatusPersonID and
+ *  continue, Otherwise display an error message to the user
+ *
+ * Parameters:
+ *  person - The person's name to search for
+ *
+ * Returns:
+ *    None
+ */
+function CheckUser(person) {
+  // Check if the user exists
+  $.ajax({
+      url: "/users/searchExactDisplayName",
+      type: "POST",
+      data: {
+        displayName: person,
+      },
+      cache: false,
+      success: function(dataResult){
+        var dataResult = JSON.parse(dataResult);
+        if(dataResult.statusCode==200) {
+          // User found
+          $("#statusPersonID").val(dataResult.ID);
+          return;
+        }
+        else {
+          // User not found
+          alert("The user you have entered in the \"Assigned To\" field under status does not exist.\nThis most likely occured because you did not select the person's name from the drop down.\nThe field has been reset.");
+          $("#statusPersonID").val("#OriginalStatusPersonID");
+          $("#assignedTo").val("#originalAssignedTo");
+        }
+      }
+    });
+}
+
+
 /* Name: addNewKeyword
  *
  * Purpose: Function to add a keyword to the database, and then add it to the
@@ -1336,7 +1364,7 @@ $(document).ready(function(){
   lookup("#reportType", "#reportTypeID", "/reportTypes/searchReportType");
 
   // Assigned to autocomplete
-  lookup("#assignedTo", "#statusPersonID", "/people/searchPerson");
+  lookup("#assignedTo", "#statusPersonID", "/users/searchPerson");
 
 	// Fiscal Year autocomplete
   lookup("#fiscalYear", "#fiscalYearID", "/fiscalYears/searchFiscalYear");
@@ -1412,7 +1440,26 @@ $(document).ready(function(){
 
   // Add keyword function
   $("#btnAddKeyword").click(function(){
-    checkKeyword();
+    // Get the form variables
+    var keyword = $("#newKeyword").val();
+    var keywordID = $('#keywordID').val();
+    var publicationID = $("#publicationID").val();
+
+    if ((keywordID == "") && (keyword == "")) {
+      // No keyword entered
+      alert("You must select a keyword first");
+      return;
+    } else if ((keywordID == "") && (keyword != "")) {
+      // Check to see if the keyword exists, but an ID was not select
+      // (e.g. didn't select from the drop downn)
+      checkKeyword(keyword);
+    } else {
+        // Keyword entered, ID found in lookup
+
+        // Add the keyword to the publication
+        AddPublicationKeyword(keywordID, publicationID);
+    }
+
   });
 
   // Add link function
@@ -1457,7 +1504,7 @@ $(document).ready(function(){
             } else {
               html = html + link;
             }
-            html = html + '</td><td id="ll_lt_'+PublicationsLinksID+'">'+linkType+'</td><td><button class="btn btn-info m-1 fas fa-edit" id="btnEL_'+PublicationsLinksID+'" type="button" title="Edit Link" data-toggle="modal" data-target="#linkModal" data-id="'+PublicationsLinksID+'" /><button class="btn btn-danger m-1 fas fa-trash-alt" type="button" title="Delete Link" onclick="removeLink(\'ll_'+PublicationsLinksID+'\', '+PublicationsLinksID+'" /></td></tr>';
+            html = html + '</td><td id="ll_lt_'+PublicationsLinksID+'">'+linkType+'</td><td><button class="btn btn-info m-1 fas fa-edit" id="btnEL_'+PublicationsLinksID+'" type="button" title="Edit Link" data-toggle="modal" data-target="#linkModal" data-id="'+PublicationsLinksID+'" /><button class="btn btn-danger m-1 fas fa-trash-alt" type="button" title="Delete Link" onclick="removeLink(\'ll_'+PublicationsLinksID+'\', '+PublicationsLinksID+')" /></td></tr>';
             $("#tblLinks").append(html);
             displaySuccessMessage("Link Added");
           }
@@ -1551,6 +1598,11 @@ $(document).ready(function(){
         }
       },
     });
+  });
+
+  // Assigned to change function
+  $("#assignedTo").change(function(){
+    CheckUser($("#assignedTo").val());
   });
 
   // Select the General Tab

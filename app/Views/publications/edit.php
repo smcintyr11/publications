@@ -9,7 +9,8 @@
 
 <?php use App\Libraries\MyFormGeneration; ?>
 <?php helper('auth'); ?>
-<?php $hideDetailedFields = true; ?>
+<?php $hideDetailedFields = false; ?>
+
 
 <!-- Edit Link Modal -->
  <div class="modal fade" id="linkModal" tabindex="-1" role="dialog">
@@ -393,6 +394,9 @@
     <!-- General Tab -->
     <div id="tbGeneral" class="tabcontent" style="display: block;">
 
+      <?= MyFormGeneration::generateMultilineTextBox("debug",
+        $debug, '', 'Debug', 3); ?>
+
       <?= MyFormGeneration::generateIDTextBox("publicationID",
         $publication['PublicationID'], "Publication ID"); ?>
 
@@ -469,6 +473,8 @@
         set_value('originalStatusID', $publication['OriginalStatusID'])); ?>
       <?= MyFormGeneration::generateHiddenInput('originalStatusPersonID',
         set_value('originalStatusID', $publication['OriginalStatusPersonID'])); ?>
+      <?= MyFormGeneration::generateHiddenInput('originalAssignedTo',
+        set_value('originalAssignedTo', $publication['OriginalAssignedTo'])); ?>
       <?= MyFormGeneration::generateHiddenInput('originalStatusDueDate',
         set_value('originalStatusID', $publication['OriginalStatusDueDate'])); ?>
 
@@ -485,7 +491,7 @@
             "-- Select a status --", "Status", $statuses));
 
           echo (MyFormGeneration::generateLookupTextBox("assignedTo",
-            set_value('assignedTo', $publication['StatusPerson']),
+            set_value('assignedTo', $publication['AssignedTo']),
             "-- Enter a person --", "Assigned To",
             "statusPersonID", set_value('statusPersonID', $publication['StatusPersonID'])));
 

@@ -7,5 +7,6 @@ class PublicationsLinksModel extends Model {
   protected $DBGroup  = 'publications';
   protected $table = "PublicationsLinks";
   protected $primaryKey = "PublicationsLinksID";
-  protected $allowedFields = ["PublicationID", "LinkTypeID", "Link"];
+  protected $useSoftDeletes = true;
+  protected $allowedFields = ["CreatedBy","ModifiedBy","PublicationID", "LinkTypeID", "Link"];
 }

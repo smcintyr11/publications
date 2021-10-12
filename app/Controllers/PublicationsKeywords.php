@@ -14,6 +14,9 @@ class PublicationsKeywords extends Controller {
    *  the PublicationsKeywordsID, KeywordEnglish, KeywordFrench of the newly inserted row
    */
   public function add() {
+    // Load the helper functions
+    helper(['auth']);
+
     // Create a new Model
     $model = new PublicationsKeywordsModel();
 
@@ -39,6 +42,7 @@ class PublicationsKeywords extends Controller {
 
     // Do the insert
     $model->save([
+      'CreatedBy' => user_id(),
       'PublicationID' => $publicationID,
       'KeywordID' => $keywordID,
     ]);
@@ -101,6 +105,7 @@ class PublicationsKeywords extends Controller {
     $db = \Config\Database::connect('publications');
     $builder = $db->table('PublicationsKeywords');
     $builder->selectMax('PublicationsKeywordsID');
+    $builder->where('deleted_at', null);
     $builder->where('PublicationID', $publicationID);
     $builder->where('KeywordID', $keywordID);
 
@@ -127,6 +132,7 @@ class PublicationsKeywords extends Controller {
     $db = \Config\Database::connect('publications');
     $builder = $db->table('PublicationsKeywords');
     $builder->select('PublicationsKeywordsID');
+    $builder->where('deleted_at', null);
     $builder->where('PublicationID', $publicationID);
     $builder->where('KeywordID', $keywordID);
 
@@ -151,6 +157,7 @@ class PublicationsKeywords extends Controller {
      $db = \Config\Database::connect('publications');
      $builder = $db->table('Keywords');
      $builder->select('KeywordEnglish, KeywordFrench');
+     $builder->where('deleted_at', null);
      $builder->where('KeywordID', $keywordID);
 
      // Run the query

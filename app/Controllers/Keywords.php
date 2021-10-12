@@ -540,8 +540,9 @@ class Keywords extends Controller {
     // Variable declaration
     $searchString = $this->request->getVar('keyword');
 
-    // Is there an exact match
     if ($this->exactKeywordCount($searchString) > 0) {
+
+
       // Build the query
       $db = \Config\Database::connect('publications');
       $builder = $db->table('Keywords');
@@ -552,6 +553,7 @@ class Keywords extends Controller {
 
       // Run the query and compile an array of organization data
       $result = $builder->get()->getRow();
+
 
       // Return success
       echo json_encode(array("statusCode"=>200, "keywordID"=>$result->KeywordID, "keyword"=>$result->Keyword));
@@ -588,6 +590,28 @@ class Keywords extends Controller {
 
     // Return the number of rows
     return $results;
+  }
+
+  public function exactKeywordCount2() {
+    // Variable declaration
+    $searchString = $this->request->getVar('keyword');
+
+    // Build the query
+    $db = \Config\Database::connect('publications');
+    $builder = $db->table('Keywords');
+    $builder->select('KeywordID');
+    $builder->where('deleted_at', null);
+    $builder->where('KeywordEnglish', $searchString);
+    $builder->orWhere('KeywordFrench', $searchString);
+    $builder->orWhere('CONCAT(KeywordEnglish, " | ", KeywordFrench)', $searchString);
+
+    // Run the query
+    $results = $builder->get()->getNumRows();
+
+    // Return the number of rows
+
+    echo json_encode(array("statusCode"=>200, "results"=>$results));
+    return;
   }
 
   /**

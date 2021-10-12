@@ -28,6 +28,7 @@ class PublicationsLinks extends Controller {
     $db = \Config\Database::connect('publications');
     $builder = $db->table('PublicationsLinks');
     $builder->select('*');
+    $builder->where('deleted_at', null);
     $builder->where('PublicationsLinksID', $publicationsLinksID);
 
     // Run the query
@@ -64,6 +65,9 @@ class PublicationsLinks extends Controller {
    * Returns: json encoded array with status code (200 = success, 201 = failure)
    */
   public function update() {
+    // Load the helper functions
+    helper(['auth']);
+
     // Create a new Model
     $model = new PublicationsLinksModel();
 
@@ -86,6 +90,7 @@ class PublicationsLinks extends Controller {
 
     // Do the update
     $model->save([
+      'ModifiedBy' => user_id(),
       'PublicationsLinksID' => $publicationsLinksID,
       'LinkTypeID' => $linkTypeID,
       'Link' => $link,
@@ -110,6 +115,7 @@ class PublicationsLinks extends Controller {
      $db = \Config\Database::connect('publications');
      $builder = $db->table('LinkTypes');
      $builder->select('LinkTypeID');
+     $builder->where('deleted_at', null);
      $builder->where('LinkTypeID', $linkTypeID);
 
      // Run the query
@@ -132,6 +138,9 @@ class PublicationsLinks extends Controller {
     *  and the PublicationsLinksID of the newly inserted row
     */
    public function add() {
+     // Load the helper functions
+     helper(['auth']);
+
      // Create a new Model
      $model = new PublicationsLinksModel();
 
@@ -154,6 +163,7 @@ class PublicationsLinks extends Controller {
 
      // Do the insert
      $model->save([
+       'CreatedBy' => user_id(),
        'PublicationID' => $publicationID,
        'LinkTypeID' => $linkTypeID,
        'Link' => $link,
@@ -211,6 +221,7 @@ class PublicationsLinks extends Controller {
      $db = \Config\Database::connect('publications');
      $builder = $db->table('PublicationsLinks');
      $builder->selectMax('PublicationsLinksID');
+     $builder->where('deleted_at', null);
      $builder->where('PublicationID', $publicationID);
      $builder->where('LinkTypeID', $linkTypeID);
      $builder->where('Link', $link);

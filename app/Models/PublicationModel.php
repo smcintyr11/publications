@@ -7,12 +7,14 @@ class PublicationModel extends Model {
   protected $DBGroup  = 'publications';
   protected $table = "Publications";
   protected $primaryKey = "PublicationID";
-  protected $allowedFields = ["PrimaryTitle", "SecondaryTitle", "PublicationDate", "FiscalYearID", "Volume", "StartPage",
-    "EndPage", "ClientID", "OrganizationID", "AbstractEnglish", "AbstractFrench", "PLSEnglish", "PLSFrench", "PRSEnglish",
-    "PRSFrench", "ISBN", "AgreementNumber", "IPDNumber", "CrossReferenceNumber", "ProjectCode", "ReportNumber", "ManuscriptNumber",
-    "CostCentreID", "JournalID", "ReportTypeID", "StatusID", "StatusPersonID", "StatusDueDate", "DOI", "JournalSubmissionDate",
-    "JournalAcceptanceDate", "ConferenceSubmissionDate", "ConferenceAcceptanceDate", "EmbargoPeriod", "EmbargoEndDate",
-    "WebPublicationDate", "SentToClient", "SentToClientDate", "ReportFormatted", "RecordNumber", "RushPublication"];
+  protected $useSoftDeletes = true;
+  protected $allowedFields = ["CreatedBy","ModifiedBy","PrimaryTitle", "SecondaryTitle", "PublicationDate", "FiscalYearID",
+    "Volume", "StartPage", "EndPage", "ClientID", "OrganizationID", "AbstractEnglish", "AbstractFrench", "PLSEnglish", "PLSFrench",
+    "PRSEnglish", "PRSFrench", "ISBN", "AgreementNumber", "IPDNumber", "CrossReferenceNumber", "ProjectCode", "ReportNumber",
+    "ManuscriptNumber", "CostCentreID", "JournalID", "ReportTypeID", "StatusID", "StatusPersonID", "StatusDueDate", "DOI",
+    "JournalSubmissionDate", "JournalAcceptanceDate", "ConferenceSubmissionDate", "ConferenceAcceptanceDate", "EmbargoPeriod",
+    "EmbargoEndDate", "WebPublicationDate", "SentToClient", "SentToClientDate", "ReportFormatted", "RecordNumber",
+    "RushPublication"];
 
   /**
    * Name: getPublication
@@ -30,7 +32,7 @@ class PublicationModel extends Model {
       p.Volume, p.StartPage, p.EndPage, p.ClientID, c.Client, p.OrganizationID, o.Organization, p.AbstractEnglish, p.AbstractFrench,
       p.PLSEnglish, p.PLSFrench, p.PRSEnglish, p.PRSFrench, p.ISBN, p.AgreementNumber, p.IPDNumber, p.CrossReferenceNumber,
       p.ProjectCode, p.ReportNumber, p.ManuscriptNumber, p.CostCentreID, cc.CostCentre, p.JournalID, j.Journal, p.ReportTypeID,
-      CONCAT (rt.ReportType, " (", rt.Abbreviation, ")") AS ReportType, p.StatusID, s.Status, p.StatusPersonID, pe.DisplayName AS StatusPerson, p.StatusDueDate, p.DOI,
+      CONCAT (rt.ReportType, " (", rt.Abbreviation, ")") AS ReportType, p.StatusID, s.Status, p.StatusPersonID, p.StatusDueDate, p.DOI,
       p.JournalSubmissionDate, p.JournalAcceptanceDate, p.ConferenceSubmissionDate, p.ConferenceAcceptanceDate, p.EmbargoPeriod,
       p.EmbargoEndDate, p.WebPublicationDate, p.SentToClient, p.SentToClientDate, p.ReportFormatted, p.RecordNumber, p.RushPublication, DATEDIFF(p.StatusDueDate, CURDATE()) AS DueDateDelta
       FROM (((((((Publications AS p LEFT JOIN FiscalYears AS fy ON p.FiscalYearID = fy.FiscalYearID)
@@ -40,11 +42,12 @@ class PublicationModel extends Model {
       LEFT JOIN Journals AS j ON p.JournalID = j.JournalID)
       LEFT JOIN ReportTypes AS rt ON p.ReportTypeID = rt.ReportTypeID)
       LEFT JOIN Statuses AS s ON p.StatusID = s.StatusID)
-      LEFT JOIN vPeopleDropDown AS pe ON p.StatusPersonID = pe.PersonID
-      WHERE p.PublicationID = ' . $publicationID);
+      WHERE p.deleted_at is null
+      AND p.PublicationID = ' . $publicationID);
 
     // Create the result
     foreach ($query->getResult() as $row) {
+      $StatusPerson = $this->getStatusPerson($row->StatusPersonID);
       $result = array(
         "PublicationID" => $row->PublicationID,
         "PrimaryTitle" => $row->PrimaryTitle,
@@ -83,7 +86,8 @@ class PublicationModel extends Model {
         "Status" => $row->Status,
         "StatusPersonID" => $row->StatusPersonID,
         "OriginalStatusPersonID" => $row->StatusPersonID,
-        "StatusPerson" => $row->StatusPerson,
+        "AssignedTo" => $StatusPerson,
+        "OriginalAssignedTo" => $StatusPerson,
         "StatusDueDate" => $row->StatusDueDate,
         "OriginalStatusDueDate" => $row->StatusDueDate,
         "DOI" => $row->DOI,
@@ -247,5 +251,68 @@ class PublicationModel extends Model {
     // Generate and execute the delete
     $builder->where('PublicationID', $publicationID);
     $builder->delete();
+  }
+
+  /**
+   * Name: getStatusPerson
+   * Purpose: Gets the display name from the users.users table based on the
+   *  ID passed it
+   *
+   * Parameters:
+   *  int (or NULL) $ID - The ID of the user
+   *
+   * Returns: None
+   */
+  public function getStatusPerson($ID) {
+    if (is_null($ID)) {
+      return null;
+    }
+    if ($this->getStatusPersonCount($ID) > 0) {
+      // Load the query builder
+      $db = \Config\Database::connect();
+      $builder = $db->table('users');
+
+      // Generate and execute the delete
+      $builder->select('displayName');
+      $builder->where('deleted_at', null);
+      $builder->where('ID', $ID);
+
+      // Run the query
+      $result = $builder->get()->getRow();
+
+      // Return the result
+      return $result->displayName;
+    }
+
+    // User not found
+    return null;
+  }
+
+  /**
+   * Name: getStatusPersonCount
+   * Purpose: Gets the number of rows from the users.users table that have an
+   *  ID that matches the parameter
+   *
+   * Parameters:
+   *  int (or NULL) $ID - The ID of the user
+   *
+   * Returns: None
+   */
+  public function getStatusPersonCount($ID) {
+    if (is_null($ID)) {
+      return 0;
+    }
+
+    // Load the query builder
+    $db = \Config\Database::connect();
+    $builder = $db->table('users');
+
+    // Generate and execute the delete
+    $builder->select('displayName');
+    $builder->where('deleted_at', null);
+    $builder->where('ID', $ID);
+
+    // Return the result
+    return $builder->get()->getNumRows();
   }
 }

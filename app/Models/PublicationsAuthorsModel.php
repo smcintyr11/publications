@@ -7,5 +7,6 @@ class PublicationsAuthorsModel extends Model {
   protected $DBGroup  = 'publications';
   protected $table = "PublicationsAuthors";
   protected $primaryKey = "PublicationsAuthorsID";
-  protected $allowedFields = ["PublicationID", "PersonID", "PrimaryAuthor"];
+  protected $useSoftDeletes = true;
+  protected $allowedFields = ["CreatedBy","ModifiedBy","PublicationID", "PersonID", "PrimaryAuthor"];
 }

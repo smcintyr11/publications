@@ -10,6 +10,7 @@
               Publications
           </a>
           <div class="dropdown-menu">
+            <a class="dropdown-item" href="/publications/new">New Publication</a>
             <a class="dropdown-item" href="/publications/indexDetailed">Publications Dashboard</a>
             <a class="dropdown-item" href="/publications/index">Publications Status Dashboard</a>
           </div>
@@ -44,7 +45,7 @@
             echo ('<a class="nav-link" href="/login">Login</a>');
           } else {
             $user = user();
-            echo ('<a class="nav-link">Welcome ' . $user->username . "</a>");
+            echo ('<a class="nav-link">Welcome ' . $user->firstname . "</a>");
             echo ('<a class="nav-link" href="/logout">Logout</a>');
           }
          ?>

@@ -14,6 +14,9 @@ class PublicationsAuthors extends Controller {
    *  and the PublicationsAuthorsID of the newly inserted row
    */
   public function add() {
+    // Load the helper functions
+    helper(['auth']);
+
     // Create a new Model
     $model = new PublicationsAuthorsModel();
 
@@ -35,6 +38,7 @@ class PublicationsAuthors extends Controller {
 
     // Do the insert
     $model->save([
+      'CreatedBy' => user_id(),
       'PublicationID' => $publicationID,
       'PersonID' => $personID,
       'PrimaryAuthor' => 0,
@@ -84,6 +88,9 @@ class PublicationsAuthors extends Controller {
    * Returns: json encoded array with status code (200 = success, 201 = failure)
    */
   public function update() {
+    // Load the helper functions
+    helper(['auth']);
+
     // Create a new Model
     $model = new PublicationsAuthorsModel();
 
@@ -99,6 +106,7 @@ class PublicationsAuthors extends Controller {
 
     // Do the update
     $model->save([
+      'ModifiedBy' => user_id(),
       'PublicationsAuthorsID' => $publicationsAuthorsID,
       'PrimaryAuthor' => $primaryAuthor,
     ]);
@@ -149,6 +157,7 @@ class PublicationsAuthors extends Controller {
     $db = \Config\Database::connect('publications');
     $builder = $db->table('PublicationsAuthors');
     $builder->select('PublicationsAuthorsID');
+    $builder->where('deleted_at', null);
     $builder->where('PublicationID', $publicationID);
     $builder->where('PersonID', $personID);
 

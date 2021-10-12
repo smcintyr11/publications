@@ -36,7 +36,7 @@ class People extends Controller {
     $builder->join('Organizations', 'People.OrganizationID = Organizations.OrganizationID', 'left');
 
     // Are we filtering
-    $builder->where('deleted_at', null);
+    $builder->where('People.deleted_at', null);
     if ($filter != '') {
       $builder->like('People.Lastname', $filter);
       $builder->orLike('People.Firstname', $filter);
