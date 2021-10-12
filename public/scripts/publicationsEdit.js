@@ -1548,7 +1548,7 @@ $(document).ready(function(){
 
             // Success
             var formatter = new Intl.DateTimeFormat('en-ca', { dateStyle: 'short', timeStyle: 'medium', hour12: false });
-            var html = '<tr id="cl_'+PublicationsCommentsID+'"><td>'+PublicationsCommentsID+'</td><td>'+formatter.format(Date.now())+'</td><td>'+comment+'</td><td><button class="btn btn-info m-1 fas fa-info-circle" type="button" title="View Comment" data-toggle="modal" data-target="#commentModal" data-id="'+PublicationsCommentsID+'" /><button class="btn btn-danger m-1 fas fa-trash-alt" type="button" title="Delete Comment" onclick="removeComment(\'cl_'+PublicationsCommentsID+'\', '+PublicationsCommentsID+')" /></td></tr>';
+            var html = '<tr id="cl_'+PublicationsCommentsID+'"><td>'+PublicationsCommentsID+'</td><td>'+formatter.format(Date.now())+'</td><td>'+comment+'</td><td><button class="btn btn-info m-1 fas fa-info-circle" type="button" title="View Comment" data-toggle="modal" data-target="#commentModal" data-pcid="'+PublicationsCommentsID+'" /><button class="btn btn-danger m-1 fas fa-trash-alt" type="button" title="Delete Comment" onclick="removeComment(\'cl_'+PublicationsCommentsID+'\', '+PublicationsCommentsID+')" /></td></tr>';
             $(html).prependTo('#tblComments');
             displaySuccessMessage("Comment Added");
           }
