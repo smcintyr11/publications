@@ -60,6 +60,9 @@ class PublicationsAuthors extends Controller {
    * Returns: json encoded array with status code (200 = success, 201 = failure)
    */
   public function remove() {
+    // Load the helper functions
+    helper(['auth']);
+
     // Create a new Model
     $model = new PublicationsAuthorsModel();
 
@@ -72,8 +75,12 @@ class PublicationsAuthors extends Controller {
       return;
     }
 
-    // Do the delete
-    $model->delete($publicationsAuthorsID);
+    // Do the Delete
+    $model->save([
+      'DeletedBy' => user_id(),
+      'deleted_at' => date("Y-m-d H:i:s"),
+      'PublicationsAuthorsID' => $publicationsAuthorsID,
+    ]);
 
     // Return the success
     echo json_encode(array("statusCode"=>200));
@@ -107,6 +114,7 @@ class PublicationsAuthors extends Controller {
     // Do the update
     $model->save([
       'ModifiedBy' => user_id(),
+      'Modified' => date("Y-m-d H:i:s"),
       'PublicationsAuthorsID' => $publicationsAuthorsID,
       'PrimaryAuthor' => $primaryAuthor,
     ]);

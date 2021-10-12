@@ -6,6 +6,7 @@
 <script type="text/javascript" src="/scripts/publicationsEdit.js"></script>
 
 <?php use App\Libraries\MyFormGeneration; ?>
+<?php helper('date') ?>
 
 <div class="container my-3 py-3">
   <form class="form-group" action="/Keywords/searchExactKeyword" method="post">
