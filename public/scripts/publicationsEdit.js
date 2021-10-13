@@ -1200,7 +1200,6 @@ function CheckUser(person) {
     });
 }
 
-
 /* Name: addNewKeyword
  *
  * Purpose: Function to add a keyword to the database, and then add it to the
@@ -1678,14 +1677,15 @@ $(document).ready(function(){
             $("#viewPublicationsCommentsID").val(dataResult.publicationComment.PublicationsCommentsID);
             $("#viewPublicationsCommentsDateEntered").val(dataResult.publicationComment.DateEntered);
             $("#viewPublicationsCommentsComment").val(dataResult.publicationComment.Comment);
-            created = String(dataResult.publicationComment.Created).concat(" by ", dataResult.publicationComment.CreatedBy);
-            $("#viewPublicationsCreated").val(created);
+            created = "Create by ".concat(dataResult.publicationComment.CreatedBy, " on ", dataResult.publicationComment.Created);
+            $("#viewPublicationsCreated").text(created);
             if (dataResult.publicationComment.Modified == null) {
               modified = "Not modified";
             } else {
-              modified = String(dataResult.publicationComment.Modified).concat(" by ", dataResult.publicationComment.ModifiedBy);
+              modified = "Modified by ".concat(dataResult.publicationComment.ModifiedBy, " on ", dataResult.publicationComment.Modified);
             }
-            $("#viewPublicationsModified").val(modified);
+            $("#viewPublicationsModified").text(modified);
+            $("#viewPublicationsCommentVersion").html(created.concat("<br>", modified));
           }
           else if(dataResult.statusCode==201) {  // Error
             $('#commentModal').modal('hide');

@@ -11,7 +11,6 @@
 <?php helper('auth'); ?>
 <?php $hideDetailedFields = false; ?>
 
-
 <!-- Edit Link Modal -->
  <div class="modal fade" id="linkModal" tabindex="-1" role="dialog">
    <div class="modal-dialog modal-lg" role="document">
@@ -71,12 +70,7 @@
                 null, "-- Comment --", "Comment"); ?>
             </div>
             <div class="form-group">
-              <?= MyFormGeneration::generateIDTextBox("viewPublicationsCreated",
-                null, "Created"); ?>
-            </div>
-            <div class="form-group">
-              <?= MyFormGeneration::generateIDTextBox("viewPublicationsModified",
-                null, "Modified"); ?>
+              <?= MyFormGeneration::generateItalicText("viewPublicationsCommentVersion", ""); ?>
             </div>
           </form>
         </div>
