@@ -9,8 +9,7 @@
 
 <?php use App\Libraries\MyFormGeneration; ?>
 <?php helper('auth'); ?>
-<?php $hideDetailedFields = false; ?>
-<?php $debug = ""; ?>
+<?php $hideDetailedFields = true; ?>
 
 <!-- Edit Link Modal -->
  <div class="modal fade" id="linkModal" tabindex="-1" role="dialog">
@@ -409,9 +408,6 @@
     <!-- Tab content -->
     <!-- General Tab -->
     <div id="tbGeneral" class="tabcontent" style="display: block;">
-
-      <?= MyFormGeneration::generateMultilineTextBox("debug",
-        $debug, '', 'Debug', 3); ?>
 
       <?= MyFormGeneration::generateIDTextBox("publicationID",
         $publication['PublicationID'], "Publication ID"); ?>
