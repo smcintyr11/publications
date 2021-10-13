@@ -59,11 +59,21 @@ class MyFormGeneration {
      * Parameters:
      *  string $labelID - The ID for the label
      *  string $text - The text to display
+     *  int $columns - The number of bootstrap columns to use
+     *  string $alignment - How the text should be aligned (right, center or left [default])
      *  bool $hidden - A boolean value indicating whether to hide the html element with the display style element
      *
      * Returns: string - The HTML for these form elements
      */
-   public static function generateItalicText(string $labelID, string $text, bool $hidden=false) {
+   public static function generateItalicText(string $labelID, string $text, int $columns=12, string $alignment="left", bool $hidden=false) {
+     // Error check the columns variable
+     if ($columns < 1) {
+       $columns = 1;
+     }
+     if ($columns > 12) {
+       $columns = 12;
+     }
+
      // Variable declaration
      $html = '';
 
@@ -72,10 +82,15 @@ class MyFormGeneration {
        $html = '<div style="display: none;">';
      }
 
-    $html = $html . '<div class="form-group row">
-     <div class="col-12">
-     <label style="font-size: 0.75em" class="font-italic" id="' . $labelID .'" name="' . $labelID . '">' . $text . '</label>
-     </div></div>';
+    $html = $html . '<div class="col-' . $columns;
+    if ($alignment == "right") {
+      $html = $html . ' text-right';
+    } elseif ($alignment == "center") {
+      $html = $html . ' text-center';
+    } else {
+      $html = $html . ' text-left';
+    }
+    $html = $html . '"><label style="font-size: 0.75em" class="font-italic" id="' . $labelID .'" name="' . $labelID . '">' . $text . '</label></div>';
      if ($hidden) {
        $html = $html . '</div>';
      }

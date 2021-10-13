@@ -8,7 +8,7 @@ class PublicationModel extends Model {
   protected $table = "Publications";
   protected $primaryKey = "PublicationID";
   protected $useSoftDeletes = true;
-  protected $allowedFields = ["CreatedBy","ModifiedBy","PrimaryTitle", "SecondaryTitle", "PublicationDate", "FiscalYearID",
+  protected $allowedFields = ["CreatedBy","ModifiedBy","Modified","DeletedBy","deleted_at","PrimaryTitle", "SecondaryTitle", "PublicationDate", "FiscalYearID",
     "Volume", "StartPage", "EndPage", "ClientID", "OrganizationID", "AbstractEnglish", "AbstractFrench", "PLSEnglish", "PLSFrench",
     "PRSEnglish", "PRSFrench", "ISBN", "AgreementNumber", "IPDNumber", "CrossReferenceNumber", "ProjectCode", "ReportNumber",
     "ManuscriptNumber", "CostCentreID", "JournalID", "ReportTypeID", "StatusID", "StatusPersonID", "StatusDueDate", "DOI",
@@ -28,13 +28,15 @@ class PublicationModel extends Model {
   public function getPublication(int $publicationID) {
     // Create the query
     $db = \Config\Database::connect('publications');
-    $query = $db->query('SELECT p.PublicationID, p.PrimaryTitle, p.SecondaryTitle, p.PublicationDate, p.FiscalYearID, fy.FiscalYear,
-      p.Volume, p.StartPage, p.EndPage, p.ClientID, c.Client, p.OrganizationID, o.Organization, p.AbstractEnglish, p.AbstractFrench,
-      p.PLSEnglish, p.PLSFrench, p.PRSEnglish, p.PRSFrench, p.ISBN, p.AgreementNumber, p.IPDNumber, p.CrossReferenceNumber,
-      p.ProjectCode, p.ReportNumber, p.ManuscriptNumber, p.CostCentreID, cc.CostCentre, p.JournalID, j.Journal, p.ReportTypeID,
-      CONCAT (rt.ReportType, " (", rt.Abbreviation, ")") AS ReportType, p.StatusID, s.Status, p.StatusPersonID, p.StatusDueDate, p.DOI,
-      p.JournalSubmissionDate, p.JournalAcceptanceDate, p.ConferenceSubmissionDate, p.ConferenceAcceptanceDate, p.EmbargoPeriod,
-      p.EmbargoEndDate, p.WebPublicationDate, p.SentToClient, p.SentToClientDate, p.ReportFormatted, p.RecordNumber, p.RushPublication, DATEDIFF(p.StatusDueDate, CURDATE()) AS DueDateDelta
+    $query = $db->query('SELECT p.Created, p.Modified, p.CreatedBy, p.ModifiedBy, p.PublicationID, p.PrimaryTitle, p.SecondaryTitle,
+      p.PublicationDate, p.FiscalYearID, fy.FiscalYear, p.Volume, p.StartPage, p.EndPage, p.ClientID, c.Client, p.OrganizationID,
+      o.Organization, p.AbstractEnglish, p.AbstractFrench, p.PLSEnglish, p.PLSFrench, p.PRSEnglish, p.PRSFrench, p.ISBN,
+      p.AgreementNumber, p.IPDNumber, p.CrossReferenceNumber, p.ProjectCode, p.ReportNumber, p.ManuscriptNumber, p.CostCentreID,
+      cc.CostCentre, p.JournalID, j.Journal, p.ReportTypeID, CONCAT (rt.ReportType, " (", rt.Abbreviation, ")") AS ReportType,
+      p.StatusID, s.Status, p.StatusPersonID, p.StatusDueDate, p.DOI, p.JournalSubmissionDate, p.JournalAcceptanceDate,
+      p.ConferenceSubmissionDate, p.ConferenceAcceptanceDate, p.EmbargoPeriod, p.EmbargoEndDate, p.WebPublicationDate,
+      p.SentToClient, p.SentToClientDate, p.ReportFormatted, p.RecordNumber, p.RushPublication,
+      DATEDIFF(p.StatusDueDate, CURDATE()) AS DueDateDelta
       FROM (((((((Publications AS p LEFT JOIN FiscalYears AS fy ON p.FiscalYearID = fy.FiscalYearID)
       LEFT JOIN Clients AS c ON p.ClientID = c.ClientID)
       LEFT JOIN Organizations AS o ON p.OrganizationID = o.OrganizationID)
@@ -47,8 +49,14 @@ class PublicationModel extends Model {
 
     // Create the result
     foreach ($query->getResult() as $row) {
-      $StatusPerson = $this->getStatusPerson($row->StatusPersonID);
+      $StatusPerson = $this->getUser($row->StatusPersonID);
+      $CreatedBy = $this->getUser($row->CreatedBy);
+      $ModifiedBy = $this->getUser($row->ModifiedBy);
       $result = array(
+        "Created" => $row->Created,
+        "CreatedBy" => $CreatedBy,
+        "Modified" => $row->Modified,
+        "ModifiedBy" => $ModifiedBy,
         "PublicationID" => $row->PublicationID,
         "PrimaryTitle" => $row->PrimaryTitle,
         "SecondaryTitle" => $row->SecondaryTitle,
@@ -254,7 +262,7 @@ class PublicationModel extends Model {
   }
 
   /**
-   * Name: getStatusPerson
+   * Name: getUser
    * Purpose: Gets the display name from the users.users table based on the
    *  ID passed it
    *
@@ -263,11 +271,11 @@ class PublicationModel extends Model {
    *
    * Returns: None
    */
-  public function getStatusPerson($ID) {
+  public function getUser($ID) {
     if (is_null($ID)) {
       return null;
     }
-    if ($this->getStatusPersonCount($ID) > 0) {
+    if ($this->getUserCount($ID) > 0) {
       // Load the query builder
       $db = \Config\Database::connect();
       $builder = $db->table('users');
@@ -289,7 +297,7 @@ class PublicationModel extends Model {
   }
 
   /**
-   * Name: getStatusPersonCount
+   * Name: getUserCount
    * Purpose: Gets the number of rows from the users.users table that have an
    *  ID that matches the parameter
    *
@@ -298,7 +306,7 @@ class PublicationModel extends Model {
    *
    * Returns: None
    */
-  public function getStatusPersonCount($ID) {
+  public function getUserCount($ID) {
     if (is_null($ID)) {
       return 0;
     }

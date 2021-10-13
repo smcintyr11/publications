@@ -10,6 +10,7 @@
 <?php use App\Libraries\MyFormGeneration; ?>
 <?php helper('auth'); ?>
 <?php $hideDetailedFields = false; ?>
+<?php $debug = ""; ?>
 
 <!-- Edit Link Modal -->
  <div class="modal fade" id="linkModal" tabindex="-1" role="dialog">
@@ -70,7 +71,9 @@
                 null, "-- Comment --", "Comment"); ?>
             </div>
             <div class="form-group">
-              <?= MyFormGeneration::generateItalicText("viewPublicationsCommentVersion", ""); ?>
+              <div class="form-row">
+                <?= MyFormGeneration::generateItalicText("viewPublicationsCommentVersion", "", 12, "right"); ?>
+              </div>
             </div>
           </form>
         </div>
@@ -301,8 +304,19 @@
 <!-- Main Form -->
 <div class="container my-3 py-3">
   <div class="form-row">
-    <button class="btn btn-success m-1" type="submit" name="submit" value="save" id="btnSubmit" form="frmEditPublication" >Save Publication</button>
-    <a class="btn btn-info m-1" href="/publications/indexDetailed/<?= $page ?>">Back to Publications</a>
+    <div class="col-6">
+      <button class="btn btn-success m-1" type="submit" name="submit" value="save" id="btnSubmit" form="frmEditPublication" >Save Publication</button>
+      <a class="btn btn-info m-1" href="/publications/indexDetailed/<?= $page ?>">Back to Publications</a>
+    </div>
+    <?php
+      $version = "Created by " . $publication['CreatedBy'] . " on " . $publication['Created'] . "<br>";
+      if (is_null($publication['Modified'])) {
+        $version = $version . "Not modified";
+      } else {
+        $version = $version . "Modified by " . $publication['ModifiedBy'] . " on " . $publication['Modified'];
+      }
+      echo (MyFormGeneration::generateItalicText("viewPublicationsVersion", $version, 6, "right"));
+      ?>
   </div>
   <br />
   <h1><?= esc($title); ?></h1>
