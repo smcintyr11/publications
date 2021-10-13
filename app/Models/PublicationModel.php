@@ -129,6 +129,9 @@ class PublicationModel extends Model {
    * Returns: None
    */
   public function deletePublication($publicationID) {
+    // Load the helper functions
+    helper(['auth']);
+
     // Delete all related data
     $this->deletePublicationsStatuses($publicationID);
     $this->deletePublicationsAuthors($publicationID);
@@ -138,7 +141,12 @@ class PublicationModel extends Model {
     $this->deletePublicationsComments($publicationID);
 
     // Delete the publication
-    $this->delete($publicationID);
+    $this->save([
+      'DeletedBy' => user_id(),
+      'deleted_at' => date("Y-m-d H:i:s"),
+      'PublicationID' => $publicationID,
+    ]);
+    //$this->delete($publicationID);
   }
 
   /**
@@ -152,13 +160,20 @@ class PublicationModel extends Model {
    * Returns: None
    */
   public function deletePublicationsStatuses($publicationID) {
+    // Load the helper functions
+    helper(['auth']);
+
     // Load the query builder
     $db = \Config\Database::connect('publications');
     $builder = $db->table('PublicationsStatuses');
 
     // Generate and execute the delete
+    $data = [
+      'DeletedBy' => user_id(),
+      'deleted_at' => date("Y-m-d H:i:s"),
+    ];
     $builder->where('PublicationID', $publicationID);
-    $builder->delete();
+    $builder->update($data);
   }
 
   /**
@@ -172,13 +187,20 @@ class PublicationModel extends Model {
    * Returns: None
    */
   public function deletePublicationsAuthors($publicationID) {
+    // Load the helper functions
+    helper(['auth']);
+
     // Load the query builder
     $db = \Config\Database::connect('publications');
     $builder = $db->table('PublicationsAuthors');
 
     // Generate and execute the delete
+    $data = [
+      'DeletedBy' => user_id(),
+      'deleted_at' => date("Y-m-d H:i:s"),
+    ];
     $builder->where('PublicationID', $publicationID);
-    $builder->delete();
+    $builder->update($data);
   }
 
   /**
@@ -192,13 +214,20 @@ class PublicationModel extends Model {
    * Returns: None
    */
   public function deletePublicationsReviewers($publicationID) {
+    // Load the helper functions
+    helper(['auth']);
+
     // Load the query builder
     $db = \Config\Database::connect('publications');
     $builder = $db->table('PublicationsReviewers');
 
     // Generate and execute the delete
+    $data = [
+      'DeletedBy' => user_id(),
+      'deleted_at' => date("Y-m-d H:i:s"),
+    ];
     $builder->where('PublicationID', $publicationID);
-    $builder->delete();
+    $builder->update($data);
   }
 
   /**
@@ -212,13 +241,20 @@ class PublicationModel extends Model {
    * Returns: None
    */
   public function deletePublicationsKeywords($publicationID) {
+    // Load the helper functions
+    helper(['auth']);
+
     // Load the query builder
     $db = \Config\Database::connect('publications');
     $builder = $db->table('PublicationsKeywords');
 
     // Generate and execute the delete
+    $data = [
+      'DeletedBy' => user_id(),
+      'deleted_at' => date("Y-m-d H:i:s"),
+    ];
     $builder->where('PublicationID', $publicationID);
-    $builder->delete();
+    $builder->update($data);
   }
 
   /**
@@ -232,13 +268,20 @@ class PublicationModel extends Model {
    * Returns: None
    */
   public function deletePulibcationsLinks($publicationID) {
+    // Load the helper functions
+    helper(['auth']);
+
     // Load the query builder
     $db = \Config\Database::connect('publications');
     $builder = $db->table('PublicationsLinks');
 
     // Generate and execute the delete
+    $data = [
+      'DeletedBy' => user_id(),
+      'deleted_at' => date("Y-m-d H:i:s"),
+    ];
     $builder->where('PublicationID', $publicationID);
-    $builder->delete();
+    $builder->update($data);
   }
 
   /**
@@ -252,13 +295,20 @@ class PublicationModel extends Model {
    * Returns: None
    */
   public function deletePublicationsComments($publicationID) {
+    // Load the helper functions
+    helper(['auth']);
+
     // Load the query builder
     $db = \Config\Database::connect('publications');
     $builder = $db->table('PublicationsComments');
 
     // Generate and execute the delete
+    $data = [
+      'DeletedBy' => user_id(),
+      'deleted_at' => date("Y-m-d H:i:s"),
+    ];
     $builder->where('PublicationID', $publicationID);
-    $builder->delete();
+    $builder->update($data);
   }
 
   /**
