@@ -70,6 +70,9 @@ class PublicationsKeywords extends Controller {
    * Returns: json encoded array with status code (200 = success, 201 = failure)
    */
   public function remove() {
+    // Load the helper functions
+    helper(['auth']);
+    
     // Create a new Model
     $model = new PublicationsKeywordsModel();
 
@@ -83,7 +86,11 @@ class PublicationsKeywords extends Controller {
     }
 
     // Do the delete
-    $model->delete($publicationsKeywordsID);
+    $model->save([
+      'DeletedBy' => user_id(),
+      'deleted_at' => date("Y-m-d H:i:s"),
+      'PublicationsKeywordsID' => $publicationsKeywordsID,
+    ]);
 
     // Return the success
     echo json_encode(array("statusCode"=>200));
