@@ -53,6 +53,38 @@ class MyFormGeneration {
   }
 
   /**
+     * Name: generateItalicText
+     * Purpose: Generates the label HTML
+     *
+     * Parameters:
+     *  string $labelID - The ID for the label
+     *  string $text - The text to display
+     *  bool $hidden - A boolean value indicating whether to hide the html element with the display style element
+     *
+     * Returns: string - The HTML for these form elements
+     */
+   public static function generateItalicText(string $labelID, string $text, bool $hidden=false) {
+     // Variable declaration
+     $html = '';
+
+     // Generate the HTML
+     if ($hidden) {
+       $html = '<div style="display: none;">';
+     }
+
+    $html = $html . '<div class="form-group row">
+     <div class="col-12">
+     <label style="font-size: 0.75em" class="font-italic" id="' . $labelID .'" name="' . $labelID . '">' . $text . '</label>
+     </div></div>';
+     if ($hidden) {
+       $html = $html . '</div>';
+     }
+
+     // Return the resulting HTML
+     return $html;
+   }
+
+  /**
    * Name: generateTextBox
    * Purpose: Generates the label and textbox HTML
    *
