@@ -172,8 +172,10 @@ class Publications extends Controller {
     // Last Page
     if ($detailed) {
       $session->set('lastPage', 'Publications::indexDetailed');
+      $session->set('publicationIndex', 'indexDetailed');
     } else {
       $session->set('lastPage', 'Publications::index');
+      $session->set('publicationIndex', 'index');
     }
 
   }
@@ -669,7 +671,6 @@ class Publications extends Controller {
        'linkTypes' => $linkTypes,
        'linksList' => $this->getLinks($publicationID),
        'commentsList'=> $this->getComments($publicationID),
-       'debug' => $this->getStatusLog2($publicationID),
      ];
      echo view('templates/header.php', $data);
      echo view('templates/menu.php', $data);
@@ -792,25 +793,6 @@ class Publications extends Controller {
    // return $builder->get()->getResult();
    return $builder->get()->getResult();
  }
-
- private function getStatusLog2(string $publicationID) {
-   // Load the query builder
-   $db = \Config\Database::connect('publications');
-
-   // Generate the query
-   $builder = $db->table('PublicationsStatuses');
-   $builder->select("PublicationsStatusesID, DateModified, Status, DisplayName, DueDate, CompletionDate");
-   $builder->join('Statuses', 'PublicationsStatuses.StatusID = Statuses.StatusID', 'left');
-   $builder->join('vPeopleDropDown', 'PublicationsStatuses.StatusPersonID = vPeopleDropDown.PersonID', 'left');
-   $builder->where('PublicationsStatuses.deleted_at', null);
-   $builder->where('PublicationID', $publicationID);
-   $builder->orderBy("DateModified", "DESC");
-
-   // Return the result
-   //return $builder->get()->getResult();
-   return "debug";
- }
-
 
  /**
   * Name: getAuthors

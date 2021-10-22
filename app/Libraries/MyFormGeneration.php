@@ -501,10 +501,11 @@ class MyFormGeneration {
         *  string $contoller - The name of the controller this delete page is for
         *  string $singular - The singluar name of a controller item (e.g. Person rather than People)
         *  string $page - The index page number
+        *  string $index - The index page name (default = index)
         *
         * Returns: string - The HTML for the form part
         */
- public static function generateDeleteOptions(bool $dependentRecords, string $controller, string $singular, string $page) {
+ public static function generateDeleteOptions(bool $dependentRecords, string $controller, string $singular, string $page, string $index = "index") {
    // Dependent Records
    if ($dependentRecords) {
      $html = '<div class="form-group row">
@@ -518,7 +519,7 @@ class MyFormGeneration {
       </div>
       <div class="form-group row">
       <button class="btn btn-success m-1" type="submit" name="submit">Yes</button>
-      <a class="btn btn-danger m-1" href="/' . $controller . '/index/' . $page . '">No</a>
+      <a class="btn btn-danger m-1" href="/' . $controller . '/' . $index . '/' . $page . '">No</a>
       </div>';
    }
    // Return the html
