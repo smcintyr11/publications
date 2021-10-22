@@ -1,3 +1,4 @@
+<script type="text/javascript" src="/scripts/unique.js"></script>
 <script type="text/javascript" src="/scripts/fiscalYearsEdit.js"></script>
 
 <?php use App\Libraries\MyFormGeneration; ?>
@@ -23,3 +24,10 @@
     <a class="btn btn-info m-1" href="/fiscalYears/index/<?= $page ?>">Back to Fiscal Years</a>
   </form>
 </div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  // Add uniqueness checking to the link type
+  $("#fiscalYear").change(function(){uniqueCheck("/fiscalYears/uniqueCheck", "#fiscalYear", <?= $fiscalYear['FiscalYearID'] ?>, "<?= $fiscalYear['FiscalYear'] ?>");});
+});
+</script>

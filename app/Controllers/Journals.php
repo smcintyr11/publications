@@ -234,12 +234,11 @@ class Journals extends Controller {
       $page = $this->request->getPost('page');
 
       // Set validation rules
-      $validation->setRule('journal', 'Journal', 'required|max_length[256]|is_unique[Journals.Journal,journalID,{journalID}]');
+      $validation->setRule('journal', 'Journal', 'required|max_length[256]');
       if ($validation->withRequest($this->request)->run(null, null, 'publications')) {
         // Save
         $model->save([
           'CreatedBy' => user_id(),
-          'ModifiedBy' => user_id(),
           'Journal' => $this->request->getPost('journal'),
         ]);
 
@@ -313,7 +312,11 @@ class Journals extends Controller {
     // Is this a post (deleting)
     if ($this->request->getMethod() === 'post') {
       // Delete the journal
-      $model->deleteJournal($this->request->getPost('journalID'));
+      $model->save([
+        'DeletedBy' => user_id(),
+        'deleted_at' => date("Y-m-d H:i:s"),
+        'JournalID' => $this->request->getPost('journalID'),
+      ]);
 
       // Get the view data from the form
       $page = $this->request->getPost('page');
@@ -388,11 +391,12 @@ class Journals extends Controller {
       $page = $this->request->getPost('page');
 
       // Validate the data
-      $validation->setRule('journal', 'Journal', 'required|max_length[256]|is_unique[Journals.Journal,journalID,{journalID}]');
+      $validation->setRule('journal', 'Journal', 'required|max_length[256]');
       if ($validation->withRequest($this->request)->run(null, null, 'publications')) {  // Valid
         // Save
         $model->save([
           'ModifiedBy' => user_id(),
+          'Modified' => date("Y-m-d H:i:s"),
           'JournalID' => $this->request->getPost('journalID'),
           'Journal' => $this->request->getPost('journal'),
         ]);
@@ -442,11 +446,14 @@ class Journals extends Controller {
    *  and the JournalID of the newly inserted row
    */
   public function add() {
+    // Load the authentication helper
+    helper('auth');
+
     // Create a new Model
     $model = new JournalModel();
 
     // Get the POST variables
-    $userid = $this->request->getPost('userid');
+    $userid = user_id();
     $journal = $this->request->getPost('journal');
 
     // Make sure the variables are valid
@@ -465,7 +472,6 @@ class Journals extends Controller {
     // Do the insert
     $model->save([
       'CreatedBy' => $userid,
-      'ModifiedBy' => $userid,
       'Journal' => $journal,
     ]);
 
@@ -605,6 +611,7 @@ class Journals extends Controller {
      $db = \Config\Database::connect('publications');
      $builder = $db->table('Publications');
      $builder->select("PublicationID");
+     $builder->where('deleted_at', null);
      $builder->where('JournalID', $journalID);
 
      // Get the number of rows
@@ -614,5 +621,36 @@ class Journals extends Controller {
      }
 
      return false;
+   }
+
+   /**
+    * Name: uniqueCheck
+    * Purpose: Uses a post variable to search for unique (deleted_at = null) term
+    *
+    * Parameters: None
+    *
+    * Returns: Outputs JSON - An array of data
+    */
+   public function uniqueCheck() {
+     // Get the POST variables
+     $term = $this->request->getPost('term');
+     $id = $this->request->getPost('id');
+
+     // Build the query
+     $db = \Config\Database::connect('publications');
+     $builder = $db->table('Journals');
+     $builder->select("JournalID");
+     $builder->where('deleted_at', null);
+     $builder->where('JournalID !=', $id);
+     $builder->where('Journal', $term);
+
+     // Get the number of rows
+     $result = $builder->get()->getNumRows();
+     $unique = true;
+     if ($result > 0) {
+       $unique = false;
+     }
+
+     echo json_encode(array("statusCode"=>200, "unique"=>$unique));
    }
 }

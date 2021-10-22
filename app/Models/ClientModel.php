@@ -8,7 +8,7 @@ class ClientModel extends Model {
   protected $table = "Clients";
   protected $primaryKey = "ClientID";
   protected $useSoftDeletes = true;
-  protected $allowedFields = ["CreatedBy","ModifiedBy","Client"];
+  protected $allowedFields = ["CreatedBy","ModifiedBy","Modified","DeletedBy","deleted_at","Client"];
 
 
   /**
@@ -22,18 +22,5 @@ class ClientModel extends Model {
    */
   public function getClient($clientID) {
     return $this->find($clientID);
-  }
-
-  /**
-   * Name: deleteClient
-   * Purpose: Deletes a specific Client from the database
-   *
-   * Parameters:
-   *  int $clientID - The ClientID that corresponds to a row in the database
-   *
-   * Returns: None
-   */
-  public function deleteClient($clientID) {
-    $this->delete($clientID);
   }
 }

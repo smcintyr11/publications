@@ -8,7 +8,7 @@ class ReportTypeModel extends Model {
   protected $table = "ReportTypes";
   protected $primaryKey = "ReportTypeID";
   protected $useSoftDeletes = true;
-  protected $allowedFields = ["CreatedBy","ModifiedBy","ReportType", "Abbreviation"];
+  protected $allowedFields = ["CreatedBy","ModifiedBy","Modified","DeletedBy","deleted_at","ReportType", "Abbreviation"];
 
   /**
    * Name: getReportType
@@ -21,18 +21,5 @@ class ReportTypeModel extends Model {
    */
   public function getReportType($reportTypeID) {
     return $this->find($reportTypeID);
-  }
-
-  /**
-   * Name: deleteClient
-   * Purpose: Deletes a specific ReportType from the database
-   *
-   * Parameters:
-   *  int $reportTypeID - The ReportTypeID that corresponds to a row in the database
-   *
-   * Returns: None
-   */
-  public function deleteReportType($reportTypeID) {
-    $this->delete($reportTypeID);
   }
 }

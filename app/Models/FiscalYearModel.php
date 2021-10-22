@@ -8,7 +8,7 @@ class FiscalYearModel extends Model {
   protected $table = "FiscalYears";
   protected $primaryKey = "FiscalYearID";
   protected $useSoftDeletes = true;
-  protected $allowedFields = ["CreatedBy","ModifiedBy","FiscalYear"];
+  protected $allowedFields = ["CreatedBy","ModifiedBy","Modified","DeletedBy","deleted_at","FiscalYear"];
 
   /**
    * Name: getFiscalYear
@@ -21,18 +21,5 @@ class FiscalYearModel extends Model {
    */
   public function getFiscalYear($fiscalYearID) {
     return $this->find($fiscalYearID);
-  }
-
-  /**
-   * Name: deleteFiscalYear
-   * Purpose: Deletes a specific Fiscal Year from the database
-   *
-   * Parameters:
-   *  int $fiscalYearID - The FiscalYearID that corresponds to a row in the database
-   *
-   * Returns: None
-   */
-  public function deleteFiscalYear($fiscalYearID) {
-    return $this->delete($fiscalYearID);
   }
 }

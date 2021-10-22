@@ -8,7 +8,7 @@ class OrganizationModel extends Model {
   protected $table = "Organizations";
   protected $primaryKey = "OrganizationID";
   protected $useSoftDeletes = true;
-  protected $allowedFields = ["CreatedBy","ModifiedBy","Organization"];
+  protected $allowedFields = ["CreatedBy","ModifiedBy","Modified","DeletedBy","deleted_at","Organization"];
 
   /**
    * Name: getOrganization
@@ -21,18 +21,5 @@ class OrganizationModel extends Model {
    */
   public function getOrganization($organizationID) {
     return $this->find($organizationID);
-  }
-
-  /**
-   * Name: deleteOrganization
-   * Purpose: Deletes a specific Organization from the database
-   *
-   * Parameters:
-   *  int $organizationID - The OrganizationID that corresponds to a row in the database
-   *
-   * Returns: None
-   */
-  public function deleteOrganization($organizationID) {
-    $this->delete($organizationID);
   }
 }

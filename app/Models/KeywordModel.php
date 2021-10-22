@@ -8,7 +8,7 @@ class KeywordModel extends Model {
   protected $table = "Keywords";
   protected $primaryKey = "KeywordID";
   protected $useSoftDeletes = true;
-  protected $allowedFields = ["CreatedBy","ModifiedBy","KeywordEnglish", "KeywordFrench"];
+  protected $allowedFields = ["CreatedBy","ModifiedBy","Modified","DeletedBy","deleted_at","KeywordEnglish", "KeywordFrench"];
 
   /**
    * Name: getKeyword
@@ -21,18 +21,5 @@ class KeywordModel extends Model {
    */
   public function getKeyword($keywordID) {
     return $this->find($keywordID);
-  }
-
-  /**
-   * Name: deleteKeyword
-   * Purpose: Deletes a specific Keyword from the database
-   *
-   * Parameters:
-   *  int $keywordID - The KeywordID that corresponds to a row in the database
-   *
-   * Returns: None
-   */
-  public function deleteKeyword($keywordID) {
-    $this->delete($keywordID);
   }
 }

@@ -235,12 +235,11 @@ class LinkTypes extends Controller {
       $page = $this->request->getPost('page');
 
       // Set validation rules
-      $validation->setRule('linkType', 'Link Type', 'required|max_length[128]|is_unique[LinkTypes.LinkType,linkTypeID,{linkTypeID}]');
+      $validation->setRule('linkType', 'Link Type', 'required|max_length[128]');
       if ($validation->withRequest($this->request)->run(null, null, 'publications')) {
         // Save
         $model->save([
           'CreatedBy' => user_id(),
-          'ModifiedBy' => user_id(),
           'LinkType' => $this->request->getPost('linkType'),
         ]);
 
@@ -314,7 +313,11 @@ class LinkTypes extends Controller {
     // Is this a post (deleting)
     if ($this->request->getMethod() === 'post') {
       // Delete the link type
-      $model->deleteLinkType($this->request->getPost('linkTypeID'));
+      $model->save([
+        'DeletedBy' => user_id(),
+        'deleted_at' => date("Y-m-d H:i:s"),
+        'LinkTypeID' => $this->request->getPost('linkTypeID'),
+      ]);
 
       // Get the view data from the form
       $page = $this->request->getPost('page');
@@ -389,11 +392,12 @@ class LinkTypes extends Controller {
       $page = $this->request->getPost('page');
 
       // Validate the data
-      $validation->setRule('linkType', 'Link Type', 'required|max_length[128]|is_unique[LinkTypes.LinkType,linkTypeID,{linkTypeID}]');
+      $validation->setRule('linkType', 'Link Type', 'required|max_length[128]');
       if ($validation->withRequest($this->request)->run(null, null, 'publications')) {  // Valid
         // Save
         $model->save([
           'ModifiedBy' => user_id(),
+          'Modified' => date("Y-m-d H:i:s"),
           'LinkTypeID' => $this->request->getPost('linkTypeID'),
           'LinkType' => $this->request->getPost('linkType'),
         ]);
@@ -449,6 +453,7 @@ class LinkTypes extends Controller {
      $db = \Config\Database::connect('publications');
      $builder = $db->table('PublicationsLinks');
      $builder->select("PublicationID");
+     $builder->where('deleted_at', null);
      $builder->where('LinkTypeID', $linkTypeID);
 
      // Get the number of rows
@@ -458,5 +463,36 @@ class LinkTypes extends Controller {
      }
 
      return false;
+   }
+
+   /**
+    * Name: uniqueCheck
+    * Purpose: Uses a post variable to search for unique (deleted_at = null) term
+    *
+    * Parameters: None
+    *
+    * Returns: Outputs JSON - An array of data
+    */
+   public function uniqueCheck() {
+     // Get the POST variables
+     $term = $this->request->getPost('term');
+     $id = $this->request->getPost('id');
+
+     // Build the query
+     $db = \Config\Database::connect('publications');
+     $builder = $db->table('LinkTypes');
+     $builder->select("LinkTypeID");
+     $builder->where('deleted_at', null);
+     $builder->where('LinkTypeID !=', $id);
+     $builder->where('LinkType', $term);
+
+     // Get the number of rows
+     $result = $builder->get()->getNumRows();
+     $unique = true;
+     if ($result > 0) {
+       $unique = false;
+     }
+
+     echo json_encode(array("statusCode"=>200, "unique"=>$unique));
    }
 }

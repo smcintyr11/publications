@@ -8,7 +8,7 @@ class CostCentreModel extends Model {
   protected $table = "CostCentres";
   protected $primaryKey = "CostCentreID";
   protected $useSoftDeletes = true;
-  protected $allowedFields = ["CreatedBy","ModifiedBy","CostCentre","Description"];
+  protected $allowedFields = ["CreatedBy","ModifiedBy","Modified","DeletedBy","deleted_at","CostCentre","Description"];
 
   /**
    * Name: getCostCentre
@@ -21,18 +21,5 @@ class CostCentreModel extends Model {
    */
   public function getCostCentre($costCentreID) {
     return $this->find($costCentreID);
-  }
-
-  /**
-   * Name: deleteCostCentre
-   * Purpose: Deletes a specific Cost Centre from the database
-   *
-   * Parameters:
-   *  int $costCentreID - The CostCentreID that corresponds to a row in the database
-   *
-   * Returns: None
-   */
-  public function deleteCostCentre($costCentreID) {
-    $this->delete($costCentreID);
   }
 }

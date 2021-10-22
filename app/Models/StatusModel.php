@@ -8,7 +8,7 @@ class StatusModel extends Model {
   protected $table = "Statuses";
   protected $primaryKey = "StatusID";
   protected $useSoftDeletes = true;
-  protected $allowedFields = ["CreatedBy","ModifiedBy","Status", "ExpectedDuration", "DefaultStatus"];
+  protected $allowedFields = ["CreatedBy","ModifiedBy","Modified","DeletedBy","deleted_at","Status", "ExpectedDuration", "DefaultStatus"];
 
   /**
    * Name: getStatus
@@ -21,18 +21,5 @@ class StatusModel extends Model {
    */
   public function getStatus($statusID) {
     return $this->find($statusID);
-  }
-
-  /**
-   * Name: deleteStatus
-   * Purpose: Deletes a specific Status from the database
-   *
-   * Parameters:
-   *  int $statusID - The StatusID that corresponds to a row in the database
-   *
-   * Returns: None
-   */
-  public function deleteStatus($statusID) {
-    $this->delete($statusID);
   }
 }

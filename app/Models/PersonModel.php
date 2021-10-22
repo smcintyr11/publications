@@ -8,7 +8,7 @@ class PersonModel extends Model {
   protected $table = "People";
   protected $primaryKey = "PersonID";
   protected $useSoftDeletes = true;
-  protected $allowedFields = ["CreatedBy","ModifiedBy","LastName", "FirstName", "DisplayName", "OrganizationID"];
+  protected $allowedFields = ["CreatedBy","ModifiedBy","Modified","DeletedBy","deleted_at","LastName", "FirstName", "DisplayName", "OrganizationID"];
 
   /**
    * Name: getPerson
@@ -38,18 +38,5 @@ class PersonModel extends Model {
 
     // Return the result
     return $result;
-  }
-
-  /**
-   * Name: deletePerson
-   * Purpose: Deletes a specific Person from the database
-   *
-   * Parameters:
-   *  int $personID - The PersonID that corresponds to a row in the database
-   *
-   * Returns: None
-   */
-  public function deletePerson($personID) {
-    $this->delete($personID);
   }
 }

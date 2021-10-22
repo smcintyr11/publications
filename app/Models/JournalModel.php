@@ -8,7 +8,7 @@ class JournalModel extends Model {
   protected $table = "Journals";
   protected $primaryKey = "JournalID";
   protected $useSoftDeletes = true;
-  protected $allowedFields = ["CreatedBy","ModifiedBy","Journal"];
+  protected $allowedFields = ["CreatedBy","ModifiedBy","Modified","DeletedBy","deleted_at","Journal"];
 
   /**
    * Name: getJournal
@@ -21,18 +21,5 @@ class JournalModel extends Model {
    */
   public function getJournal($journalID) {
     return $this->find($journalID);
-  }
-
-  /**
-   * Name: deleteJournal
-   * Purpose: Deletes a specific Journal from the database
-   *
-   * Parameters:
-   *  int $journalID - The JournalID that corresponds to a row in the database
-   *
-   * Returns: None
-   */
-  public function deleteJournal($journalID) {
-    $this->delete($journalID);
   }
 }

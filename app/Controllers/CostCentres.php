@@ -241,13 +241,12 @@ class CostCentres extends Controller
       $page = $this->request->getPost('page');
 
       // Set validation rules
-      $validation->setRule('costCentre', 'Cost Centre', 'required|max_length[64]|is_unique[CostCentres.CostCentre,costCentreID,{costCentreID}]');
+      $validation->setRule('costCentre', 'Cost Centre', 'required|max_length[64]');
       $validation->setRule('description', 'Description', 'required|max_length[256]');
       if ($validation->withRequest($this->request)->run(null, null, 'publications')) {
           // Save
           $model->save([
             'CreatedBy' => user_id(),
-            'ModifiedBy' => user_id(),
             'CostCentre' => $this->request->getPost('costCentre'),
             'Description' => $this->request->getPost('description'),
           ]);
@@ -323,7 +322,11 @@ class CostCentres extends Controller
     // Is this a post (deleting)
     if ($this->request->getMethod() === 'post') {
       // Delete the cost centre
-      $model->deleteCostCentre($this->request->getPost('costCentreID'));
+      $model->save([
+        'DeletedBy' => user_id(),
+        'deleted_at' => date("Y-m-d H:i:s"),
+        'CostCentreID' => $this->request->getPost('costCentreID'),
+      ]);
 
       // Get the view data from the form
       $page = $this->request->getPost('page');
@@ -398,12 +401,13 @@ class CostCentres extends Controller
       $page = $this->request->getPost('page');
 
       // Validate the data
-      $validation->setRule('costCentre', 'Cost Centre', 'required|max_length[64]|is_unique[CostCentres.CostCentre,costCentreID,{costCentreID}]');
+      $validation->setRule('costCentre', 'Cost Centre', 'required|max_length[64]');
       $validation->setRule('description', 'Description', 'required|max_length[256]');
       if ($validation->withRequest($this->request)->run(null, null, 'publications')) {  // Valid
         // Save
         $model->save([
           'ModifiedBy' => user_id(),
+          'Modified' => date("Y-m-d H:i:s"),
           'CostCentreID' => $this->request->getPost('costCentreID'),
           'CostCentre' => $this->request->getPost('costCentre'),
           'Description' => $this->request->getPost('description'),
@@ -460,6 +464,7 @@ class CostCentres extends Controller
      $db = \Config\Database::connect('publications');
      $builder = $db->table('Publications');
      $builder->select("PublicationID");
+     $builder->where('deleted_at', null);
      $builder->where('CostCentreID', $costCentreID);
 
      // Get the number of rows
@@ -469,5 +474,36 @@ class CostCentres extends Controller
      }
 
      return false;
+   }
+
+   /**
+    * Name: uniqueCheck
+    * Purpose: Uses a post variable to search for unique (deleted_at = null) term
+    *
+    * Parameters: None
+    *
+    * Returns: Outputs JSON - An array of data
+    */
+   public function uniqueCheck() {
+     // Get the POST variables
+     $term = $this->request->getPost('term');
+     $id = $this->request->getPost('id');
+
+     // Build the query
+     $db = \Config\Database::connect('publications');
+     $builder = $db->table('CostCentres');
+     $builder->select("CostCentreID");
+     $builder->where('deleted_at', null);
+     $builder->where('CostCentre', $term);
+     $builder->where('CostCentreID !=', $id);
+
+     // Get the number of rows
+     $result = $builder->get()->getNumRows();
+     $unique = true;
+     if ($result > 0) {
+       $unique = false;
+     }
+
+     echo json_encode(array("statusCode"=>200, "unique"=>$unique));
    }
 }

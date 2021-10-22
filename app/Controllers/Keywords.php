@@ -245,7 +245,6 @@ class Keywords extends Controller {
         // Save
         $model->save([
           'CreatedBy' => user_id(),
-          'ModifiedBy' => user_id(),
           'KeywordEnglish' => $this->request->getPost('keywordEnglish'),
           'KeywordFrench' => $this->request->getPost('keywordFrench'),
         ]);
@@ -320,7 +319,11 @@ class Keywords extends Controller {
     // Is this a post (deleting)
     if ($this->request->getMethod() === 'post') {
       // Delete the keyword
-      $model->deleteKeyword($this->request->getPost('keywordID'));
+      $model->save([
+        'DeletedBy' => user_id(),
+        'deleted_at' => date("Y-m-d H:i:s"),
+        'KeywordID' => $this->request->getPost('keywordID'),
+      ]);
 
       // Get the view data from the form
       $page = $this->request->getPost('page');
@@ -401,6 +404,7 @@ class Keywords extends Controller {
         // Save
         $model->save([
           'ModifiedBy' => user_id(),
+          'Modified' => date("Y-m-d H:i:s"),
           'KeywordID' => $this->request->getPost('keywordID'),
           'KeywordEnglish' => $this->request->getPost('keywordEnglish'),
           'KeywordFrench' => $this->request->getPost('keywordFrench'),
@@ -451,11 +455,14 @@ class Keywords extends Controller {
    *  and the KeywordID of the newly inserted row
    */
   public function add() {
+    // Load the authentication helper
+    helper('auth');
+
     // Create a new Model
     $model = new KeywordModel();
 
     // Get the POST variables
-    $userid = $this->request->getPost('userid');
+    $userid = user_id();
     $keywordE = $this->request->getPost('keywordE');
     $keywordF = $this->request->getPost('keywordF');
 
@@ -476,7 +483,6 @@ class Keywords extends Controller {
     // Do the insert
     $model->save([
       'CreatedBy' => $userid,
-      'ModifiedBy' => $userid,
       'KeywordEnglish' => $keywordE,
       'KeywordFrench' => $keywordF,
     ]);
@@ -542,7 +548,6 @@ class Keywords extends Controller {
 
     if ($this->exactKeywordCount($searchString) > 0) {
 
-
       // Build the query
       $db = \Config\Database::connect('publications');
       $builder = $db->table('Keywords');
@@ -592,28 +597,6 @@ class Keywords extends Controller {
     return $results;
   }
 
-  public function exactKeywordCount2() {
-    // Variable declaration
-    $searchString = $this->request->getVar('keyword');
-
-    // Build the query
-    $db = \Config\Database::connect('publications');
-    $builder = $db->table('Keywords');
-    $builder->select('KeywordID');
-    $builder->where('deleted_at', null);
-    $builder->where('KeywordEnglish', $searchString);
-    $builder->orWhere('KeywordFrench', $searchString);
-    $builder->orWhere('CONCAT(KeywordEnglish, " | ", KeywordFrench)', $searchString);
-
-    // Run the query
-    $results = $builder->get()->getNumRows();
-
-    // Return the number of rows
-
-    echo json_encode(array("statusCode"=>200, "results"=>$results));
-    return;
-  }
-
   /**
    * Name: getKeywordID
    * Purpose: Gets the KeywordID of the specified keyword
@@ -656,6 +639,7 @@ class Keywords extends Controller {
      $db = \Config\Database::connect('publications');
      $builder = $db->table('PublicationsKeywords');
      $builder->select("PublicationID");
+     $builder->where('deleted_at', null);
      $builder->where('KeywordID', $keywordID);
 
      // Get the number of rows

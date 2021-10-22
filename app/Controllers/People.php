@@ -262,7 +262,6 @@ class People extends Controller {
         // Save
         $model->save([
           'CreatedBy' => user_id(),
-          'ModifiedBy' => user_id(),
           'DisplayName' => $this->request->getPost('displayName'),
           'LastName' => $this->request->getPost('lastName'),
           'FirstName' => $this->request->getPost('firstName'),
@@ -342,7 +341,11 @@ class People extends Controller {
     // Is this a post (deleting)
     if ($this->request->getMethod() === 'post') {
       // Delete the person
-      $model->deletePerson($this->request->getPost('personID'));
+      $model->save([
+        'DeletedBy' => user_id(),
+        'deleted_at' => date("Y-m-d H:i:s"),
+        'PersonID' => $this->request->getPost('personID'),
+      ]);
 
       // Get the view data from the form
       $page = $this->request->getPost('page');
@@ -428,6 +431,7 @@ class People extends Controller {
         // Save
         $model->save([
           'ModifiedBy' => user_id(),
+          'Modified' => date("Y-m-d H:i:s"),
           'PersonID' => $this->request->getPost('personID'),
           'FirstName' => $this->request->getPost('firstName'),
           'LastName' => $this->request->getPost('lastName'),
@@ -509,7 +513,6 @@ class People extends Controller {
     // Do the insert
     $model->save([
       'CreatedBy' => $userid,
-      'ModifiedBy' => $userid,
       'LastName' => empty($lastName) ? null : $lastName,
       'FirstName' => empty($firstName) ? null : $firstName,
       'DisplayName' => $displayName,
@@ -699,6 +702,7 @@ class People extends Controller {
    $db = \Config\Database::connect('publications');
    $builder = $db->table('PublicationsAuthors');
    $builder->select("PublicationID");
+   $builder->where('deleted_at', null);
    $builder->where('PersonID', $personID);
 
    // Get the number of rows
@@ -710,18 +714,8 @@ class People extends Controller {
    // Build the query for the PublicationsReviewers table
    $builder = $db->table('PublicationsReviewers');
    $builder->select("PublicationID");
+   $builder->where('deleted_at', null);
    $builder->where('PersonID', $personID);
-
-   // Get the number of rows
-   $result = $builder->get()->getNumRows();
-   if ($result > 0) {
-     return true;
-   }
-
-   // Build the query for the PublicationsStatuses table
-   $builder = $db->table('PublicationsStatuses');
-   $builder->select("PublicationID");
-   $builder->where('StatusPersonID', $personID);
 
    // Get the number of rows
    $result = $builder->get()->getNumRows();

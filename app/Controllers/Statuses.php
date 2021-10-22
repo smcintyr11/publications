@@ -240,7 +240,7 @@ class Statuses extends Controller {
       $page = $this->request->getPost('page');
 
       // Set validation rules
-      $validation->setRule('status', 'Status', 'required|max_length[64]|is_unique[Statuses.Status,statusID,{statusID}]');
+      $validation->setRule('status', 'Status', 'required|max_length[64]');
       $validation->setRule('expectedDuration', 'Expected Duration', 'permit_empty|integer|greater_than_equal_to[1]');
       if ($validation->withRequest($this->request)->run(null, null, 'publications')) {
         // An empty string is returned when nothing is entered, convert that to NULL
@@ -252,7 +252,6 @@ class Statuses extends Controller {
         // Save
         $model->save([
           'CreatedBy' => user_id(),
-          'ModifiedBy' => user_id(),
           'Status' => $this->request->getPost('status'),
           'ExpectedDuration' => $expectedDuration,
         ]);
@@ -340,8 +339,11 @@ class Statuses extends Controller {
     // Is this a post (deleting)
     if ($this->request->getMethod() === 'post') {
       // Delete the client
-      $model->deleteStatus($this->request->getPost('statusID'));
-
+      $model->save([
+        'DeletedBy' => user_id(),
+        'deleted_at' => date("Y-m-d H:i:s"),
+        'StatusID' => $this->request->getPost('statusID'),
+      ]);
 
       // Was this the default status?
       if ($this->request->getPost('defaultStatus') == "Yes") {
@@ -427,7 +429,7 @@ class Statuses extends Controller {
       $page = $this->request->getPost('page');
 
       // Validate the data
-      $validation->setRule('status', 'Status', 'required|max_length[64]|is_unique[Statuses.Status,statusID,{statusID}]');
+      $validation->setRule('status', 'Status', 'required|max_length[64]');
       $validation->setRule('expectedDuration', 'Expected Duration', 'permit_empty|integer|greater_than_equal_to[1]');
       if ($validation->withRequest($this->request)->run(null, null, 'publications')) {  // Valid
         // An empty string is returned when nothing is entered, convert that to NULL
@@ -440,6 +442,7 @@ class Statuses extends Controller {
         $model->save([
           'ModifiedBy' => user_id(),
           'StatusID' => $this->request->getPost('statusID'),
+          'Modified' => date("Y-m-d H:i:s"),
           'Status' => $this->request->getPost('status'),
           'ExpectedDuration' => $expectedDuration,
         ]);
@@ -589,6 +592,7 @@ class Statuses extends Controller {
      $db = \Config\Database::connect('publications');
      $builder = $db->table('PublicationsStatuses');
      $builder->select("PublicationID");
+     $builder->where('deleted_at', null);
      $builder->where('StatusID', $statusID);
 
      // Get the number of rows
@@ -643,6 +647,7 @@ class Statuses extends Controller {
 
      // Generate the query
      $builder = $db->table('Statuses');
+     $builder->where('deleted_at', null);
      $builder->selectMax('StatusID');
 
      // Return the result
@@ -691,9 +696,41 @@ class Statuses extends Controller {
     // Generate the query
     $builder = $db->table('Statuses');
     $builder->set('DefaultStatus', 1);
+    $builder->where('deleted_at', null);
     $builder->where('StatusID', $statusID);
 
     // Run the update
     $builder->update();
+  }
+
+  /**
+   * Name: uniqueCheck
+   * Purpose: Uses a post variable to search for unique (deleted_at = null) term
+   *
+   * Parameters: None
+   *
+   * Returns: Outputs JSON - An array of data
+   */
+  public function uniqueCheck() {
+    // Get the POST variables
+    $term = $this->request->getPost('term');
+    $id = $this->request->getPost('id');
+
+    // Build the query
+    $db = \Config\Database::connect('publications');
+    $builder = $db->table('Statuses');
+    $builder->select("StatusID");
+    $builder->where('deleted_at', null);
+    $builder->where('Status', $term);
+    $builder->where('StatusID !=', $id);
+
+    // Get the number of rows
+    $result = $builder->get()->getNumRows();
+    $unique = true;
+    if ($result > 0) {
+      $unique = false;
+    }
+
+    echo json_encode(array("statusCode"=>200, "unique"=>$unique));
   }
 }

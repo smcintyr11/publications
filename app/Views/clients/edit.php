@@ -1,3 +1,5 @@
+<script type="text/javascript" src="/scripts/unique.js"></script>
+
 <?php use App\Libraries\MyFormGeneration; ?>
 
 <div class="container my-3 py-3">
@@ -23,3 +25,10 @@
     <a class="btn btn-info m-1" href="/clients/index/<?= $page ?>">Back to Clients / Publishers</a>
   </form>
 </div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  // Add uniqueness checking to the link type
+  $("#client").change(function(){uniqueCheck("/clients/uniqueCheck", "#client", <?= $client['ClientID'] ?>, "<?= $client['Client'] ?>");});
+});
+</script>

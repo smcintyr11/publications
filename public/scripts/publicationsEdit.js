@@ -264,9 +264,6 @@ function checkLookups(event) {
 
   // Check the journal
   if (checkJournal(event)) { return; }
-
-  // Check the status person
-  // if (checkAssignedTo(event)) { return; }
 }
 
 /* Name: checkReportType

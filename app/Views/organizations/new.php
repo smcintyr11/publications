@@ -1,3 +1,5 @@
+<script type="text/javascript" src="/scripts/unique.js"></script>
+
 <?php use App\Libraries\MyFormGeneration; ?>
 
 <div class="container my-3 py-3">
@@ -18,3 +20,10 @@
   </form>
 
 </div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  // Add uniqueness checking to the link type
+  $("#organization").change(function(){uniqueCheck("/organizations/uniqueCheck", "#organization");});
+});
+</script>

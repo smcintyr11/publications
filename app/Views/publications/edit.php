@@ -9,7 +9,7 @@
 
 <?php use App\Libraries\MyFormGeneration; ?>
 <?php helper('auth'); ?>
-<?php $hideDetailedFields = true; ?>
+<?php $hideDetailedFields = false; ?>
 
 <!-- Edit Link Modal -->
  <div class="modal fade" id="linkModal" tabindex="-1" role="dialog">

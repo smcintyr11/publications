@@ -240,13 +240,12 @@ class ReportTypes extends Controller {
       $page = $this->request->getPost('page');
 
       // Set validation rules
-      $validation->setRule('reportType', 'Report Type', 'required|max_length[64]|is_unique[ReportTypes.ReportType,reportTypeID,{reportTypeID}]');
-      $validation->setRule('abbreviation', 'Abbreviation', 'required|max_length[16]|is_unique[ReportTypes.Abbreviation,reportTypeID,{reportTypeID}]');
+      $validation->setRule('reportType', 'Report Type', 'required|max_length[64]');
+      $validation->setRule('abbreviation', 'Abbreviation', 'required|max_length[16]');
       if ($validation->withRequest($this->request)->run(null, null, 'publications')) {
         // Save
         $model->save([
           'CreatedBy' => user_id(),
-          'ModifiedBy' => user_id(),
           'ReportType' => $this->request->getPost('reportType'),
           'Abbreviation' => $this->request->getPost('abbreviation'),
         ]);
@@ -321,7 +320,11 @@ class ReportTypes extends Controller {
     // Is this a post (deleting)
     if ($this->request->getMethod() === 'post') {
       // Delete the report type
-      $model->deleteReportType($this->request->getPost('reportTypeID'));
+      $model->save([
+        'DeletedBy' => user_id(),
+        'deleted_at' => date("Y-m-d H:i:s"),
+        'ReportTypeID' => $this->request->getPost('reportTypeID'),
+      ]);
 
       // Get the view data from the form
       $page = $this->request->getPost('page');
@@ -396,12 +399,13 @@ class ReportTypes extends Controller {
       $page = $this->request->getPost('page');
 
       // Validate the data
-      $validation->setRule('reportType', 'Report Type', 'required|max_length[64]|is_unique[ReportTypes.ReportType,reportTypeID,{reportTypeID}]');
-      $validation->setRule('abbreviation', 'Abbreviation', 'required|max_length[16]|is_unique[ReportTypes.Abbreviation,reportTypeID,{reportTypeID}]');
+      $validation->setRule('reportType', 'Report Type', 'required|max_length[64]');
+      $validation->setRule('abbreviation', 'Abbreviation', 'required|max_length[16]');
       if ($validation->withRequest($this->request)->run(null, null, 'publications')) {  // Valid
         // Save
         $model->save([
           'ModifiedBy' => user_id(),
+          'Modified' => date("Y-m-d H:i:s"),
           'ReportTypeID' => $this->request->getPost('reportTypeID'),
           'ReportType' => $this->request->getPost('reportType'),
           'Abbreviation' => $this->request->getPost('abbreviation'),
@@ -476,7 +480,6 @@ class ReportTypes extends Controller {
     // Do the insert
     $model->save([
       'CreatedBy' => $userid,
-      'ModifiedBy' => $userid,
       'ReportType' => $reportType,
       'Abbreviation' => $abbreviation,
     ]);
@@ -619,6 +622,7 @@ class ReportTypes extends Controller {
      $db = \Config\Database::connect('publications');
      $builder = $db->table('Publications');
      $builder->select("PublicationID");
+     $builder->where('deleted_at', null);
      $builder->where('ReportTypeID', $reportTypeID);
 
      // Get the number of rows
@@ -628,5 +632,67 @@ class ReportTypes extends Controller {
      }
 
      return false;
+   }
+
+   /**
+    * Name: uniqueCheckRT
+    * Purpose: Uses a post variable to search for unique (deleted_at = null) term
+    *
+    * Parameters: None
+    *
+    * Returns: Outputs JSON - An array of data
+    */
+   public function uniqueCheckRT() {
+     // Get the POST variables
+     $term = $this->request->getPost('term');
+     $id = $this->request->getPost('id');
+
+     // Build the query
+     $db = \Config\Database::connect('publications');
+     $builder = $db->table('ReportTypes');
+     $builder->select("ReportTypeID");
+     $builder->where('deleted_at', null);
+     $builder->where('ReportTypeID !=', $id);
+     $builder->where('ReportType', $term);
+
+     // Get the number of rows
+     $result = $builder->get()->getNumRows();
+     $unique = true;
+     if ($result > 0) {
+       $unique = false;
+     }
+
+     echo json_encode(array("statusCode"=>200, "unique"=>$unique));
+   }
+
+   /**
+    * Name: uniqueCheckAB
+    * Purpose: Uses a post variable to search for unique (deleted_at = null) term
+    *
+    * Parameters: None
+    *
+    * Returns: Outputs JSON - An array of data
+    */
+   public function uniqueCheckAB() {
+     // Get the POST variables
+     $term = $this->request->getPost('term');
+     $id = $this->request->getPost('id');
+
+     // Build the query
+     $db = \Config\Database::connect('publications');
+     $builder = $db->table('ReportTypes');
+     $builder->select("ReportTypeID");
+     $builder->where('deleted_at', null);
+     $builder->where('ReportTypeID !=', $id);
+     $builder->where('Abbreviation', $term);
+
+     // Get the number of rows
+     $result = $builder->get()->getNumRows();
+     $unique = true;
+     if ($result > 0) {
+       $unique = false;
+     }
+
+     echo json_encode(array("statusCode"=>200, "unique"=>$unique));
    }
 }

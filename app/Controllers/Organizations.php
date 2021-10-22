@@ -235,12 +235,11 @@ class Organizations extends Controller {
       $page = $this->request->getPost('page');
 
       // Set validation rules
-      $validation->setRule('organization', 'Organization', 'required|max_length[128]|is_unique[Organizations.Organization,organizationID,{organizationID}]');
+      $validation->setRule('organization', 'Organization', 'required|max_length[128]');
       if ($validation->withRequest($this->request)->run(null, null, 'publications')) {
         // Save
         $model->save([
           'CreatedBy' => user_id(),
-          'ModifiedBy' => user_id(),
           'Organization' => $this->request->getPost('organization'),
         ]);
 
@@ -314,7 +313,11 @@ class Organizations extends Controller {
     // Is this a post (deleting)
     if ($this->request->getMethod() === 'post') {
       // Delete the client
-      $model->deleteOrganization($this->request->getPost('organizationID'));
+      $model->save([
+        'DeletedBy' => user_id(),
+        'deleted_at' => date("Y-m-d H:i:s"),
+        'OrganizationID' => $this->request->getPost('organizationID'),
+      ]);
 
       // Get the view data from the form
       $page = $this->request->getPost('page');
@@ -389,11 +392,12 @@ class Organizations extends Controller {
       $page = $this->request->getPost('page');
 
       // Validate the data
-      $validation->setRule('organization', 'Organization', 'required|max_length[128]|is_unique[Organizations.Organization,organizationID,{organizationID}]');
+      $validation->setRule('organization', 'Organization', 'required|max_length[128]');
       if ($validation->withRequest($this->request)->run(null, null, 'publications')) {  // Valid
         // Save
         $model->save([
           'ModifiedBy' => user_id(),
+          'Modified' => date("Y-m-d H:i:s"),
           'OrganizationID' => $this->request->getPost('organizationID'),
           'Organization' => $this->request->getPost('organization'),
         ]);
@@ -466,7 +470,6 @@ class Organizations extends Controller {
     // Do the insert
     $model->save([
       'CreatedBy' => $userid,
-      'ModifiedBy' => $userid,
       'Organization' => $organization,
     ]);
 
@@ -530,6 +533,7 @@ class Organizations extends Controller {
    $db = \Config\Database::connect('publications');
    $builder = $db->table('People');
    $builder->select("PersonID");
+   $builder->where('deleted_at', null);
    $builder->where('OrganizationID', $organizationID);
 
    // Get the number of rows
@@ -626,5 +630,36 @@ class Organizations extends Controller {
 
    // Return the result
    return $results->OrganizationID;
+ }
+
+ /**
+  * Name: uniqueCheck
+  * Purpose: Uses a post variable to search for unique (deleted_at = null) term
+  *
+  * Parameters: None
+  *
+  * Returns: Outputs JSON - An array of data
+  */
+ public function uniqueCheck() {
+   // Get the POST variables
+   $term = $this->request->getPost('term');
+   $id = $this->request->getPost('id');
+
+   // Build the query
+   $db = \Config\Database::connect('publications');
+   $builder = $db->table('Organizations');
+   $builder->select("OrganizationID");
+   $builder->where('deleted_at', null);
+   $builder->where('OrganizationID !=', $id);
+   $builder->where('Organization', $term);
+
+   // Get the number of rows
+   $result = $builder->get()->getNumRows();
+   $unique = true;
+   if ($result > 0) {
+     $unique = false;
+   }
+
+   echo json_encode(array("statusCode"=>200, "unique"=>$unique));
  }
 }

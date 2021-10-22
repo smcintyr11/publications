@@ -235,12 +235,11 @@ class FiscalYears extends Controller {
       $page = $this->request->getPost('page');
 
       // Set validation rules
-      $validation->setRule('fiscalYear', 'Fiscal Year', 'required|regex_match[\d{4} \/ \d{4}]|is_unique[FiscalYears.FiscalYear,fiscalYearID,{fiscalYearID}]');
+      $validation->setRule('fiscalYear', 'Fiscal Year', 'required|regex_match[\d{4} \/ \d{4}]');
       if ($validation->withRequest($this->request)->run(null, null, 'publications')) {
         // Save
         $model->save([
           'CreatedBy' => user_id(),
-          'ModifiedBy' => user_id(),
           'FiscalYear' => $this->request->getPost('fiscalYear'),
         ]);
 
@@ -314,7 +313,11 @@ class FiscalYears extends Controller {
     // Is this a post (deleting)
     if ($this->request->getMethod() === 'post') {
       // Delete the fiscal year
-      $model->deleteFiscalYear($this->request->getPost('fiscalYearID'));
+      $model->save([
+        'DeletedBy' => user_id(),
+        'deleted_at' => date("Y-m-d H:i:s"),
+        'FiscalYearID' => $this->request->getPost('fiscalYearID'),
+      ]);
 
       // Get the view data from the form
       $page = $this->request->getPost('page');
@@ -389,11 +392,12 @@ class FiscalYears extends Controller {
       $page = $this->request->getPost('page');
 
       // Validate the data
-      $validation->setRule('fiscalYear', 'Fiscal Year', 'required|max_length[11]|is_unique[FiscalYears.FiscalYear,fiscalYearID,{fiscalYearID}]');
+      $validation->setRule('fiscalYear', 'Fiscal Year', 'required|max_length[11]');
       if ($validation->withRequest($this->request)->run(null, null, 'publications')) {  // Valid
         // Save
         $model->save([
           'ModifiedBy' => user_id(),
+          'Modified' => date("Y-m-d H:i:s"),
           'FiscalYearID' => $this->request->getPost('fiscalYearID'),
           'FiscalYear' => $this->request->getPost('fiscalYear'),
         ]);
@@ -443,11 +447,14 @@ class FiscalYears extends Controller {
    *  and the FiscalYearID of the newly inserted row
    */
   public function add() {
+    // Load the authentication helper
+    helper('auth');
+
     // Create a new Model
     $model = new FiscalYearModel();
 
     // Get the POST variables
-    $userid = $this->request->getPost('userid');
+    $userid = user_id();
     $fiscalYear = $this->request->getPost('fiscalYear');
 
     // Make sure the variables are valid
@@ -466,7 +473,6 @@ class FiscalYears extends Controller {
     // Do the insert
     $model->save([
       'CreatedBy' => $userid,
-      'ModifiedBy' => $userid,
       'FiscalYear' => $fiscalYear,
     ]);
 
@@ -605,6 +611,7 @@ class FiscalYears extends Controller {
      $db = \Config\Database::connect('publications');
      $builder = $db->table('Publications');
      $builder->select("PublicationID");
+     $builder->where('deleted_at', null);
      $builder->where('FiscalYearID', $fiscalYearID);
 
      // Get the number of rows
@@ -614,5 +621,36 @@ class FiscalYears extends Controller {
      }
 
      return false;
+   }
+
+   /**
+    * Name: uniqueCheck
+    * Purpose: Uses a post variable to search for unique (deleted_at = null) term
+    *
+    * Parameters: None
+    *
+    * Returns: Outputs JSON - An array of data
+    */
+   public function uniqueCheck() {
+     // Get the POST variables
+     $term = $this->request->getPost('term');
+     $id = $this->request->getPost('id');
+
+     // Build the query
+     $db = \Config\Database::connect('publications');
+     $builder = $db->table('FiscalYears');
+     $builder->select("FiscalYearID");
+     $builder->where('deleted_at', null);
+     $builder->where('FiscalYearID !=', $id);
+     $builder->where('FiscalYear', $term);
+
+     // Get the number of rows
+     $result = $builder->get()->getNumRows();
+     $unique = true;
+     if ($result > 0) {
+       $unique = false;
+     }
+
+     echo json_encode(array("statusCode"=>200, "unique"=>$unique));
    }
 }

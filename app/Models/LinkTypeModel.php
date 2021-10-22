@@ -8,7 +8,7 @@ class LinkTypeModel extends Model {
   protected $table = "LinkTypes";
   protected $primaryKey = "LinkTypeID";
   protected $useSoftDeletes = true;
-  protected $allowedFields = ["CreatedBy","ModifiedBy","LinkType"];
+  protected $allowedFields = ["CreatedBy","ModifiedBy","Modified","DeletedBy","deleted_at","LinkType"];
 
   /**
    * Name: getLinkType
@@ -21,18 +21,5 @@ class LinkTypeModel extends Model {
    */
   public function getLinkType($linkTypeID) {
     return $this->find($linkTypeID);
-  }
-
-  /**
-   * Name: deleteLinkType
-   * Purpose: Deletes a specific Link Type from the database
-   *
-   * Parameters:
-   *  int $linkTypeID - The LinkTypeID that corresponds to a row in the database
-   *
-   * Returns: None
-   */
-  public function deleteLinkType($linkTypeID) {
-    $this->delete($linkTypeID);
   }
 }
