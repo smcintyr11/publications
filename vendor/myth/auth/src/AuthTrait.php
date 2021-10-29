@@ -56,7 +56,7 @@ trait AuthTrait {
 
         if (empty($uri))
         {
-            throw new RedirectException( route_to('login') );
+            throw new RedirectException( route_to('\publications\login') );
         }
 
         throw new RedirectException($uri);
@@ -103,7 +103,7 @@ trait AuthTrait {
 
         if (empty($uri))
         {
-            throw new RedirectException( route_to('login') .'?request_uri='. current_url() );
+            throw new RedirectException( route_to('\publications\login') .'?request_uri='. current_url() );
         }
 
         throw new RedirectException($uri .'?request_uri='. current_url());
@@ -143,7 +143,7 @@ trait AuthTrait {
 
         if (empty($uri))
         {
-            throw new RedirectException( route_to('login') .'?request_uri='. current_url() );
+            throw new RedirectException( route_to('\publications\login') .'?request_uri='. current_url() );
         }
 
         throw new RedirectException($uri .'?request_uri='. current_url());
