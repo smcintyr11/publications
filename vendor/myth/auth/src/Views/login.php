@@ -11,7 +11,7 @@
 
 					<?= view('Myth\Auth\Views\_message_block') ?>
 
-					<form action="<?= route_to('/publications/login') ?>" method="post">
+					<form action="<?= '/publications/login') ?>" method="post">
 						<?= csrf_field() ?>
 
 <?php if ($config->validFields === ['email']): ?>
@@ -59,10 +59,10 @@
 					<hr>
 
 <?php if ($config->allowRegistration) : ?>
-					<p><a href="<?= route_to('/publications/register') ?>"><?=lang('Auth.needAnAccount')?></a></p>
+					<p><a href="<?= '/publications/register') ?>"><?=lang('Auth.needAnAccount')?></a></p>
 <?php endif; ?>
 <?php if ($config->activeResetter): ?>
-					<p><a href="<?= route_to('/publications/forgot') ?>"><?=lang('Auth.forgotYourPassword')?></a></p>
+					<p><a href="<?= '/publications/forgot') ?>"><?=lang('Auth.forgotYourPassword')?></a></p>
 <?php endif; ?>
 				</div>
 			</div>

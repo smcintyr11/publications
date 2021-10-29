@@ -11,7 +11,7 @@
 
                     <?= view('Myth\Auth\Views\_message_block') ?>
 
-                    <form action="<?= route_to('/publications/register') ?>" method="post">
+                    <form action="<?= '/publications/register') ?>" method="post">
                         <?= csrf_field() ?>
 
                         <div class="form-group">
@@ -44,7 +44,7 @@
 
                     <hr>
 
-                    <p><?=lang('Auth.alreadyRegistered')?> <a href="<?= route_to('/publications/login') ?>"><?=lang('Auth.signIn')?></a></p>
+                    <p><?=lang('Auth.alreadyRegistered')?> <a href="<?= '/publications/login') ?>"><?=lang('Auth.signIn')?></a></p>
                 </div>
             </div>
 
