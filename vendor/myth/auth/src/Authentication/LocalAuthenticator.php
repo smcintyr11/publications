@@ -51,7 +51,7 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
                 'login' => urlencode($credentials['email'] ?? $credentials['username'])
             ]);
 
-            $this->error = lang('Auth.notActivated') .' '. anchor(route_to('\publications\resend-activate-account').'?'.$param, lang('Auth.activationResend'));
+            $this->error = lang('Auth.notActivated') .' '. anchor(route_to('/publications/resend-activate-account').'?'.$param, lang('Auth.activationResend'));
 
             $this->user = null;
             return false;
@@ -72,7 +72,7 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
             // Do we need to force the user to reset their password?
             if ($this->user && $this->user->force_pass_reset)
             {
-                throw new RedirectException(route_to('\publications\reset-password') .'?token='.$this->user->reset_hash);
+                throw new RedirectException(route_to('/publications/reset-password') .'?token='.$this->user->reset_hash);
             }
 
             return true;
