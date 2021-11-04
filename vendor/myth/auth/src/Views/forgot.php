@@ -13,7 +13,7 @@
 
                     <p><?=lang('Auth.enterEmailForInstructions')?></p>
 
-                    <form action="<?= '/publications/forgot') ?>" method="post">
+                    <form action="<?= base_url() . '/forgot' ?>" method="post">
                         <?= csrf_field() ?>
 
                         <div class="form-group">

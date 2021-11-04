@@ -35,7 +35,7 @@ class LoginFilter implements FilterInterface
 		}
 
 		// Make sure this isn't already a login route
-		if (in_array((string)$current, ['/publications/login'), '/publications/forgot'), '/publications/reset-password'), '/publications/register'), '/publications/activate-account')]))
+		if (in_array((string)$current, [base_url() . '/login', base_url() . '/forgot', base_url() . '/reset-password', base_url() . '/register', base_url() . '/activate-account']))
 		{
 			return;
 		}

@@ -13,7 +13,7 @@
 
                     <p><?=lang('Auth.enterCodeEmailPassword')?></p>
 
-                    <form action="<?= '/publications/reset-password') ?>" method="post">
+                    <form action="<?= base_url() . '/reset-password' ?>" method="post">
                         <?= csrf_field() ?>
 
                         <div class="form-group">
