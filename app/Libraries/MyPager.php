@@ -2,12 +2,18 @@
 
 class MyPager {
   // Member variables
-  protected int $maxRows = 0;
+/*  protected int $maxRows = 0;
   protected int $maxPages = 1;
   protected int $rowsPerPage = 1;
   protected \CodeIgniter\HTTP\URI $baseUrl;
   protected int $currentPage = 1;
-  protected string $queryString = "";
+  protected string $queryString = ""; */
+    protected $maxRows = 0;
+    protected $maxPages = 1;
+    protected $rowsPerPage = 1;
+    protected $baseUrl;
+    protected $currentPage = 1;
+    protected $queryString = "";
 
 
   /**
