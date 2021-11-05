@@ -66,6 +66,6 @@
     </div>
 
     <button class="btn btn-success m-1" type="submit" name="submit" id="btnSubmit">Create Publication</button>
-    <a class="btn btn-info m-1" href="<?= base_url() ?>/publications/<?= session('publicationIndex') ?>/<?= $page ?>">Back to Publications</a>
+    <a class="btn btn-info m-1" href="<?= base_url() ?>/publications/<?= session('publicationIndex') ?? 'index' ?>/<?= $page ?>">Back to Publications</a>
   </form>
 </div>

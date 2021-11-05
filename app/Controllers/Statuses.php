@@ -128,6 +128,7 @@ class Statuses extends Controller {
   public function index() {
     // Check to see if the user is logged in
     if (logged_in() == false) {
+      $_SESSION['redirect_url'] = base_url() . '/statuses/index';
       return redirect()->to('/login');
 
       if (in_groups(['pubsAdmin', 'pubsRC', 'pubsAuth', 'pubsRCMan']) == false) {
@@ -208,6 +209,7 @@ class Statuses extends Controller {
   public function new() {
     // Check to see if the user is logged in
     if (logged_in() == false) {
+      $_SESSION['redirect_url'] = base_url() . '/statuses/new/1';
       return redirect()->to('/login');
     }
 
@@ -312,8 +314,13 @@ class Statuses extends Controller {
    * Returns: None
    */
   public function delete() {
+    // Get the URI service
+    $uri = service('uri');
+
     // Check to see if the user is logged in
     if (logged_in() == false) {
+      $statusID = $uri->getSegment(4);
+      $_SESSION['redirect_url'] = base_url() . '/statuses/delete/1/' . $statusID;
       return redirect()->to('/login');
     }
 
@@ -362,9 +369,6 @@ class Statuses extends Controller {
       // Go back to index
       return redirect()->to("index");
     } else {  // // Not post - show delete form
-      // Get the URI service
-      $uri = service('uri');
-
       // Parse the URI
       $page = $uri->setSilent()->getSegment(3, 1);
       $statusID = $uri->getSegment(4);
@@ -395,8 +399,14 @@ class Statuses extends Controller {
    * Returns: None
    */
   public function edit() {
+    // Get the URI service
+    $uri = service('uri');
+
     // Check to see if the user is logged in
     if (logged_in() == false) {
+      $page = $uri->setSilent()->getSegment(3, 1);
+      $statusID = $uri->getSegment(4);
+      $_SESSION['redirect_url'] = base_url() . '/statuses/edit/' . $page . '/' . $statusID;
       return redirect()->to('/login');
     }
 
@@ -471,9 +481,6 @@ class Statuses extends Controller {
         echo view('templates/footer.php', $data);
       }
     } else {  // Load edit page
-      // Get the URI service
-      $uri = service('uri');
-
       // Parse the URI
       $page = $uri->setSilent()->getSegment(3, 1);
       $statusID = $uri->getSegment(4);

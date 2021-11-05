@@ -139,6 +139,7 @@ class People extends Controller {
   public function index() {
     // Check to see if the user is logged in
     if (logged_in() == false) {
+      $_SESSION['redirect_url'] = base_url() . '/people/index';
       return redirect()->to('/login');
 
       if (in_groups(['pubsAdmin', 'pubsRC', 'pubsAuth', 'pubsRCMan']) == false) {
@@ -220,6 +221,7 @@ class People extends Controller {
   public function new() {
     // Check to see if the user is logged in
     if (logged_in() == false) {
+      $_SESSION['redirect_url'] = base_url() . '/people/new/1';
       return redirect()->to('/login');
 
       if (in_groups(['pubsAdmin', 'pubsRC', 'pubsAuth', 'pubsRCMan']) == false) {
@@ -314,8 +316,13 @@ class People extends Controller {
    * Returns: None
    */
   public function delete() {
+    // Get the URI service
+    $uri = service('uri');
+
     // Check to see if the user is logged in
     if (logged_in() == false) {
+      $personID = $uri->getSegment(4);
+      $_SESSION['redirect_url'] = base_url() . '/people/delete/1/' . $personID;
       return redirect()->to('/login');
     }
 
@@ -353,9 +360,6 @@ class People extends Controller {
       // Go back to index
        return redirect()->to("index");
     } else {  // // Not post - show delete form
-      // Get the URI service
-      $uri = service('uri');
-
       // Parse the URI
       $page = $uri->setSilent()->getSegment(3, 1);
       $personID = $uri->getSegment(4);
@@ -386,8 +390,14 @@ class People extends Controller {
    * Returns: None
    */
   public function edit() {
+    // Get the URI service
+    $uri = service('uri');
+
     // Check to see if the user is logged in
     if (logged_in() == false) {
+      $page = $uri->setSilent()->getSegment(3, 1);
+      $personID = $uri->getSegment(4);
+      $_SESSION['redirect_url'] = base_url() . '/people/edit/' . $page . '/' . $personID;
       return redirect()->to('/login');
     }
 
@@ -455,9 +465,6 @@ class People extends Controller {
         echo view('templates/footer.php', $data);
       }
     } else {  // Load edit page
-      // Get the URI service
-      $uri = service('uri');
-
       // Parse the URI
       $page = $uri->setSilent()->getSegment(3, 1);
       $personID = $uri->getSegment(4);

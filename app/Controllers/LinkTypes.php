@@ -123,6 +123,7 @@ class LinkTypes extends Controller {
   public function index() {
     // Check to see if the user is logged in
     if (logged_in() == false) {
+      $_SESSION['redirect_url'] = base_url() . '/linkTypes/index';
       return redirect()->to('/login');
 
       if (in_groups(['pubsAdmin', 'pubsRC', 'pubsAuth', 'pubsRCMan']) == false) {
@@ -203,6 +204,7 @@ class LinkTypes extends Controller {
   public function new() {
     // Check to see if the user is logged in
     if (logged_in() == false) {
+      $_SESSION['redirect_url'] = base_url() . '/linkTypes/new/1';
       return redirect()->to('/login');
     }
 
@@ -286,8 +288,13 @@ class LinkTypes extends Controller {
    * Returns: None
    */
   public function delete() {
+    // Get the URI service
+    $uri = service('uri');
+
     // Check to see if the user is logged in
     if (logged_in() == false) {
+      $linkTypeID = $uri->getSegment(4);
+      $_SESSION['redirect_url'] = base_url() . '/linkTypes/delete/1/' . $linkTypeID;
       return redirect()->to('/login');
     }
 
@@ -325,9 +332,6 @@ class LinkTypes extends Controller {
       // Go back to index
       return redirect()->to("index");
     } else {  // // Not post - show delete form
-      // Get the URI service
-      $uri = service('uri');
-
       // Parse the URI
       $page = $uri->setSilent()->getSegment(3, 1);
       $linkTypeID = $uri->getSegment(4);
@@ -358,8 +362,14 @@ class LinkTypes extends Controller {
    * Returns: None
    */
   public function edit() {
+    // Get the URI service
+    $uri = service('uri');
+
     // Check to see if the user is logged in
     if (logged_in() == false) {
+      $page = $uri->setSilent()->getSegment(3, 1);
+      $linkTypeID = $uri->getSegment(4);
+      $_SESSION['redirect_url'] = base_url() . '/linkTypes/edit/' . $page . '/' . $linkTypeID;      
       return redirect()->to('/login');
     }
 
@@ -417,9 +427,6 @@ class LinkTypes extends Controller {
         echo view('templates/footer.php', $data);
       }
     } else {  // Load edit page
-      // Get the URI service
-      $uri = service('uri');
-
       // Parse the URI
       $page = $uri->setSilent()->getSegment(3, 1);
       $linkTypeID = $uri->getSegment(4);

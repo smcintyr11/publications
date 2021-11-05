@@ -440,7 +440,7 @@
 
      </div>
 
-     <?= MyFormGeneration::generateDeleteOptions(false, 'publications', 'publication', $page, session('publicationIndex')); ?>
+     <?= MyFormGeneration::generateDeleteOptions(false, 'publications', 'publication', $page, session('publicationIndex') ?? 'index'); ?>
 
    </form>
  </div>

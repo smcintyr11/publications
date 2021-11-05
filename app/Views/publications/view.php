@@ -42,7 +42,7 @@
 
  <!-- Main Form -->
  <div class="container my-3 py-3">
-   <a class="btn btn-info my-3" href="<?= base_url() ?>/publications/<?= session('publicationIndex') ?>/<?= $page ?>">Back to Publications</a>
+   <a class="btn btn-info my-3" href="<?= base_url() ?>/publications/<?= session('publicationIndex') ?? 'index' ?>/<?= $page ?>">Back to Publications</a>
    <h1><?= esc($title); ?></h1>
 
    <?php

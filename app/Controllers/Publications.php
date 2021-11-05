@@ -191,6 +191,7 @@ class Publications extends Controller {
   public function index() {
      // Check to see if the user is logged in
      if (logged_in() == false) {
+       $_SESSION['redirect_url'] = base_url() . '/publications/index';
        return redirect()->to('/login');
 
        if (in_groups(['pubsAdmin', 'pubsRC', 'pubsAuth', 'pubsRCMan']) == false) {
@@ -279,6 +280,7 @@ class Publications extends Controller {
   public function indexDetailed() {
     // Check to see if the user is logged in
     if (logged_in() == false) {
+      $_SESSION['redirect_url'] = base_url() . '/publications/indexDetailed';
       return redirect()->to('/login');
 
       if (in_groups(['pubsAdmin', 'pubsRC', 'pubsAuth', 'pubsRCMan']) == false) {
@@ -500,6 +502,17 @@ class Publications extends Controller {
   * Returns: None
   */
  public function edit() {
+   // Get the URI service
+   $uri = service('uri');
+
+   // Check to see if the user is logged in
+   if (logged_in() == false) {
+     $page = $uri->setSilent()->getSegment(3, 1);
+     $publicationID = $uri->getSegment(4);
+     $_SESSION['redirect_url'] = base_url() . '/publications/edit/' . $page . '/' . $publicationID;
+     return redirect()->to('/login');
+   }
+
    // Create a new Model
    $model = new PublicationModel();
 
@@ -649,9 +662,6 @@ class Publications extends Controller {
        echo view('templates/footer.php', $data);
      }
    } else {  // Load edit page
-     // Get the URI service
-     $uri = service('uri');
-
      // Parse the URI
      $page = $uri->setSilent()->getSegment(3, 1);
      $publicationID = $uri->getSegment(4);
@@ -1080,8 +1090,13 @@ private function getDefaultStatus() {
  * Returns: None
  */
 public function delete() {
+  // Get the URI service
+  $uri = service('uri');
+
   // Check to see if the user is logged in
   if (logged_in() == false) {
+    $publicationID = $uri->getSegment(4);
+    $_SESSION['redirect_url'] = base_url() . '/publications/delete/1/' . $publicationID;
     return redirect()->to('/login');
   }
 
@@ -1115,9 +1130,6 @@ public function delete() {
     // Go back to index
     return redirect()->to("index");
   } else {  // // Not post - show delete form
-    // Get the URI service
-    $uri = service('uri');
-
     // Parse the URI
     $page = $uri->setSilent()->getSegment(3, 1);
     $publicationID = $uri->getSegment(4);
@@ -1150,8 +1162,14 @@ public function delete() {
  * Returns: None
  */
 public function view() {
+  // Get the URI service
+  $uri = service('uri');
+
   // Check to see if the user is logged in
   if (logged_in() == false) {
+    $page = $uri->setSilent()->getSegment(3, 1);
+    $publicationID = $uri->getSegment(4);
+    $_SESSION['redirect_url'] = base_url() . '/publications/view/' . $page . '/' . $publicationID;
     return redirect()->to('/login');
   }
 
@@ -1161,9 +1179,6 @@ public function view() {
   // Set the session last page
   $session = session();
   $session->set('lastPage', 'Publications::view');
-
-  // Get the URI service
-  $uri = service('uri');
 
   // Parse the URI
   $page = $uri->setSilent()->getSegment(3, 1);
@@ -1186,19 +1201,6 @@ public function view() {
   echo view('publications/view.php', $data);
   echo view('templates/footer.php', $data);
 }
-
-public function test() {
-  // Generate the delete view
-  $data = [
-    'title' => 'Test',
-  ];
-  echo view('templates/header.php', $data);
-  echo view('templates/menu.php', $data);
-  echo view('publications/test.php', $data);
-  echo view('templates/footer.php', $data);
-}
-
-
 
 public function generateIndexQB2(string $filter, ?string $reportTypeID, ?string $statusID, ?string $costCentreID, bool $detailed = false, string $sorting = '') {
   // Load the query builder

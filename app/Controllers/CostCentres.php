@@ -129,6 +129,7 @@ class CostCentres extends Controller
   public function index() {
     // Check to see if the user is logged in
     if (logged_in() == false) {
+      $_SESSION['redirect_url'] = base_url() . '/costCentres/index';
       return redirect()->to('/login');
 
       if (in_groups(['pubsAdmin', 'pubsRC', 'pubsAuth', 'pubsRCMan']) == false) {
@@ -209,6 +210,7 @@ class CostCentres extends Controller
   public function new() {
     // Check to see if the user is logged in
     if (logged_in() == false) {
+      $_SESSION['redirect_url'] = base_url() . '/costCentres/new/1';
       return redirect()->to('/login');
     }
 
@@ -295,8 +297,13 @@ class CostCentres extends Controller
    * Returns: None
    */
   public function delete() {
+    // Get the URI service
+    $uri = service('uri');
+
     // Check to see if the user is logged in
     if (logged_in() == false) {
+      $costCentreID = $uri->getSegment(4);
+      $_SESSION['redirect_url'] = base_url() . '/costCentres/delete/1/' . $costCentreID;
       return redirect()->to('/login');
     }
 
@@ -334,9 +341,6 @@ class CostCentres extends Controller
       // Go back to index
       return redirect()->to("index");
     } else {  // // Not post - show delete form
-      // Get the URI service
-      $uri = service('uri');
-
       // Parse the URI
       $page = $uri->setSilent()->getSegment(3, 1);
       $costCentreID = $uri->getSegment(4);
@@ -367,8 +371,14 @@ class CostCentres extends Controller
    * Returns: None
    */
   public function edit() {
+    // Get the URI service
+    $uri = service('uri');
+
     // Check to see if the user is logged in
     if (logged_in() == false) {
+      $page = $uri->setSilent()->getSegment(3, 1);
+      $costCentreID = $uri->getSegment(4);
+      $_SESSION['redirect_url'] = base_url() . '/costCentres/edit/' . $page . '/' . $costCentreID;
       return redirect()->to('/login');
     }
 
@@ -428,9 +438,6 @@ class CostCentres extends Controller
         echo view('templates/footer.php', $data);
       }
     } else {  // Load edit page
-      // Get the URI service
-      $uri = service('uri');
-
       // Parse the URI
       $page = $uri->setSilent()->getSegment(3, 1);
       $costCentreID = $uri->getSegment(4);

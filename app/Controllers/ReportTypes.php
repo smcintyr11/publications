@@ -128,6 +128,7 @@ class ReportTypes extends Controller {
   public function index() {
     // Check to see if the user is logged in
     if (logged_in() == false) {
+      $_SESSION['redirect_url'] = base_url() . '/reportTypes/index';
       return redirect()->to('/login');
 
       if (in_groups(['pubsAdmin', 'pubsRC', 'pubsAuth', 'pubsRCMan']) == false) {
@@ -208,6 +209,7 @@ class ReportTypes extends Controller {
   public function new() {
     // Check to see if the user is logged in
     if (logged_in() == false) {
+      $_SESSION['redirect_url'] = base_url() . '/reportTypes/new/1';
       return redirect()->to('/login');
     }
 
@@ -293,8 +295,13 @@ class ReportTypes extends Controller {
    * Returns: None
    */
   public function delete() {
+    // Get the URI service
+    $uri = service('uri');
+
     // Check to see if the user is logged in
     if (logged_in() == false) {
+      $reportTypeID = $uri->getSegment(4);
+      $_SESSION['redirect_url'] = base_url() . '/reportTypes/delete/1/' . $reportTypeID;
       return redirect()->to('/login');
     }
 
@@ -332,9 +339,6 @@ class ReportTypes extends Controller {
       // Go back to index
       return redirect()->to("index");
     } else {  // // Not post - show delete form
-      // Get the URI service
-      $uri = service('uri');
-
       // Parse the URI
       $page = $uri->setSilent()->getSegment(3, 1);
       $reportTypeID = $uri->getSegment(4);
@@ -365,8 +369,14 @@ class ReportTypes extends Controller {
    * Returns: None
    */
   public function edit() {
+    // Get the URI service
+    $uri = service('uri');
+
     // Check to see if the user is logged in
     if (logged_in() == false) {
+      $page = $uri->setSilent()->getSegment(3, 1);
+      $reportTypeID = $uri->getSegment(4);
+      $_SESSION['redirect_url'] = base_url() . '/reportTypes/edit/' . $page . '/' . $reportTypeID;
       return redirect()->to('/login');
     }
 
@@ -426,9 +436,6 @@ class ReportTypes extends Controller {
         echo view('templates/footer.php', $data);
       }
     } else {  // Load edit page
-      // Get the URI service
-      $uri = service('uri');
-
       // Parse the URI
       $page = $uri->setSilent()->getSegment(3, 1);
       $reportTypeID = $uri->getSegment(4);
