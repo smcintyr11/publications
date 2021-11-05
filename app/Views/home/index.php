@@ -7,6 +7,6 @@
   <p>To access the publications, click on <strong>Publications</strong> in <thead>
     menu bar.</p>
   </thead>
-  <p>Please send any feed back to
+  <p>Please send any feedback to
     <a href="mailto:scott.mcIntyre@nrcan-rncan.gc.ca">Scott McIntyre</a></p>
 </div>
