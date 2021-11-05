@@ -1,3 +1,6 @@
+// Global Variable
+var baseurl = 'http://s-dev-drupal/publications';
+
 function openTab(evt, tabName) {
   // Declare all variables
   var i, tabcontent, tablinks;
@@ -51,7 +54,7 @@ $(document).ready(function(){
 
     // Get link data
     $.ajax({
-        url: "/PublicationsComments/get",
+        url: baseurl + "/PublicationsComments/get",
         type: "POST",
         data: {
           publicationsCommentsID: id,

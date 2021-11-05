@@ -20,7 +20,7 @@
 
   <?= MyFormGeneration::generateIndexSearch("keywords", csrf_field()); ?>
 
-  <a class="btn btn-primary my-3" href="/keywords/new/<?= $page ?>">Create Keyword</a>
+  <a class="btn btn-primary my-3" href="<?= base_url() ?>/keywords/new/<?= $page ?>">Create Keyword</a>
 
   <div class="table-responsive-lg">
     <table class="table table-striped table-bordered">

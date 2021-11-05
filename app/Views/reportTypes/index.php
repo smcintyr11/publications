@@ -20,7 +20,7 @@
 
   <?= MyFormGeneration::generateIndexSearch("reportTypes", csrf_field()); ?>
 
-  <a class="btn btn-primary my-3" href="/reportTypes/new/<?= $page ?>">Create Report Type</a>
+  <a class="btn btn-primary my-3" href="<?= base_url() ?>/reportTypes/new/<?= $page ?>">Create Report Type</a>
 
   <div class="table-responsive-lg">
     <table class="table table-striped table-bordered">

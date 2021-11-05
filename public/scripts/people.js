@@ -1,3 +1,6 @@
+// Global Variable
+var baseurl = 'http://s-dev-drupal/publications';
+
 // Checks to see if the Organization textbox is filled in, and OrganizationID
 // is empty.  If so, that means what was typed in the Organization field, does
 // not exist in the database, and we need to offer the user a chance to create
@@ -15,7 +18,7 @@ function checkOrganization(event) {
     // Check if the organization has an organizationID (e.g. the user didn't
     // select the organization from the drop down)
     $.ajax({
-        url: "/organizations/searchOrganizationID",
+        url: baseurl + "/organizations/searchOrganizationID",
         type: "POST",
         data: {
           organization: organization,
@@ -48,7 +51,7 @@ function checkOrganization(event) {
 // Function to add an organization to the database
 function addOrganization() {
   $.ajax({
-      url: "/organizations/add",
+      url: baseurl + "/organizations/add",
       type: "POST",
       data: {
         organization: $("#organization").val(),
@@ -89,7 +92,7 @@ $(document).ready(function(){
     minLength: 1,
     source: function(request, response) {
       $.ajax({
-        url: location.protocol + "//" + location.host + "/organizations/searchOrganization",
+        url: baseurl + "/organizations/searchOrganization",
         datatype: "json",
         data: {
           term: request.term,

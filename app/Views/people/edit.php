@@ -1,4 +1,4 @@
-<script type="text/javascript" src="/scripts/people.js"></script>
+<script type="text/javascript" src="<?= base_url() ?>/scripts/people.js"></script>
 
 <?php use App\Libraries\MyFormGeneration; ?>
 
@@ -41,7 +41,7 @@
      </div>
    </div>
 
-  <form class="form-group" action="/people/edit" method="post"  id="frmPerson">
+  <form class="form-group" action="<?= base_url() ?>/people/edit" method="post"  id="frmPerson">
     <?= csrf_field() ?>
 
     <input type="hidden" name="page" value="<?= $page ?>">
@@ -72,6 +72,6 @@
       </div>
 
     <button class="btn btn-success m-1" type="submit" "name="submit" id="btnSubmit">Save Person</button>
-    <a class="btn btn-info m-1" href="/people/index/<?= $page ?>">Back to People</a>
+    <a class="btn btn-info m-1" href="<?= base_url() ?>/people/index/<?= $page ?>">Back to People</a>
   </form>
 </div>

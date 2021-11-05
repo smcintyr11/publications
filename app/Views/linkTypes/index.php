@@ -17,7 +17,7 @@
 
   <?= MyFormGeneration::generateIndexSearch("linkTypes", csrf_field()); ?>
 
-  <a class="btn btn-primary my-3" href="/linkTypes/new/<?= $page ?>">Create Link Type</a>
+  <a class="btn btn-primary my-3" href="<?= base_url() ?>/linkTypes/new/<?= $page ?>">Create Link Type</a>
 
   <div class="table-responsive-lg">
     <table class="table table-striped table-bordered">

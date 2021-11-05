@@ -26,7 +26,7 @@
 
   <?= MyFormGeneration::generateIndexSearch("people", csrf_field()); ?>
 
-  <a class="btn btn-primary my-3" href="/people/new/<?= $page ?>">Create Person</a>
+  <a class="btn btn-primary my-3" href="<?= base_url() ?>/people/new/<?= $page ?>">Create Person</a>
 
   <div class="table-responsive-lg">
     <table class="table table-striped table-bordered">

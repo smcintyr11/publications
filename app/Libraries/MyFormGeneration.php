@@ -509,7 +509,7 @@ class MyFormGeneration {
    // Dependent Records
    if ($dependentRecords) {
      $html = '<div class="form-group row">
-       <a class="btn btn-info m-1" href="/' . $controller . '/index/' .
+       <a class="btn btn-info m-1" href="' . base_url() . '/' . $controller . '/index/' .
        $page . '">Return to ' . ucfirst($controller) . '</a>
        </div>';
    } else {
@@ -519,7 +519,7 @@ class MyFormGeneration {
       </div>
       <div class="form-group row">
       <button class="btn btn-success m-1" type="submit" name="submit">Yes</button>
-      <a class="btn btn-danger m-1" href="/' . $controller . '/' . $index . '/' . $page . '">No</a>
+      <a class="btn btn-danger m-1" href="' . base_url() . '/' . $controller . '/' . $index . '/' . $page . '">No</a>
       </div>';
    }
    // Return the html
@@ -636,11 +636,11 @@ class MyFormGeneration {
   */
   public static function generateIndexSearch(string $controller, string $csrf_field) {
     // Generate the html
-    $html = '<form class="form-inline" action="/' . $controller . '/index/1" method="post" id="frmSearch">
+    $html = '<form class="form-inline" action="' . base_url() . '/' . $controller . '/index/1" method="post" id="frmSearch">
       ' . $csrf_field . '
       <input class="form-control mr-2" type="text" name="filter" placeholder="Search">
       <button class="btn btn-success m-1" type="submit">Search</button>
-      <a class="btn btn-info m-1" href="/' . $controller . '/index/1?filter=">Reset</a>
+      <a class="btn btn-info m-1" href="' . base_url() . '/' . $controller . '/index/1?filter=">Reset</a>
       </form>';
 
     // Return the html

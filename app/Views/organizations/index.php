@@ -17,7 +17,7 @@
 
   <?= MyFormGeneration::generateIndexSearch("organizations", csrf_field()); ?>
 
-  <a class="btn btn-primary my-3" href="/organizations/new/<?= $page ?>">Create Organization</a>
+  <a class="btn btn-primary my-3" href="<?= base_url() ?>/organizations/new/<?= $page ?>">Create Organization</a>
 
   <div class="table-responsive-lg">
     <table class="table table-striped table-bordered">

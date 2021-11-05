@@ -1,4 +1,4 @@
-<script type="text/javascript" src="/scripts/unique.js"></script>
+<script type="text/javascript" src="<?= base_url() ?>/scripts/unique.js"></script>
 
 <?php use App\Libraries\MyFormGeneration; ?>
 
@@ -7,7 +7,7 @@
 
   <?= \Config\Services::validation()->listErrors(); ?>
 
-  <form class="form-group" action="/statuses/new" method="post">
+  <form class="form-group" action="<?= base_url() ?>/statuses/new" method="post">
     <?= csrf_field() ?>
 
     <input type="hidden" name="page" value="<?= $page ?>">
@@ -22,7 +22,7 @@
         set_value('defaultStatus'), "Make Default"); ?>
 
     <button class="btn btn-success m-1" type="submit" name="submit">Create Status</button>
-    <a class="btn btn-info m-1" href="/statuses/index/<?= $page ?>">Back to Statuses</a>
+    <a class="btn btn-info m-1" href="<?= base_url() ?>/statuses/index/<?= $page ?>">Back to Statuses</a>
   </form>
 
 </div>
@@ -30,6 +30,6 @@
 <script type="text/javascript">
 $(document).ready(function(){
   // Add uniqueness checking to the link type
-  $("#status").change(function(){uniqueCheck("/statuses/uniqueCheck", "#status", null);});
+  $("#status").change(function(){uniqueCheck("<?= base_url() ?>/statuses/uniqueCheck", "#status", null);});
 });
 </script>

@@ -1,3 +1,6 @@
+// Global Variable
+var baseurl = 'http://s-dev-drupal/publications';
+
 // Checks to see if the ReportType textbox is filled in, and ReportTypeID
 // is empty.  If so, that means what was typed in the ReportType field, does
 // not exist in the database, and we need to offer the user a chance to create
@@ -15,7 +18,7 @@ function checkReportType(event) {
     // Check if the reportType has an reportTypeID (e.g. the user didn't
     // select the reportType from the drop down)
     $.ajax({
-        url: "/reportTypes/searchReportTypeID",
+        url: baseurl + "/reportTypes/searchReportTypeID",
         type: "POST",
         data: {
           reportType: reportType,
@@ -55,7 +58,7 @@ function addReportType() {
 
   // Add the report type
   $.ajax({
-      url: "/reportTypes/add",
+      url: baseurl + "/reportTypes/add",
       type: "POST",
       data: {
         reportType: $("#newReportType").val(),
@@ -93,7 +96,7 @@ function addReportType() {
 
 $(document).ready(function(){
   // Report Type autocomplete
-  lookup("#reportTypeN", "#reportTypeNID", "/reportTypes/searchReportType");
+  lookup("#reportTypeN", "#reportTypeNID", baseurl + "/reportTypes/searchReportType");
 
   // Intercept form submition
   const form = document.getElementById('frmNewPublication');

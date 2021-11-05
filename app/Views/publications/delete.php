@@ -2,7 +2,7 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.widgets.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/css/theme.bootstrap_4.min.css" integrity="sha512-2C6AmJKgt4B+bQc08/TwUeFKkq8CsBNlTaNcNgUmsDJSU1Fg+R6azDbho+ZzuxEkJnCjLZQMozSq3y97ZmgwjA==" crossorigin="anonymous" />
-<script type="text/javascript" src="/scripts/publicationDelete.js"></script>
+<script type="text/javascript" src="<?= base_url() ?>/scripts/publicationDelete.js"></script>
 
 <?php use App\Libraries\MyFormGeneration; ?>
 <?php $hideDetailedFields = true; ?>
@@ -92,7 +92,7 @@
      </li>
    </ul>
 
-   <form class="form-group" action="/publications/delete" method="post" id="frmDeletePublication" >
+   <form class="form-group" action="<?= base_url() ?>/publications/delete" method="post" id="frmDeletePublication" >
      <br />
      <?= csrf_field() ?>
 

@@ -1,4 +1,4 @@
-<script type="text/javascript" src="/scripts/unique.js"></script>
+<script type="text/javascript" src="<?= base_url() ?>/scripts/unique.js"></script>
 
 <?php use App\Libraries\MyFormGeneration; ?>
 
@@ -7,7 +7,7 @@
 
   <?= \Config\Services::validation()->listErrors(); ?>
 
-  <form class="form-group" action="/organizations/edit" method="post">
+  <form class="form-group" action="<?= base_url() ?>/organizations/edit" method="post">
     <?= csrf_field() ?>
 
     <input type="hidden" name="page" value="<?= $page ?>">
@@ -20,13 +20,13 @@
       "-- Enter the organization name --", "Organization"); ?>
 
     <button class="btn btn-success m-1" type="submit" name="submit">Save Organization</button>
-    <a class="btn btn-info m-1" href="/organizations/index/<?= $page ?>">Back to Organizations</a>
+    <a class="btn btn-info m-1" href="<?= base_url() ?>/organizations/index/<?= $page ?>">Back to Organizations</a>
   </form>
 </div>
 
 <script type="text/javascript">
 $(document).ready(function(){
   // Add uniqueness checking to the link type
-  $("#organization").change(function(){uniqueCheck("/organizations/uniqueCheck", "#organization", <?= $organization['OrganizationID'] ?>, "<?= $organization['Organization'] ?>");});
+  $("#organization").change(function(){uniqueCheck("<?= base_url() ?>/organizations/uniqueCheck", "#organization", <?= $organization['OrganizationID'] ?>, "<?= $organization['Organization'] ?>");});
 });
 </script>

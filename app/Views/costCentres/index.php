@@ -20,7 +20,7 @@
 
   <?= MyFormGeneration::generateIndexSearch("costCentres", csrf_field()); ?>
 
-  <a class="btn btn-primary my-3" href="/costCentres/new/<?= $page ?>">Create Cost Centre</a>
+  <a class="btn btn-primary my-3" href="<?= base_url() ?>/costCentres/new/<?= $page ?>">Create Cost Centre</a>
 
   <div class="table-responsive-lg">
     <table class="table table-striped table-bordered">

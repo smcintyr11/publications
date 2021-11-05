@@ -17,7 +17,7 @@
 
   <?= MyFormGeneration::generateIndexSearch("journals", csrf_field()); ?>
 
-  <a class="btn btn-primary my-3" href="/journals/new/<?= $page ?>">Create Journal</a>
+  <a class="btn btn-primary my-3" href="<?= base_url() ?>/journals/new/<?= $page ?>">Create Journal</a>
 
   <div class="table-responsive-lg">
     <table class="table table-striped table-bordered">

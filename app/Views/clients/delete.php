@@ -3,7 +3,7 @@
 <div class="container my-3 py-3">
   <h1><?= esc($title); ?></h1>
 
-  <form class="form-group" action="/clients/delete" method="post">
+  <form class="form-group" action="<?= base_url() ?>/clients/delete" method="post">
     <br />
     <?= csrf_field() ?>
 

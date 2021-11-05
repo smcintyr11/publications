@@ -1,5 +1,5 @@
-<script type="text/javascript" src="/scripts/lookup.js"></script>
-<script type="text/javascript" src="/scripts/publicationsNew.js"></script>
+<script type="text/javascript" src="<?= base_url() ?>/scripts/lookup.js"></script>
+<script type="text/javascript" src="<?= base_url() ?>/scripts/publicationsNew.js"></script>
 
 <?php use App\Libraries\MyFormGeneration; ?>
 
@@ -47,7 +47,7 @@
     </div>
   </div>
 
-  <form class="form-group" action="/publications/new" method="post" id="frmNewPublication">
+  <form class="form-group" action="<?= base_url() ?>/publications/new" method="post" id="frmNewPublication">
     <?= csrf_field() ?>
 
     <input type="hidden" name="page" value="<?= $page ?>">
@@ -66,6 +66,6 @@
     </div>
 
     <button class="btn btn-success m-1" type="submit" name="submit" id="btnSubmit">Create Publication</button>
-    <a class="btn btn-info m-1" href="/publications/<?= session('publicationIndex') ?>/<?= $page ?>">Back to Publications</a>
+    <a class="btn btn-info m-1" href="<?= base_url() ?>/publications/<?= session('publicationIndex') ?>/<?= $page ?>">Back to Publications</a>
   </form>
 </div>

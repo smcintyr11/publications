@@ -23,7 +23,7 @@
 
   <?= MyFormGeneration::generateIndexSearch("statuses", csrf_field()); ?>
 
-  <a class="btn btn-primary my-3" href="/statuses/new/<?= $page ?>">Create Status</a>
+  <a class="btn btn-primary my-3" href="<?= base_url() ?>/statuses/new/<?= $page ?>">Create Status</a>
 
   <div class="table-responsive-lg">
     <table class="table table-striped table-bordered">

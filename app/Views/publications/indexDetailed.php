@@ -35,14 +35,14 @@
 <div class="container my-3 my-3">
   <h1><?= esc($title); ?></h1>
 
-  <form class="form-inline" action="/publications/indexDetailed/1" method="post" id="frmSearch">
+  <form class="form-inline" action="<?= base_url() ?>/publications/indexDetailed/1" method="post" id="frmSearch">
     <?= csrf_field() ?>
     <input class="form-control mr-2" type="text" name="filter" placeholder="Search">
     <button class="btn btn-success m-1" type="submit">Search</button>
-    <a class="btn btn-info m-1" href="/publications/indexDetailed/1?filter=">Reset</a>
+    <a class="btn btn-info m-1" href="<?= base_url() ?>/publications/indexDetailed/1?filter=">Reset</a>
   </form>
 
-  <a class="btn btn-primary my-3" href="/publications/new/<?= $page ?>">Create Publication</a>
+  <a class="btn btn-primary my-3" href="<?= base_url() ?>/publications/new/<?= $page ?>">Create Publication</a>
 
   <div class="table-fluid">
     <table class="table table-bordered">

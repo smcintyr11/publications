@@ -17,7 +17,7 @@
 
   <?= MyFormGeneration::generateIndexSearch("fiscalYears", csrf_field()); ?>
 
-  <a class="btn btn-primary my-3" href="/fiscalYears/new/<?= $page ?>">Create Fiscal Year</a>
+  <a class="btn btn-primary my-3" href="<?= base_url() ?>/fiscalYears/new/<?= $page ?>">Create Fiscal Year</a>
 
   <div class="table-responsive-lg">
     <table class="table table-striped table-bordered">

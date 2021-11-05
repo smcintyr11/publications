@@ -1,3 +1,6 @@
+// Global Variable
+var baseurl = 'http://s-dev-drupal/publications';
+
 function openTab(evt, tabName) {
   // Declare all variables
   var i, tabcontent, tablinks;
@@ -36,7 +39,7 @@ function displayErrorMessage(message) {
 
 function removeAuthor(rowID, paID) {
   $.ajax({
-      url: "/publicationsAuthors/remove",
+      url: baseurl + "/publicationsAuthors/remove",
       type: "POST",
       data: {
         publicationsAuthorsID: paID,
@@ -64,7 +67,7 @@ function toggleAuthor(cellID, paID, currentState, btnID) {
     newText = "Yes";
   }
   $.ajax({
-      url: "/publicationsAuthors/update",
+      url: baseurl + "/publicationsAuthors/update",
       type: "POST",
       data: {
         publicationsAuthorsID: paID,
@@ -88,7 +91,7 @@ function toggleAuthor(cellID, paID, currentState, btnID) {
 
 function removeReviewer(rowID, prID) {
   $.ajax({
-      url: "/publicationsReviewers/remove",
+      url: baseurl + "/publicationsReviewers/remove",
       type: "POST",
       data: {
         publicationsReviewersID: prID,
@@ -116,7 +119,7 @@ function toggleReviewer(cellID, prID, currentState, btnID) {
     newText = "Yes";
   }
   $.ajax({
-      url: "/publicationsReviewers/update",
+      url: baseurl + "/publicationsReviewers/update",
       type: "POST",
       data: {
         publicationsReviewersID: prID,
@@ -140,7 +143,7 @@ function toggleReviewer(cellID, prID, currentState, btnID) {
 
 function removeKeyword(rowID, pkID) {
   $.ajax({
-      url: "/publicationsKeywords/remove",
+      url: baseurl + "/publicationsKeywords/remove",
       type: "POST",
       data: {
         publicationsKeywordsID: pkID,
@@ -169,7 +172,7 @@ function editLink() {
 
   // Update the link
   $.ajax({
-      url: "/publicationsLinks/update",
+      url: baseurl + "/publicationsLinks/update",
       type: "POST",
       data: {
         publicationsLinksID: plID,
@@ -197,7 +200,7 @@ function editLink() {
 
 function removeLink(rowID, plID) {
   $.ajax({
-      url: "/publicationsLinks/remove",
+      url: baseurl + "/publicationsLinks/remove",
       type: "POST",
       data: {
         publicationsLinksID: plID,
@@ -219,7 +222,7 @@ function removeLink(rowID, plID) {
 
 function removeComment(rowID, pcID) {
   $.ajax({
-      url: "/publicationsComments/remove",
+      url: baseurl + "/publicationsComments/remove",
       type: "POST",
       data: {
         publicationsCommentsID: pcID,
@@ -292,7 +295,7 @@ function checkReportType(event) {
     // Check if the reportType has an reportTypeID (e.g. the user didn't
     // select the reportType from the drop down)
     $.ajax({
-        url: "/reportTypes/searchReportTypeID",
+        url: baseurl + "/reportTypes/searchReportTypeID",
         type: "POST",
         data: {
           reportType: reportType,
@@ -344,7 +347,7 @@ function addReportType() {
 
  // Add the report type
  $.ajax({
-     url: "/reportTypes/add",
+     url: baseurl + "/reportTypes/add",
      type: "POST",
      data: {
        reportType: $("#newReportType").val(),
@@ -409,7 +412,7 @@ function checkFiscalYear(event) {
     // Check if the fiscalYear has a fiscalYearID (e.g. the user didn't
     // select the fiscalYear from the drop down)
     $.ajax({
-        url: "/fiscalYears/searchFiscalYearID",
+        url: baseurl + "/fiscalYears/searchFiscalYearID",
         type: "POST",
         data: {
           fiscalYear: fiscalYear,
@@ -483,7 +486,7 @@ function checkFiscalYearFormat() {
 function addFiscalYear() {
  // Add the fiscal year
  $.ajax({
-     url: "/fiscalYears/add",
+     url: baseurl + "/fiscalYears/add",
      type: "POST",
      data: {
        fiscalYear: $("#newFiscalYear").val(),
@@ -547,7 +550,7 @@ function checkOrganization(event) {
     // Check if the organization has a organizationID (e.g. the user didn't
     // select the organization from the drop down)
     $.ajax({
-        url: "/organizations/searchOrganizationID",
+        url: baseurl + "/organizations/searchOrganizationID",
         type: "POST",
         data: {
           organization: organization,
@@ -592,7 +595,7 @@ function checkOrganization(event) {
 function addOrganization() {
  // Add the organization
  $.ajax({
-     url: "/organizations/add",
+     url: baseurl + "/organizations/add",
      type: "POST",
      data: {
        organization: $("#newOrganization").val(),
@@ -656,7 +659,7 @@ function checkClient(event) {
     // Check if the client has an clientID (e.g. the user didn't
     // select the client from the drop down)
     $.ajax({
-        url: "/clients/searchClientID",
+        url: baseurl + "/clients/searchClientID",
         type: "POST",
         data: {
           client: client,
@@ -702,7 +705,7 @@ function checkClient(event) {
 function addClient() {
   // Add the client
   $.ajax({
-      url: "/clients/add",
+      url: baseurl + "/clients/add",
       type: "POST",
       data: {
         client: $("#newClient").val(),
@@ -766,7 +769,7 @@ function checkJournal(event) {
     // Check if the journal has an journalID (e.g. the user didn't
     // select the journal from the drop down)
     $.ajax({
-        url: "/journals/searchJournalID",
+        url: baseurl + "/journals/searchJournalID",
         type: "POST",
         data: {
           journal: journal,
@@ -812,7 +815,7 @@ function checkJournal(event) {
 function addJournal() {
   // Add the journal
   $.ajax({
-      url: "/journals/add",
+      url: baseurl + "/journals/add",
       type: "POST",
       data: {
         journal: $("#newJournal").val(),
@@ -874,7 +877,7 @@ function checkKeyword(keyword) {
 
   // Check if the person exists
   $.ajax({
-      url: "/keywords/searchExactKeyword",
+      url: baseurl + "/keywords/searchExactKeyword",
       type: "POST",
       data: {
         keyword: keyword,
@@ -912,7 +915,7 @@ function checkKeyword(keyword) {
 function AddPublicationKeyword(keywordID, publicationID) {
   // Add the keyword to the publicationn
   $.ajax({
-      url: "/publicationsKeywords/add",
+      url: baseurl + "/publicationsKeywords/add",
       type: "POST",
       data: {
         publicationID: publicationID,
@@ -988,7 +991,7 @@ function checkAssignedTo() {
  */
 function AddPublicationAuthor(authorID, authorName, publicationID) {
   $.ajax({
-      url: "/publicationsAuthors/add",
+      url: baseurl + "/publicationsAuthors/add",
       type: "POST",
       data: {
         publicationID: publicationID,
@@ -1032,7 +1035,7 @@ function AddPublicationAuthor(authorID, authorName, publicationID) {
  */
 function AddPublicationReviewer(reviewerID, reviewerName, publicationID) {
   $.ajax({
-      url: "/publicationsReviewers/add",
+      url: baseurl + "/publicationsReviewers/add",
       type: "POST",
       data: {
         publicationID: publicationID,
@@ -1130,7 +1133,7 @@ function CheckPerson(person, message, click, callback) {
 
   // Check if the person exists
   $.ajax({
-      url: "/people/searchExactDisplayName",
+      url: baseurl + "/people/searchExactDisplayName",
       type: "POST",
       data: {
         displayName: person,
@@ -1174,7 +1177,7 @@ function CheckPerson(person, message, click, callback) {
 function CheckUser(person) {
   // Check if the user exists
   $.ajax({
-      url: "/users/searchExactDisplayName",
+      url: baseurl + "/users/searchExactDisplayName",
       type: "POST",
       data: {
         displayName: person,
@@ -1220,7 +1223,7 @@ function addNewKeyword() {
 
   // Add the keyword to the database
   $.ajax({
-      url: "/keywords/add",
+      url: baseurl + "/keywords/add",
       type: "POST",
       data: {
         keywordE: keywordE,
@@ -1262,7 +1265,7 @@ function addNewKeyword() {
 function addJournal() {
   // Add the journal
   $.ajax({
-      url: "/journals/add",
+      url: baseurl + "/journals/add",
       type: "POST",
       data: {
         journal: $("#newJournal").val(),
@@ -1323,7 +1326,7 @@ function addNewPerson(callback) {
 
   // Add the person to the database
   $.ajax({
-      url: "/people/add",
+      url: baseurl + "/people/add",
       type: "POST",
       data: {
         lastName: $("#newLastName").val(),
@@ -1357,34 +1360,34 @@ function addNewPerson(callback) {
 
 $(document).ready(function(){
   // Report Type autocomplete
-  lookup("#reportType", "#reportTypeID", "/reportTypes/searchReportType");
+  lookup("#reportType", "#reportTypeID", baseurl + "/reportTypes/searchReportType");
 
   // Assigned to autocomplete
-  lookup("#assignedTo", "#statusPersonID", "/users/searchPerson");
+  lookup("#assignedTo", "#statusPersonID", baseurl + "/users/searchPerson");
 
 	// Fiscal Year autocomplete
-  lookup("#fiscalYear", "#fiscalYearID", "/fiscalYears/searchFiscalYear");
+  lookup("#fiscalYear", "#fiscalYearID", baseurl + "/fiscalYears/searchFiscalYear");
 
   // Organization autocomplete
-  lookup("#organization", "#organizationID", "/organizations/searchOrganization");
+  lookup("#organization", "#organizationID", baseurl + "/organizations/searchOrganization");
 
   // Author autocomplete
-  lookup("#newAuthor", "#authorID", "/people/searchPerson");
+  lookup("#newAuthor", "#authorID", baseurl + "/people/searchPerson");
 
   // Reviewer autocomplete
-  lookup("#newReviewer", "#reviewerID", "/people/searchPerson");
+  lookup("#newReviewer", "#reviewerID", baseurl + "/people/searchPerson");
 
   // Keyword autocomplete
-  lookup("#newKeyword", "#keywordID", "/keywords/searchKeyword");
+  lookup("#newKeyword", "#keywordID", baseurl + "/keywords/searchKeyword");
 
   // Publisher autocomplete
-  lookup("#client", "#clientID", "/clients/searchClient");
+  lookup("#client", "#clientID", baseurl + "/clients/searchClient");
 
   // Journal autocomplete
-  lookup("#journal", "#journalID", "/journals/searchJournal");
+  lookup("#journal", "#journalID", baseurl + "/journals/searchJournal");
 
   // Person Modal Organization lookup
-  lookup("#newPOrganization", "#newPOrganizationID", "/organizations/searchOrganization");
+  lookup("#newPOrganization", "#newPOrganizationID", baseurl + "/organizations/searchOrganization");
 
   // Add author function
   $("#btnAddAuthor").click(function(){
@@ -1478,7 +1481,7 @@ $(document).ready(function(){
 
     // Do the insert
     $.ajax({
-        url: "/PublicationsLinks/add",
+        url: baseurl + "/PublicationsLinks/add",
         type: "POST",
         data: {
           publicationID: publicationID,
@@ -1529,7 +1532,7 @@ $(document).ready(function(){
 
     // Do the insert
     $.ajax({
-        url: "/PublicationsComments/add",
+        url: baseurl + "/PublicationsComments/add",
         type: "POST",
         data: {
           publicationID: publicationID,
@@ -1566,7 +1569,7 @@ $(document).ready(function(){
 
     // Try to get the expected duration
     $.ajax({
-      url: location.protocol + "//" + location.host + "/statuses/getExpectedDuration",
+      url: baseurl + "/statuses/getExpectedDuration",
       type: "POST",
       data: {
         statusID: $("#statusID").val(),
@@ -1627,7 +1630,7 @@ $(document).ready(function(){
 
     // Get link data
     $.ajax({
-        url: "/PublicationsLinks/get",
+        url: baseurl + "/PublicationsLinks/get",
         type: "POST",
         data: {
           publicationsLinksID: id,
@@ -1662,7 +1665,7 @@ $(document).ready(function(){
 
     // Get link data
     $.ajax({
-        url: "/PublicationsComments/get",
+        url: baseurl + "/PublicationsComments/get",
         type: "POST",
         data: {
           publicationsCommentsID: id,

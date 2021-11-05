@@ -1,4 +1,4 @@
-<script type="text/javascript" src="/scripts/unique.js"></script>
+<script type="text/javascript" src="<?= base_url() ?>/scripts/unique.js"></script>
 
 <?php use App\Libraries\MyFormGeneration; ?>
 
@@ -7,7 +7,7 @@
 
   <?= \Config\Services::validation()->listErrors(); ?>
 
-  <form class="form-group" action="/reportTypes/edit" method="post">
+  <form class="form-group" action="<?= base_url() ?>/reportTypes/edit" method="post">
     <?= csrf_field() ?>
 
     <input type="hidden" name="page" value="<?= $page ?>">
@@ -24,14 +24,14 @@
       "-- Enter the abbreviation for the report type (e.g. JJ) --", "Abbreviation"); ?>
 
     <button class="btn btn-success m-1" type="submit" name="submit">Save Report Type</button>
-    <a class="btn btn-info m-1" href="/reportTypes/index/<?= $page ?>">Back to Report Types</a>
+    <a class="btn btn-info m-1" href="<?= base_url() ?>/reportTypes/index/<?= $page ?>">Back to Report Types</a>
   </form>
 </div>
 
 <script type="text/javascript">
 $(document).ready(function(){
   // Add uniqueness checking to the link type
-  $("#reportType").change(function(){uniqueCheck("/reportTypes/uniqueCheckRT", "#reportType", <?= $reportType['ReportTypeID'] ?>);});
-  $("#abbreviation").change(function(){uniqueCheck("/reportTypes/uniqueCheckAB", "#abbreviation", <?= $reportType['ReportTypeID'] ?>);});
+  $("#reportType").change(function(){uniqueCheck("<?= base_url() ?>/reportTypes/uniqueCheckRT", "#reportType", <?= $reportType['ReportTypeID'] ?>);});
+  $("#abbreviation").change(function(){uniqueCheck("<?= base_url() ?>/reportTypes/uniqueCheckAB", "#abbreviation", <?= $reportType['ReportTypeID'] ?>);});
 });
 </script>

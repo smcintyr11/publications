@@ -2,8 +2,8 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.widgets.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/css/theme.bootstrap_4.min.css" integrity="sha512-2C6AmJKgt4B+bQc08/TwUeFKkq8CsBNlTaNcNgUmsDJSU1Fg+R6azDbho+ZzuxEkJnCjLZQMozSq3y97ZmgwjA==" crossorigin="anonymous" />
-<script type="text/javascript" src="/scripts/lookup.js"></script>
-<script type="text/javascript" src="/scripts/publicationsEdit.js"></script>
+<script type="text/javascript" src="<?= base_url() ?>/scripts/lookup.js"></script>
+<script type="text/javascript" src="<?= base_url() ?>/scripts/publicationsEdit.js"></script>
 
 
 
@@ -305,7 +305,7 @@
   <div class="form-row">
     <div class="col-6">
       <button class="btn btn-success m-1" type="submit" name="submit" value="save" id="btnSubmit" form="frmEditPublication" >Save Publication</button>
-      <a class="btn btn-info m-1" href="/publications/<?= session('publicationIndex') ?>/<?= $page ?>">Back to Publications</a>
+      <a class="btn btn-info m-1" href="<?= base_url() ?>/publications/<?= session('publicationIndex') ?>/<?= $page ?>">Back to Publications</a>
     </div>
     <?php
       $version = "Created by " . $publication['CreatedBy'] . " on " . $publication['Created'] . "<br>";
@@ -400,7 +400,7 @@
   </ul>
 
 
-  <form class="form-group" action="/publications/edit" method="post" id="frmEditPublication">
+  <form class="form-group" action="<?= base_url() ?>/publications/edit" method="post" id="frmEditPublication">
     <?= csrf_field() ?>
     <input type="hidden" name="page" value="<?= $page ?>">
 
