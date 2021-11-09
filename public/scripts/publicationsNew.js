@@ -1,5 +1,6 @@
 // Global Variable
-var myBaseurl = 'http://s-dev-drupal/publications';
+//var myBaseurl = 'http://s-dev-drupal/publications';
+var myBaseurl = '';
 
 // Checks to see if the ReportType textbox is filled in, and ReportTypeID
 // is empty.  If so, that means what was typed in the ReportType field, does
