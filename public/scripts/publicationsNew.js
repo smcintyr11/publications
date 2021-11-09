@@ -11,9 +11,6 @@ function checkReportType(event) {
   var reportType = $("#reportTypeN").val();
   var reportTypeID = $("#reportTypeNID").val();
 
-  a = myBaseurl + "/reportTypes/searchReportTypeID";
-  alert(a);
-  
   // Check if reportType is not empty
   if ((reportType != "") && (reportTypeID == "")) {
     // Stop saving temporarily
@@ -100,7 +97,7 @@ function addReportType() {
 
 $(document).ready(function(){
   // Report Type autocomplete
-  lookup("#reportTypeN", "#reportTypeNID", baseurl + "/reportTypes/searchReportType");
+  lookup("#reportTypeN", "#reportTypeNID", myBaseurl + "/reportTypes/searchReportType");
 
   // Intercept form submition
   const form = document.getElementById('frmNewPublication');
