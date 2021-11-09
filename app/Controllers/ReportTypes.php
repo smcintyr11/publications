@@ -463,11 +463,14 @@ class ReportTypes extends Controller {
    *  and the ReportTypeID of the newly inserted row
    */
   public function add() {
+    // Load the helper functions
+    helper(['auth']);
+
     // Create a new Model
     $model = new ReportTypeModel();
 
     // Get the POST variables
-    $userid = $this->request->getPost('userid');
+    $userid = user_id();
     $reportType = $this->request->getPost('reportType');
     $abbreviation = $this->request->getPost('abbreviation');
 
