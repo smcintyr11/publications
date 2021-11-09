@@ -4,8 +4,8 @@ use App\Models\PersonModel;
 use App\Libraries\MyPager;
 use CodeIgniter\Controller;
 
-// Load the authentication helper
-helper('auth');
+// Load the helpers
+helper(['url', 'auth']);
 
 class People extends Controller {
   /**
@@ -140,7 +140,7 @@ class People extends Controller {
     // Check to see if the user is logged in
     if (logged_in() == false) {
       $_SESSION['redirect_url'] = base_url() . '/people/index';
-      return redirect()->to('/login');
+      return redirect()->to(base_url() . '/login');
 
       if (in_groups(['pubsAdmin', 'pubsRC', 'pubsAuth', 'pubsRCMan']) == false) {
         $data = [
@@ -222,7 +222,7 @@ class People extends Controller {
     // Check to see if the user is logged in
     if (logged_in() == false) {
       $_SESSION['redirect_url'] = base_url() . '/people/new/1';
-      return redirect()->to('/login');
+      return redirect()->to(base_url() . '/login');
 
       if (in_groups(['pubsAdmin', 'pubsRC', 'pubsAuth', 'pubsRCMan']) == false) {
         $data = [
@@ -271,7 +271,7 @@ class People extends Controller {
         ]);
 
         // Go back to index
-        return redirect()->to("index/".$page);
+        return redirect()->to(base_url() . "/people/index/".$page);
       } else {  // Invalid - Redisplay the form
         // Generate the create view
         $data = [
@@ -323,7 +323,7 @@ class People extends Controller {
     if (logged_in() == false) {
       $personID = $uri->getSegment(4);
       $_SESSION['redirect_url'] = base_url() . '/people/delete/1/' . $personID;
-      return redirect()->to('/login');
+      return redirect()->to(base_url() . '/login');
     }
 
     // Check to see if the user is in the appropriate group
@@ -358,7 +358,7 @@ class People extends Controller {
       $page = $this->request->getPost('page');
 
       // Go back to index
-       return redirect()->to("index");
+       return redirect()->to(base_url() . "/people/index");
     } else {  // // Not post - show delete form
       // Parse the URI
       $page = $uri->setSilent()->getSegment(3, 1);
@@ -398,7 +398,7 @@ class People extends Controller {
       $page = $uri->setSilent()->getSegment(3, 1);
       $personID = $uri->getSegment(4);
       $_SESSION['redirect_url'] = base_url() . '/people/edit/' . $page . '/' . $personID;
-      return redirect()->to('/login');
+      return redirect()->to(base_url() . '/login');
     }
 
     // Check to see if the user is in the appropriate group
@@ -450,7 +450,7 @@ class People extends Controller {
         ]);
 
         // Go back to index
-        return redirect()->to("index/".$page);
+        return redirect()->to(base_url() . "/people/index/".$page);
       } else  {  // Invalid - Redisplay the form
         // Generate the view
         $data = [

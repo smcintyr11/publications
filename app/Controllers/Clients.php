@@ -4,8 +4,8 @@ use App\Models\ClientModel;
 use App\Libraries\MyPager;
 use CodeIgniter\Controller;
 
-// Load the authentication helper
-helper('auth');
+// Load the helpers
+helper(['url', 'auth']);
 
 class Clients extends Controller {
   /**
@@ -124,7 +124,7 @@ class Clients extends Controller {
     // Check to see if the user is logged in
     if (logged_in() == false) {
       $_SESSION['redirect_url'] = base_url() . '/clients/index';
-      return redirect()->to('/login');
+      return redirect()->to(base_url() . '/login');
 
       if (in_groups(['pubsAdmin', 'pubsRC', 'pubsAuth', 'pubsRCMan']) == false) {
         $data = [
@@ -205,7 +205,7 @@ class Clients extends Controller {
     // Check to see if the user is logged in
     if (logged_in() == false) {
       $_SESSION['redirect_url'] = base_url() . '/clients/new/1';
-      return redirect()->to('/login');
+      return redirect()->to(base_url() . '/login');
 
       if (in_groups(['pubsAdmin', 'pubsRC', 'pubsAuth', 'pubsRCMan']) == false) {
         $data = [
@@ -245,7 +245,7 @@ class Clients extends Controller {
         ]);
 
         // Go back to index
-        return redirect()->to("index/".$page);
+        return redirect()->to(base_url() . "/clients/index/".$page);
       } else {  // Invalid - Redisplay the form
         // Generate the create view
         $data = [
@@ -297,7 +297,7 @@ class Clients extends Controller {
     if (logged_in() == false) {
       $clientID = $uri->getSegment(4);
       $_SESSION['redirect_url'] = base_url() . '/clients/delete/1/' . $clientID;
-      return redirect()->to('/login');
+      return redirect()->to(base_url() . '/login');
     }
 
     // Check to see if the user is in the appropriate group
@@ -332,7 +332,7 @@ class Clients extends Controller {
       $page = $this->request->getPost('page');
 
       // Go back to index
-      return redirect()->to("index");
+      return redirect()->to(base_url() . "/clients/index");
     } else {  // // Not post - show delete form
       // Parse the URI
       $page = $uri->setSilent()->getSegment(3, 1);
@@ -372,7 +372,7 @@ class Clients extends Controller {
       $page = $uri->setSilent()->getSegment(3, 1);
       $clientID = $uri->getSegment(4);
       $_SESSION['redirect_url'] = base_url() . '/clients/edit/' . $page . '/' . $clientID;
-      return redirect()->to('/login');
+      return redirect()->to(base_url() . '/login');
     }
 
     // Check to see if the user is in the appropriate group
@@ -415,7 +415,7 @@ class Clients extends Controller {
         ]);
 
         // Go back to index
-        return redirect()->to("index/".$page);
+        return redirect()->to(base_url() . "/clients/index/".$page);
       } else  {  // Invalid - Redisplay the form
         // Generate the view
         $data = [

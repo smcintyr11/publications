@@ -5,7 +5,7 @@ use App\Libraries\MyPager;
 use CodeIgniter\Controller;
 
 // Load the authentication helper
-helper('auth');
+helper(['url', 'auth']);
 
 class Publications extends Controller {
   /**
@@ -192,7 +192,7 @@ class Publications extends Controller {
      // Check to see if the user is logged in
      if (logged_in() == false) {
        $_SESSION['redirect_url'] = base_url() . '/publications/index';
-       return redirect()->to('/login');
+       return redirect()->to(base_url() . '/login');
 
        if (in_groups(['pubsAdmin', 'pubsRC', 'pubsAuth', 'pubsRCMan']) == false) {
          $data = [
@@ -281,7 +281,7 @@ class Publications extends Controller {
     // Check to see if the user is logged in
     if (logged_in() == false) {
       $_SESSION['redirect_url'] = base_url() . '/publications/indexDetailed';
-      return redirect()->to('/login');
+      return redirect()->to(base_url() . '/login');
 
       if (in_groups(['pubsAdmin', 'pubsRC', 'pubsAuth', 'pubsRCMan']) == false) {
         $data = [
@@ -368,7 +368,7 @@ class Publications extends Controller {
     // Check to see if the user is logged in
     if (logged_in() == false) {
       $_SESSION['redirect_url'] = base_url() . '/publications/new/1';
-      return redirect()->to('/login');
+      return redirect()->to(base_url() . '/login');
 
       if (in_groups(['pubsAdmin', 'pubsRC', 'pubsAuth', 'pubsRCMan']) == false) {
         $data = [
@@ -510,7 +510,7 @@ class Publications extends Controller {
      $page = $uri->setSilent()->getSegment(3, 1);
      $publicationID = $uri->getSegment(4);
      $_SESSION['redirect_url'] = base_url() . '/publications/edit/' . $page . '/' . $publicationID;
-     return redirect()->to('/login');
+     return redirect()->to(base_url() . '/login');
    }
 
    // Create a new Model
@@ -637,7 +637,8 @@ class Publications extends Controller {
       }
 
        // Go back to index
-       return redirect()->to("index/".$page);
+       $idx = session('publicationIndex') ?? 'index';
+       return redirect()->to(base_url() . "/publications/" . $idx . "/".$page);
      } else  {  // Invalid - Redisplay the form
        // Generate the view
        $publicationID = $this->request->getPost('publicationID');
@@ -1097,7 +1098,7 @@ public function delete() {
   if (logged_in() == false) {
     $publicationID = $uri->getSegment(4);
     $_SESSION['redirect_url'] = base_url() . '/publications/delete/1/' . $publicationID;
-    return redirect()->to('/login');
+    return redirect()->to(base_url() . '/login');
   }
 
   // Check to see if the user is in the appropriate group
@@ -1128,7 +1129,8 @@ public function delete() {
     $page = 1;
 
     // Go back to index
-    return redirect()->to("index");
+    $idx = session('publicationIndex') ?? 'index';
+    return redirect()->to(base_url() . "/publications/" . $idx . "/");
   } else {  // // Not post - show delete form
     // Parse the URI
     $page = $uri->setSilent()->getSegment(3, 1);
@@ -1170,7 +1172,7 @@ public function view() {
     $page = $uri->setSilent()->getSegment(3, 1);
     $publicationID = $uri->getSegment(4);
     $_SESSION['redirect_url'] = base_url() . '/publications/view/' . $page . '/' . $publicationID;
-    return redirect()->to('/login');
+    return redirect()->to(base_url() . '/login');
   }
 
   // Get the model

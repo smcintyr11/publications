@@ -4,8 +4,8 @@ use App\Models\KeywordModel;
 use App\Libraries\MyPager;
 use CodeIgniter\Controller;
 
-// Load the authentication helper
-helper('auth');
+// Load the helpers
+helper(['url', 'auth']);
 
 class Keywords extends Controller {
   /**
@@ -129,7 +129,7 @@ class Keywords extends Controller {
     // Check to see if the user is logged in
     if (logged_in() == false) {
       $_SESSION['redirect_url'] = base_url() . '/keywords/index';
-      return redirect()->to('/login');
+      return redirect()->to(base_url() . '/login');
 
       if (in_groups(['pubsAdmin', 'pubsRC', 'pubsAuth', 'pubsRCMan']) == false) {
         $data = [
@@ -210,7 +210,7 @@ class Keywords extends Controller {
     // Check to see if the user is logged in
     if (logged_in() == false) {
       $_SESSION['redirect_url'] = base_url() . '/keywords/new/1';
-      return redirect()->to('/login');
+      return redirect()->to(base_url() . '/login');
 
       if (in_groups(['pubsAdmin', 'pubsRC', 'pubsAuth', 'pubsRCMan']) == false) {
         $data = [
@@ -252,7 +252,7 @@ class Keywords extends Controller {
         ]);
 
         // Go back to index
-        return redirect()->to("index/".$page);
+        return redirect()->to(base_url() . "/keywords/index/".$page);
       } else {  // Invalid - Redisplay the form
         // Generate the create view
         $data = [
@@ -301,7 +301,7 @@ class Keywords extends Controller {
     if (logged_in() == false) {
       $keywordID = $uri->getSegment(4);
       $_SESSION['redirect_url'] = base_url() . '/keywords/delete/1/' . $keywordID;
-      return redirect()->to('/login');
+      return redirect()->to(base_url() . '/login');
     }
 
     // Check to see if the user is in the appropriate group
@@ -336,7 +336,7 @@ class Keywords extends Controller {
       $page = $this->request->getPost('page');
 
       // Go back to index
-      return redirect()->to("index");
+      return redirect()->to(base_url() . "/keywords/index");
     } else {  // // Not post - show delete form
       // Parse the URI
       $page = $uri->setSilent()->getSegment(3, 1);
@@ -375,8 +375,8 @@ class Keywords extends Controller {
     if (logged_in() == false) {
       $page = $uri->setSilent()->getSegment(3, 1);
       $keywordID = $uri->getSegment(4);
-      $_SESSION['redirect_url'] = base_url() . '/keywords/edit/' . $page . '/' . $keywordID;      
-      return redirect()->to('/login');
+      $_SESSION['redirect_url'] = base_url() . '/keywords/edit/' . $page . '/' . $keywordID;
+      return redirect()->to(base_url() . '/login');
     }
 
     // Check to see if the user is in the appropriate group
@@ -421,7 +421,7 @@ class Keywords extends Controller {
         ]);
 
         // Go back to index
-        return redirect()->to("index/".$page);
+        return redirect()->to(base_url() . "/keywords/index/".$page);
       } else  {  // Invalid - Redisplay the form
         // Generate the view
         $data = [

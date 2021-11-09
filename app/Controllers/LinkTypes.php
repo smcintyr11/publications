@@ -4,8 +4,8 @@ use App\Models\LinkTypeModel;
 use App\Libraries\MyPager;
 use CodeIgniter\Controller;
 
-// Load the authentication helper
-helper('auth');
+// Load the helpers
+helper(['url', 'auth']);
 
 class LinkTypes extends Controller {
   /**
@@ -124,7 +124,7 @@ class LinkTypes extends Controller {
     // Check to see if the user is logged in
     if (logged_in() == false) {
       $_SESSION['redirect_url'] = base_url() . '/linkTypes/index';
-      return redirect()->to('/login');
+      return redirect()->to(base_url() . '/login');
 
       if (in_groups(['pubsAdmin', 'pubsRC', 'pubsAuth', 'pubsRCMan']) == false) {
         $data = [
@@ -205,7 +205,7 @@ class LinkTypes extends Controller {
     // Check to see if the user is logged in
     if (logged_in() == false) {
       $_SESSION['redirect_url'] = base_url() . '/linkTypes/new/1';
-      return redirect()->to('/login');
+      return redirect()->to(base_url() . '/login');
     }
 
     // Check to see if the user is in the appropriate group
@@ -246,7 +246,7 @@ class LinkTypes extends Controller {
         ]);
 
         // Go back to index
-        return redirect()->to("index/".$page);
+        return redirect()->to(base_url() . "/linkTypes/index/".$page);
       } else {  // Invalid - Redisplay the form
         // Generate the create view
         $data = [
@@ -295,7 +295,7 @@ class LinkTypes extends Controller {
     if (logged_in() == false) {
       $linkTypeID = $uri->getSegment(4);
       $_SESSION['redirect_url'] = base_url() . '/linkTypes/delete/1/' . $linkTypeID;
-      return redirect()->to('/login');
+      return redirect()->to(base_url() . '/login');
     }
 
     // Check to see if the user is in the appropriate group
@@ -330,7 +330,7 @@ class LinkTypes extends Controller {
       $page = $this->request->getPost('page');
 
       // Go back to index
-      return redirect()->to("index");
+      return redirect()->to(base_url() . "/linkTypes/index");
     } else {  // // Not post - show delete form
       // Parse the URI
       $page = $uri->setSilent()->getSegment(3, 1);
@@ -369,8 +369,8 @@ class LinkTypes extends Controller {
     if (logged_in() == false) {
       $page = $uri->setSilent()->getSegment(3, 1);
       $linkTypeID = $uri->getSegment(4);
-      $_SESSION['redirect_url'] = base_url() . '/linkTypes/edit/' . $page . '/' . $linkTypeID;      
-      return redirect()->to('/login');
+      $_SESSION['redirect_url'] = base_url() . '/linkTypes/edit/' . $page . '/' . $linkTypeID;
+      return redirect()->to(base_url() . '/login');
     }
 
     // Check to see if the user is in the appropriate group
@@ -413,7 +413,7 @@ class LinkTypes extends Controller {
         ]);
 
         // Go back to index
-        return redirect()->to("index/".$page);
+        return redirect()->to(base_url() . "/linkTypes/index/".$page);
       } else  {  // Invalid - Redisplay the form
         // Generate the view
         $data = [

@@ -4,8 +4,8 @@ use App\Models\ReportTypeModel;
 use App\Libraries\MyPager;
 use CodeIgniter\Controller;
 
-// Load the authentication helper
-helper('auth');
+// Load the helpers
+helper(['url', 'auth']);
 
 class ReportTypes extends Controller {
   /**
@@ -129,7 +129,7 @@ class ReportTypes extends Controller {
     // Check to see if the user is logged in
     if (logged_in() == false) {
       $_SESSION['redirect_url'] = base_url() . '/reportTypes/index';
-      return redirect()->to('/login');
+      return redirect()->to(base_url() . '/login');
 
       if (in_groups(['pubsAdmin', 'pubsRC', 'pubsAuth', 'pubsRCMan']) == false) {
         $data = [
@@ -210,7 +210,7 @@ class ReportTypes extends Controller {
     // Check to see if the user is logged in
     if (logged_in() == false) {
       $_SESSION['redirect_url'] = base_url() . '/reportTypes/new/1';
-      return redirect()->to('/login');
+      return redirect()->to(base_url() . '/login');
     }
 
     // Check to see if the user is in the appropriate group
@@ -253,7 +253,7 @@ class ReportTypes extends Controller {
         ]);
 
         // Go back to index
-        return redirect()->to("index/".$page);
+        return redirect()->to(base_url() . "/reportTypes/index/".$page);
       } else {  // Invalid - Redisplay the form
         // Generate the create view
         $data = [
@@ -302,7 +302,7 @@ class ReportTypes extends Controller {
     if (logged_in() == false) {
       $reportTypeID = $uri->getSegment(4);
       $_SESSION['redirect_url'] = base_url() . '/reportTypes/delete/1/' . $reportTypeID;
-      return redirect()->to('/login');
+      return redirect()->to(base_url() . '/login');
     }
 
     // Check to see if the user is in the appropriate group
@@ -337,7 +337,7 @@ class ReportTypes extends Controller {
       $page = $this->request->getPost('page');
 
       // Go back to index
-      return redirect()->to("index");
+      return redirect()->to(base_url() . "/reportTypes/index");
     } else {  // // Not post - show delete form
       // Parse the URI
       $page = $uri->setSilent()->getSegment(3, 1);
@@ -377,7 +377,7 @@ class ReportTypes extends Controller {
       $page = $uri->setSilent()->getSegment(3, 1);
       $reportTypeID = $uri->getSegment(4);
       $_SESSION['redirect_url'] = base_url() . '/reportTypes/edit/' . $page . '/' . $reportTypeID;
-      return redirect()->to('/login');
+      return redirect()->to(base_url() . '/login');
     }
 
     // Check to see if the user is in the appropriate group
@@ -422,7 +422,7 @@ class ReportTypes extends Controller {
         ]);
 
         // Go back to index
-        return redirect()->to("index/".$page);
+        return redirect()->to(base_url() . "/reportTypes/index/".$page);
       } else  {  // Invalid - Redisplay the form
         // Generate the view
         $data = [
