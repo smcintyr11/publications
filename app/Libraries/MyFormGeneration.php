@@ -670,10 +670,10 @@ class MyFormGeneration {
    // Generate the HTML
   $html = '<td>';
   if ($renderView) {
-      $html = $html . '<a href="/' . $controller . '/view/' . $page . '/' . $id . '" class="btn btn-success m-1 far fa-eye"></a>';
+      $html = $html . '<a href="' base_url() . '/' . $controller . '/view/' . $page . '/' . $id . '" class="btn btn-success m-1 far fa-eye"></a>';
   }
   if ($renderEdit) {
-      $html = $html . '<a href="/' . $controller . '/edit/' . $page . '/' . $id . '" class="btn btn-info m-1 fas fa-edit';
+      $html = $html . '<a href="' base_url() . '/' . $controller . '/edit/' . $page . '/' . $id . '" class="btn btn-info m-1 fas fa-edit';
       if ($enableEdit == false) {
         $html = $html . ' disabled';
       }
@@ -683,7 +683,7 @@ class MyFormGeneration {
     if ($renderView) {
       $html = $html . "<br>";
     }
-    $html = $html . ' <a href="/' . $controller . '/delete/1/' . $id . '" class="btn btn-danger m-1 fas fa-trash-alt';
+    $html = $html . ' <a href="' base_url() . '/' . $controller . '/delete/1/' . $id . '" class="btn btn-danger m-1 fas fa-trash-alt';
     if ($enableDelete == false) {
       $html = $html . ' disabled';
     }
