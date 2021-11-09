@@ -11,6 +11,9 @@ function checkReportType(event) {
   var reportType = $("#reportTypeN").val();
   var reportTypeID = $("#reportTypeNID").val();
 
+  a = myBaseurl + "/reportTypes/searchReportTypeID";
+  alert(a);
+  
   // Check if reportType is not empty
   if ((reportType != "") && (reportTypeID == "")) {
     // Stop saving temporarily
