@@ -1,4 +1,6 @@
 <?php namespace App\Libraries;
+// Load the authentication helper
+helper('url');
 
 class MyFormGeneration {
 
