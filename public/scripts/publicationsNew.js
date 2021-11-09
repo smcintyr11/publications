@@ -97,7 +97,7 @@ function addReportType() {
 
 $(document).ready(function(){
   // Report Type autocomplete
-  lookup("#reportTypeN", "#reportTypeNID", myBaseurl + "/reportTypes/searchReportType");
+  lookup("#reportTypeN", "#reportTypeNID", "/reportTypes/searchReportType");
 
   // Intercept form submition
   const form = document.getElementById('frmNewPublication');
