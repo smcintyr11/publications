@@ -599,7 +599,6 @@ class People extends Controller {
       $db = \Config\Database::connect('publications');
       $builder = $db->table('vPeopleDropDown');
       $builder->select('PersonID, DisplayName');
-      $builder->where('deleted_at', null);
       $builder->where('DisplayName', $searchString);
       $builder->orWhere('DisplayName', $searchString2);
 
