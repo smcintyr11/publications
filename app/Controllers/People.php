@@ -555,7 +555,6 @@ class People extends Controller {
     $builder = $db->table('People');
     $builder->join('vPeopleDropDown', 'People.PersonID = vPeopleDropDown.PersonID', 'left');
     $builder->select('People.PersonID, vPeopleDropDown.DisplayName');
-    $builder->where('deleted_at', null);
     $builder->like('People.DisplayName', $searchString);
     $builder->orLike('FirstName', $searchString);
     $builder->orLike('LastName', $searchString);
@@ -632,7 +631,6 @@ class People extends Controller {
     $db = \Config\Database::connect('publications');
     $builder = $db->table('vPeopleDropDown');
     $builder->select('PersonID');
-    $builder->where('deleted_at', null);
     $builder->where('DisplayName', $searchString);
     $builder->orWhere('DisplayName', $searchString2);
 
@@ -682,7 +680,6 @@ class People extends Controller {
     $db = \Config\Database::connect('publications');
     $builder = $db->table('vPeopleDropDown');
     $builder->select('DisplayName');
-    $builder->where('deleted_at', null);
     $builder->where('PersonID', $searchString);
 
     // Run the query
