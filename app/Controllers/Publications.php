@@ -584,6 +584,7 @@ class Publications extends Controller {
        // Save
        $model->save([
          'ModifiedBy' => user_id(),
+         'Modified' => date("Y-m-d H:i:s"),
          'PublicationID' => $this->request->getPost('publicationID'), // **
          'PrimaryTitle' => $this->request->getPost('primaryTitle'), // **
          'SecondaryTitle' => $this->request->getPost('secondaryTitle') == "" ? null : $this->request->getPost('secondaryTitle'),

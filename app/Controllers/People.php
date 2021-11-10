@@ -497,7 +497,7 @@ class People extends Controller {
     $model = new PersonModel();
 
     // Get the POST variables
-    $userid = $this->request->getPost('userid');
+    $userid = user_id();
     $lastName = $this->request->getPost('lastName');
     $firstName = $this->request->getPost('firstName');
     $displayName = $this->request->getPost('displayName');
