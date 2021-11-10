@@ -42,6 +42,20 @@
 
  <!-- Main Form -->
  <div class="container my-3 py-3">
+   <div class="form-row">
+     <div class="col-6">
+       <?= MyFormGeneration::generateDeleteOptions(false, 'publications', 'publication', $page, session('publicationIndex') ?? 'index'); ?>
+     </div>
+     <?php
+       $version = "Created by " . $publication['CreatedBy'] . " on " . $publication['Created'] . "<br>";
+       if (is_null($publication['Modified'])) {
+         $version = $version . "Not modified";
+       } else {
+         $version = $version . "Modified by " . $publication['ModifiedBy'] . " on " . $publication['Modified'];
+       }
+       echo (MyFormGeneration::generateItalicText("viewPublicationsVersion", $version, 6, "right"));
+       ?>
+   </div>
    <h1><?= esc($title); ?></h1>
 
    <?php
@@ -439,8 +453,6 @@
        </div>
 
      </div>
-
-     <?= MyFormGeneration::generateDeleteOptions(false, 'publications', 'publication', $page, session('publicationIndex') ?? 'index'); ?>
 
    </form>
  </div>

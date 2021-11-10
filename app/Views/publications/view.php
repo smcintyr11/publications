@@ -42,7 +42,21 @@
 
  <!-- Main Form -->
  <div class="container my-3 py-3">
-   <a class="btn btn-info my-3" href="<?= base_url() ?>/publications/<?= session('publicationIndex') ?? 'index' ?>/<?= $page ?>">Back to Publications</a>
+   <div class="form-row">
+     <div class="col-6">
+       <a class="btn btn-info my-3" href="<?= base_url() ?>/publications/<?= session('publicationIndex') ?? 'index' ?>/<?= $page ?>">Back to Publications</a>
+     </div>
+     <?php
+       $version = "Created by " . $publication['CreatedBy'] . " on " . $publication['Created'] . "<br>";
+       if (is_null($publication['Modified'])) {
+         $version = $version . "Not modified";
+       } else {
+         $version = $version . "Modified by " . $publication['ModifiedBy'] . " on " . $publication['Modified'];
+       }
+       echo (MyFormGeneration::generateItalicText("viewPublicationsVersion", $version, 6, "right"));
+       ?>
+   </div>
+
    <h1><?= esc($title); ?></h1>
 
    <?php
