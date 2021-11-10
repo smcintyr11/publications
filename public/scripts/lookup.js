@@ -1,9 +1,12 @@
+// Global Variable
+var baseUrl = 'http://s-dev-drupal/publications';
+
 function lookup(lookupField, lookupID, url) {
   $(lookupField).autocomplete({
     minLength: 1,
     source: function(request, response) {
       $.ajax({
-        url: location.protocol + "//" + location.host + url,
+        url: baseUrl + url,
         datatype: "json",
         data: {
           term: request.term,

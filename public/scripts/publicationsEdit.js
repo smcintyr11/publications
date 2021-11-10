@@ -1360,34 +1360,34 @@ function addNewPerson(callback) {
 
 $(document).ready(function(){
   // Report Type autocomplete
-  lookup("#reportType", "#reportTypeID", baseurl + "/reportTypes/searchReportType");
+  lookup("#reportType", "#reportTypeID", "/reportTypes/searchReportType");
 
   // Assigned to autocomplete
-  lookup("#assignedTo", "#statusPersonID", baseurl + "/users/searchPerson");
+  lookup("#assignedTo", "#statusPersonID", "/users/searchPerson");
 
 	// Fiscal Year autocomplete
-  lookup("#fiscalYear", "#fiscalYearID", baseurl + "/fiscalYears/searchFiscalYear");
+  lookup("#fiscalYear", "#fiscalYearID", "/fiscalYears/searchFiscalYear");
 
   // Organization autocomplete
-  lookup("#organization", "#organizationID", baseurl + "/organizations/searchOrganization");
+  lookup("#organization", "#organizationID", "/organizations/searchOrganization");
 
   // Author autocomplete
-  lookup("#newAuthor", "#authorID", baseurl + "/people/searchPerson");
+  lookup("#newAuthor", "#authorID", "/people/searchPerson");
 
   // Reviewer autocomplete
-  lookup("#newReviewer", "#reviewerID", baseurl + "/people/searchPerson");
+  lookup("#newReviewer", "#reviewerID", "/people/searchPerson");
 
   // Keyword autocomplete
-  lookup("#newKeyword", "#keywordID", baseurl + "/keywords/searchKeyword");
+  lookup("#newKeyword", "#keywordID", "/keywords/searchKeyword");
 
   // Publisher autocomplete
-  lookup("#client", "#clientID", baseurl + "/clients/searchClient");
+  lookup("#client", "#clientID", "/clients/searchClient");
 
   // Journal autocomplete
-  lookup("#journal", "#journalID", baseurl + "/journals/searchJournal");
+  lookup("#journal", "#journalID", "/journals/searchJournal");
 
   // Person Modal Organization lookup
-  lookup("#newPOrganization", "#newPOrganizationID", baseurl + "/organizations/searchOrganization");
+  lookup("#newPOrganization", "#newPOrganizationID", "/organizations/searchOrganization");
 
   // Add author function
   $("#btnAddAuthor").click(function(){

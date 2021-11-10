@@ -1,6 +1,5 @@
 // Global Variable
-//var myBaseurl = 'http://s-dev-drupal/publications';
-var myBaseurl = '';
+var baseUrl = 'http://s-dev-drupal/publications';
 
 // Checks to see if the ReportType textbox is filled in, and ReportTypeID
 // is empty.  If so, that means what was typed in the ReportType field, does
@@ -19,7 +18,7 @@ function checkReportType(event) {
     // Check if the reportType has an reportTypeID (e.g. the user didn't
     // select the reportType from the drop down)
     $.ajax({
-        url: myBaseurl + "/reportTypes/searchReportTypeID",
+        url: baseUrl + "/reportTypes/searchReportTypeID",
         type: "POST",
         data: {
           reportType: reportType,
@@ -59,7 +58,7 @@ function addReportType() {
 
   // Add the report type
   $.ajax({
-      url: myBaseurl + "/reportTypes/add",
+      url: baseUrl + "/reportTypes/add",
       type: "POST",
       data: {
         reportType: $("#newReportType").val(),
