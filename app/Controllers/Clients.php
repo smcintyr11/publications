@@ -1,6 +1,7 @@
 <?php namespace App\Controllers;
 
 use App\Models\ClientModel;
+use App\Models\UserModel;
 use App\Libraries\MyPager;
 use CodeIgniter\Controller;
 
@@ -516,7 +517,7 @@ class Clients extends Controller {
 
     // Get the model
     $model = new ClientModel();
-    $userModel = new UsersModel();
+    $userModel = new UserModel();
 
     // Set the session last page
     $session = session();

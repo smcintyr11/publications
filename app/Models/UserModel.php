@@ -2,7 +2,7 @@
 
 use CodeIgniter\Model;
 
-class UsersModel extends Model {
+class UserModel extends Model {
   /**
    * Name: getUser
    * Purpose: Gets the display name from the users.users table based on the
