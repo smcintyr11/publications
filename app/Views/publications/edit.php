@@ -519,7 +519,7 @@
           echo (MyFormGeneration::generateHiddenInput('statusPersonID',
             set_value('statusPersonID', $publication['StatusPersonID'])));
           echo (MyFormGeneration::generateIDTextBox("assignedTo",
-            $publication['StatusPerson'], "Assigned To"));
+            $publication['AssignedTo'], "Assigned To"));
 
           echo (MyFormGeneration::generateIDTextBox("statusDueDate",
             $publication['StatusDueDate'], "Due Date"));
