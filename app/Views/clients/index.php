@@ -38,7 +38,7 @@
         <?php if (! empty($clients) && is_array($clients)) : ?>
           <?php foreach ($clients as $client): ?>
             <tr>
-              <?= MyFormGeneration::generateIndexRowButtons("clients", $page, $client->ClientID); ?>
+              <?= MyFormGeneration::generateIndexRowButtons("clients", $page, $client->ClientID, in_groups(['pubsAdmin','pubsRC']), in_groups(['pubsAdmin','pubsRC']), true, true, false, true); ?>
               <td><?= $client->ClientID; ?></td>
               <td><?= $client->Client; ?></td>
             </tr>
