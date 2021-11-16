@@ -1,7 +1,7 @@
 <?php namespace App\Controllers;
 
 use App\Models\ClientModel;
-use App\Models\UserModel;
+use App\Libraries\Users;
 use App\Libraries\MyPager;
 use CodeIgniter\Controller;
 
@@ -517,7 +517,6 @@ class Clients extends Controller {
 
     // Get the model
     $model = new ClientModel();
-    $userModel = new UserModel();
 
     // Set the session last page
     $session = session();
@@ -532,8 +531,8 @@ class Clients extends Controller {
     $data = [
       'title' => 'View Client / Publisher',
       'client' => $client,
-      'createdBy' => $userModel->getUser($client['CreatedBy']),
-      'modifiedBy' => $userModel->getUser($client['ModifiedBy']),
+      'createdBy' => Users::getUser($client['CreatedBy']),
+      'modifiedBy' => Users::getUser($client['ModifiedBy']),
       'page' => $page,
     ];
     echo view('templates/header.php', $data);

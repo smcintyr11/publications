@@ -1,8 +1,6 @@
-<?php namespace App\Models;
+<?php namespace App\Libraries;
 
-use CodeIgniter\Model;
-
-class UserModel extends Model {
+class Users {
   /**
    * Name: getUser
    * Purpose: Gets the display name from the users.users table based on the
@@ -13,7 +11,7 @@ class UserModel extends Model {
    *
    * Returns: None
    */
-  public function getUser($ID) {
+  public static function getUser($ID) {
     if (is_null($ID)) {
       return null;
     }
@@ -48,7 +46,7 @@ class UserModel extends Model {
    *
    * Returns: None
    */
-  private function getUserCount($ID) {
+  private static function getUserCount($ID) {
     if (is_null($ID)) {
       return 0;
     }
