@@ -258,7 +258,6 @@ class Publications extends Controller {
        'statuses' => $this->getStatuses(),
        'costCentres' => $this->getCostCentres(),
        'page' => $page,
-       'debug' => in_groups([1]),
      ];
 
      // Generate the view
