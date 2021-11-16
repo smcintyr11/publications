@@ -430,8 +430,12 @@
         <button type="button" data-toggle="modal" data-target="#newReportTypeModal" id="btnNewReportType" />
       </div>
 
-      <?= MyFormGeneration::generateCheckBox("rushPublication",
-          set_value('rushPublication', $publication['RushPublication']), "Rush Publication"); ?>
+      <?php
+        if (in_groups(['pubsAdmin','pubsRC'])) {
+          echo MyFormGeneration::generateCheckBox("rushPublication",
+              set_value('rushPublication', $publication['RushPublication']), "Rush Publication");
+        }
+       ?>
 
       <?= MyFormGeneration::generateTextBox("reportNumber",
         set_value('reportNumber', $publication['ReportNumber']),
