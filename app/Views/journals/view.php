@@ -7,7 +7,7 @@
     </div>
     <?php
       $version = "Created by " . $createdBy . " on " . $journal['Created'] . "<br>";
-      if (is_null($client['Modified'])) {
+      if (is_null($journal['Modified'])) {
         $version = $version . "Not modified";
       } else {
         $version = $version . "Modified by " . $modifiedBy . " on " . $journal['Modified'];
@@ -15,7 +15,7 @@
       echo (MyFormGeneration::generateItalicText("Version", $version, 6, "right"));
       ?>
   </div>
-  
+
   <h1><?= esc($title); ?></h1>
 
   <?= MyFormGeneration::generateIDTextBox("journalID",

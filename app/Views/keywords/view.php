@@ -7,7 +7,7 @@
     </div>
     <?php
       $version = "Created by " . $createdBy . " on " . $keyword['Created'] . "<br>";
-      if (is_null($client['Modified'])) {
+      if (is_null($keyword['Modified'])) {
         $version = $version . "Not modified";
       } else {
         $version = $version . "Modified by " . $modifiedBy . " on " . $keyword['Modified'];

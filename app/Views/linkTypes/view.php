@@ -7,7 +7,7 @@
     </div>
     <?php
       $version = "Created by " . $createdBy . " on " . $linkType['Created'] . "<br>";
-      if (is_null($client['Modified'])) {
+      if (is_null($linkType['Modified'])) {
         $version = $version . "Not modified";
       } else {
         $version = $version . "Modified by " . $modifiedBy . " on " . $linkType['Modified'];
