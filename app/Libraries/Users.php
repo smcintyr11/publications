@@ -15,7 +15,7 @@ class Users {
     if (is_null($ID)) {
       return null;
     }
-    if ($this->getUserCount($ID) > 0) {
+    if (Users::getUserCount($ID) > 0) {
       // Load the query builder
       $db = \Config\Database::connect();
       $builder = $db->table('users');
