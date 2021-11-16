@@ -493,6 +493,55 @@ class Clients extends Controller {
   }
 
   /**
+   * Name: view
+   * Purpose: Generates the view page
+   *
+   * Parameters: None
+   *
+   * Returns: None
+   */
+  public function view() {
+    // Get the URI service
+    $uri = service('uri');
+
+    // Load the helper functions
+    helper(['auth']);
+
+    // Check to see if the user is logged in
+    if (logged_in() == false) {
+      $clientID = $uri->getSegment(4);
+      $_SESSION['redirect_url'] = base_url() . '/clients/view/1/' . $clientID;
+      return redirect()->to(base_url() . '/login');
+    }
+
+    // Get the model
+    $model = new ClientModel();
+    $userModel = new UsersModel();
+
+    // Set the session last page
+    $session = session();
+    $session->set('lastPage', 'Clients::view');
+
+    // Parse the URI
+    $page = $uri->setSilent()->getSegment(3, 1);
+    $clientID = $uri->getSegment(4);
+
+    // Generate the  view
+    $client = $model->getClient($clientID);
+    $data = [
+      'title' => 'View Client / Publisher',
+      'client' => $client,
+      'createdBy' => $userModel->getUser($client['CreatedBy']),
+      'modifiedBy' => $userModel->getUser($client['ModifiedBy']),
+      'page' => $page,
+    ];
+    echo view('templates/header.php', $data);
+    echo view('templates/menu.php', $data);
+    echo view('clients/view.php', $data);
+    echo view('templates/footer.php', $data);
+  }
+
+  /**
    * Name: searchClient
    * Purpose: Uses a query variable passed to the URL to search for a client
    *  that is like the search term.
