@@ -22,11 +22,15 @@ class PersonModel extends Model {
   public function getPerson(int $personID) {
     // Create the query
     $db = \Config\Database::connect('publications');
-    $query = $db->query('SELECT p.PersonID, p.FirstName, p.LastName, p.DisplayName, p.OrganizationID, o.Organization FROM People AS p LEFT JOIN Organizations AS o ON p.OrganizationID = o.OrganizationID WHERE p.PersonID = ' . $personID);
+    $query = $db->query('SELECT p.Created, p.CreatedBy, p.Modified, p.ModifiedBy, p.PersonID, p.FirstName, p.LastName, p.DisplayName, p.OrganizationID, o.Organization FROM People AS p LEFT JOIN Organizations AS o ON p.OrganizationID = o.OrganizationID WHERE p.PersonID = ' . $personID);
 
     // Create the result
     foreach ($query->getResult() as $row) {
       $result = array(
+        "Created" => $row->Created,
+        "CreatedBy" => $row->CreatedBy,
+        "Modified" => $row->Modified,
+        "ModifiedBy" => $row->ModifiedBy,
         "PersonID" => $row->PersonID,
         "FirstName" => $row->FirstName,
         "LastName" => $row->LastName,
