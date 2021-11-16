@@ -38,7 +38,7 @@
          <?php if (! empty($linkTypes) && is_array($linkTypes)) : ?>
            <?php foreach ($linkTypes as $linkType): ?>
              <tr>
-               <?= MyFormGeneration::generateIndexRowButtons("linkTypes", $page, $linkType->LinkTypeID); ?>
+               <?= MyFormGeneration::generateIndexRowButtons("linkTypes", $page, $linkType->LinkTypeID, in_groups(['pubsAdmin','pubsRC']), in_groups(['pubsAdmin','pubsRC']), true, true, false, true); ?>
                <td><?= $linkType->LinkTypeID; ?></td>
                <td><?= $linkType->LinkType; ?></td>
              </tr>

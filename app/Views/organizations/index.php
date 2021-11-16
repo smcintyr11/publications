@@ -38,7 +38,7 @@
         <?php if (! empty($organizations) && is_array($organizations)) : ?>
           <?php foreach ($organizations as $organization): ?>
             <tr>
-              <?= MyFormGeneration::generateIndexRowButtons("organizations", $page, $organization->OrganizationID); ?>
+              <?= MyFormGeneration::generateIndexRowButtons("organizations", $page, $organization->OrganizationID, in_groups(['pubsAdmin','pubsRC']), in_groups(['pubsAdmin','pubsRC']), true, true, false, true); ?>
               <td><?= $organization->OrganizationID; ?></td>
               <td><?= $organization->Organization; ?></td>
             </tr>

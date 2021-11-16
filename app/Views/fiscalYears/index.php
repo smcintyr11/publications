@@ -39,7 +39,7 @@
          <?php if (! empty($fiscalYears) && is_array($fiscalYears)) : ?>
            <?php foreach ($fiscalYears as $fiscalYear): ?>
              <tr>
-               <?= MyFormGeneration::generateIndexRowButtons("fiscalYears", $page, $fiscalYear->FiscalYearID); ?>
+               <?= MyFormGeneration::generateIndexRowButtons("fiscalYears", $page, $fiscalYear->FiscalYearID, in_groups(['pubsAdmin','pubsRC']), in_groups(['pubsAdmin','pubsRC']), true, true, false, true); ?>
                <td><?= $fiscalYear->FiscalYearID; ?></td>
                <td><?= $fiscalYear->FiscalYear; ?></td>
              </tr>

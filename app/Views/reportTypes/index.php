@@ -45,7 +45,7 @@
          <?php if (! empty($reportTypes) && is_array($reportTypes)) : ?>
            <?php foreach ($reportTypes as $reportType): ?>
              <tr>
-               <?= MyFormGeneration::generateIndexRowButtons("reportTypes", $page, $reportType->ReportTypeID); ?>
+               <?= MyFormGeneration::generateIndexRowButtons("reportTypes", $page, $reportType->ReportTypeID, in_groups(['pubsAdmin','pubsRC']), in_groups(['pubsAdmin','pubsRC']), true, true, false, true); ?>
                <td><?= $reportType->ReportTypeID; ?></td>
                <td><?= $reportType->ReportType; ?></td>
                <td><?= $reportType->Abbreviation; ?></td>

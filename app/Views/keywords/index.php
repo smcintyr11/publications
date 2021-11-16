@@ -47,7 +47,7 @@
         <?php if (! empty($keywords) && is_array($keywords)) : ?>
           <?php foreach ($keywords as $keyword): ?>
             <tr>
-              <?= MyFormGeneration::generateIndexRowButtons("keywords", $page, $keyword->KeywordID); ?>
+              <?= MyFormGeneration::generateIndexRowButtons("keywords", $page, $keyword->KeywordID, in_groups(['pubsAdmin','pubsRC']), in_groups(['pubsAdmin','pubsRC']), true, true, false, true); ?>
               <td><?= $keyword->KeywordID; ?></td>
               <td><?= $keyword->KeywordEnglish; ?></td>
               <td><?= $keyword->KeywordFrench; ?></td>

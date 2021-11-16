@@ -40,7 +40,7 @@
         <?php if (! empty($journals) && is_array($journals)) : ?>
           <?php foreach ($journals as $journal): ?>
             <tr>
-              <?= MyFormGeneration::generateIndexRowButtons("journals", $page, $journal->JournalID); ?>
+              <?= MyFormGeneration::generateIndexRowButtons("journals", $page, $journal->JournalID, in_groups(['pubsAdmin','pubsRC']), in_groups(['pubsAdmin','pubsRC']), true, true, false, true); ?>
               <td><?= $journal->JournalID; ?></td>
               <td><?= $journal->Journal; ?></td>
             </tr>

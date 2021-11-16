@@ -46,7 +46,7 @@
         <?php if (! empty($costCentres) && is_array($costCentres)) : ?>
           <?php foreach ($costCentres as $costCentre): ?>
             <tr>
-              <?= MyFormGeneration::generateIndexRowButtons("costCentres", $page, $costCentre->CostCentreID); ?>
+              <?= MyFormGeneration::generateIndexRowButtons("costCentres", $page, $costCentre->CostCentreID, in_groups(['pubsAdmin','pubsRC']), in_groups(['pubsAdmin','pubsRC']), true, true, false, true); ?>
               <td><?= $costCentre->CostCentreID; ?></td>
               <td><?= $costCentre->CostCentre; ?></td>
               <td><?= $costCentre->Description; ?></td>

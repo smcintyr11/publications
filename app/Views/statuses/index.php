@@ -52,7 +52,7 @@
          <?php if (! empty($statuses) && is_array($statuses)) : ?>
            <?php foreach ($statuses as $status): ?>
              <tr>
-               <?= MyFormGeneration::generateIndexRowButtons("statuses", $page, $status->StatusID); ?>
+               <?= MyFormGeneration::generateIndexRowButtons("statuses", $page, $status->StatusID, in_groups(['pubsAdmin','pubsRC']), in_groups(['pubsAdmin','pubsRC']), true, true, false, true); ?>
                <td><?= $status->StatusID; ?></td>
                <td><?= $status->Status; ?></td>
                <td><?= $status->ExpectedDuration; ?></td>

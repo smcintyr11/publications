@@ -60,7 +60,7 @@
          <?php if (! empty($people) && is_array($people)) : ?>
            <?php foreach ($people as $person): ?>
              <tr>
-               <?= MyFormGeneration::generateIndexRowButtons("people", $page, $person->PersonID); ?>
+               <?= MyFormGeneration::generateIndexRowButtons("people", $page, $person->PersonID, in_groups(['pubsAdmin','pubsRC']), in_groups(['pubsAdmin','pubsRC']), true, true, false, true); ?>
                <td><?= $person->PersonID ?></td>
                <td><?= $person->DisplayName ?></td>
                <td><?= $person->LastName ?></td>
