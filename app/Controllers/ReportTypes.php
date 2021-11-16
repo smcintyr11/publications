@@ -1,6 +1,7 @@
 <?php namespace App\Controllers;
 
 use App\Models\ReportTypeModel;
+use App\Libraries\Users;
 use App\Libraries\MyPager;
 use CodeIgniter\Controller;
 
@@ -451,6 +452,51 @@ class ReportTypes extends Controller {
       echo view('reportTypes/edit.php', $data);
       echo view('templates/footer.php', $data);
     }
+  }
+
+  /**
+   * Name: view
+   * Purpose: Generates the view page
+   *
+   * Parameters: None
+   *
+   * Returns: None
+   */
+  public function view() {
+    // Get the URI service
+    $uri = service('uri');
+
+    // Check to see if the user is logged in
+    if (logged_in() == false) {
+      $reportTypeID = $uri->getSegment(4);
+      $_SESSION['redirect_url'] = base_url() . '/reportTypes/view/1/' . $reportTypeID;
+      return redirect()->to(base_url() . '/login');
+    }
+
+    // Get the report type model
+    $model = new ReportTypeModel();
+
+    // Set the session last page
+    $session = session();
+    $session->set('lastPage', 'ReportTypes::view');
+
+    // Parse the URI
+    $page = $uri->setSilent()->getSegment(3, 1);
+    $reportTypeID = $uri->getSegment(4);
+
+    // Generate the view
+    $reportType = $model->getReportType($reportTypeID);
+    $data = [
+      'title' => 'View Report Type',
+      'reportType' => $reportType,
+      'createdBy' => Users::getUser($reportType['CreatedBy']),
+      'modifiedBy' => Users::getUser($reportType['ModifiedBy']),
+      'page' => $page,
+    ];
+    echo view('templates/header.php', $data);
+    echo view('templates/menu.php', $data);
+    echo view('reportTypes/view.php', $data);
+    echo view('templates/footer.php', $data);
   }
 
   /**

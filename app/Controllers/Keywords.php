@@ -1,6 +1,7 @@
 <?php namespace App\Controllers;
 
 use App\Models\KeywordModel;
+use App\Libraries\Users;
 use App\Libraries\MyPager;
 use CodeIgniter\Controller;
 
@@ -450,6 +451,51 @@ class Keywords extends Controller {
       echo view('keywords/edit.php', $data);
       echo view('templates/footer.php', $data);
     }
+  }
+
+  /**
+   * Name: view
+   * Purpose: Generates the view page
+   *
+   * Parameters: None
+   *
+   * Returns: None
+   */
+  public function view() {
+    // Get the URI service
+    $uri = service('uri');
+
+    // Check to see if the user is logged in
+    if (logged_in() == false) {
+      $keywordID = $uri->getSegment(4);
+      $_SESSION['redirect_url'] = base_url() . '/keywords/view/1/' . $keywordID;
+      return redirect()->to(base_url() . '/login');
+    }
+
+    // Get the keyword model
+    $model = new KeywordModel();
+
+    // Set the session last page
+    $session = session();
+    $session->set('lastPage', 'Keywords::view');
+
+    // Parse the URI
+    $page = $uri->setSilent()->getSegment(3, 1);
+    $keywordID = $uri->getSegment(4);
+
+    // Generate the view
+    $keyword = $model->getKeyword($keywordID);
+    $data = [
+      'title' => 'View Keyword',
+      'keyword' => $keyword,
+      'createdBy' => Users::getUser($keyword['CreatedBy']),
+      'modifiedBy' => Users::getUser($keyword['ModifiedBy']),
+      'page' => $page,
+    ];
+    echo view('templates/header.php', $data);
+    echo view('templates/menu.php', $data);
+    echo view('keywords/view.php', $data);
+    echo view('templates/footer.php', $data);
   }
 
   /**

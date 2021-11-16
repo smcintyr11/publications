@@ -1,6 +1,7 @@
 <?php namespace App\Controllers;
 
 use App\Models\StatusModel;
+use App\Libraries\Users;
 use App\Libraries\MyPager;
 use CodeIgniter\Controller;
 
@@ -496,6 +497,51 @@ class Statuses extends Controller {
       echo view('statuses/edit.php', $data);
       echo view('templates/footer.php', $data);
     }
+  }
+
+  /**
+   * Name: view
+   * Purpose: Generates the view page
+   *
+   * Parameters: None
+   *
+   * Returns: None
+   */
+  public function view() {
+    // Get the URI service
+    $uri = service('uri');
+
+    // Check to see if the user is logged in
+    if (logged_in() == false) {
+      $statusID = $uri->getSegment(4);
+      $_SESSION['redirect_url'] = base_url() . '/statuses/view/1/' . $statusID;
+      return redirect()->to(base_url() . '/login');
+    }
+
+    // Get the model
+    $model = new StatusModel();
+
+    // Set the session last page
+    $session = session();
+    $session->set('lastPage', 'Statuses::view');
+
+    // Parse the URI
+    $page = $uri->setSilent()->getSegment(3, 1);
+    $statusID = $uri->getSegment(4);
+
+    // Generate the view
+    $status = $model->getStatus($statusID);
+    $data = [
+      'title' => 'View Status',
+      'status' => $status,
+      'createdBy' => Users::getUser($status['CreatedBy']),
+      'modifiedBy' => Users::getUser($status['ModifiedBy']),
+      'page' => $page,
+    ];
+    echo view('templates/header.php', $data);
+    echo view('templates/menu.php', $data);
+    echo view('statuses/view.php', $data);
+    echo view('templates/footer.php', $data);
   }
 
   /**

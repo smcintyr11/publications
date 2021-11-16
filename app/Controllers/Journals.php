@@ -1,6 +1,7 @@
 <?php namespace App\Controllers;
 
 use App\Models\JournalModel;
+use App\Libraries\Users;
 use App\Libraries\MyPager;
 use CodeIgniter\Controller;
 
@@ -441,6 +442,51 @@ class Journals extends Controller {
       echo view('journals/edit.php', $data);
       echo view('templates/footer.php', $data);
     }
+  }
+
+  /**
+   * Name: view
+   * Purpose: Generates the view page
+   *
+   * Parameters: None
+   *
+   * Returns: None
+   */
+  public function view() {
+    // Get the URI service
+    $uri = service('uri');
+
+    // Check to see if the user is logged in
+    if (logged_in() == false) {
+      $journalID = $uri->getSegment(4);
+      $_SESSION['redirect_url'] = base_url() . '/journals/view/1/' . $journalID;
+      return redirect()->to(base_url() . '/login');
+    }
+
+    // Get the journal model
+    $model = new JournalModel();
+
+    // Set the session last page
+    $session = session();
+    $session->set('lastPage', 'Journals::view');
+
+    // Parse the URI
+    $page = $uri->setSilent()->getSegment(3, 1);
+    $journalID = $uri->getSegment(4);
+
+    // Generate the view
+    $journal = $model->getJournal($journalID);
+    $data = [
+      'title' => 'View Journal',
+      'journal' => $journal,
+      'createdBy' => Users::getUser($journal['CreatedBy']),
+      'modifiedBy' => Users::getUser($journal['ModifiedBy']),      
+      'page' => $page,
+    ];
+    echo view('templates/header.php', $data);
+    echo view('templates/menu.php', $data);
+    echo view('journals/view.php', $data);
+    echo view('templates/footer.php', $data);
   }
 
   /**

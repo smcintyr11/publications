@@ -1,6 +1,7 @@
 <?php namespace App\Controllers;
 
 use App\Models\PersonModel;
+use App\Libraries\Users;
 use App\Libraries\MyPager;
 use CodeIgniter\Controller;
 
@@ -481,6 +482,51 @@ class People extends Controller {
       echo view('people/edit.php', $data);
       echo view('templates/footer.php', $data);
     }
+  }
+
+  /**
+   * Name: view
+   * Purpose: Generates the view page
+   *
+   * Parameters: None
+   *
+   * Returns: None
+   */
+  public function view() {
+    // Get the URI service
+    $uri = service('uri');
+
+    // Check to see if the user is logged in
+    if (logged_in() == false) {
+      $personID = $uri->getSegment(4);
+      $_SESSION['redirect_url'] = base_url() . '/people/view/1/' . $personID;
+      return redirect()->to(base_url() . '/login');
+    }
+
+    // Get the person model
+    $model = new PersonModel();
+
+    // Set the session last page
+    $session = session();
+    $session->set('lastPage', 'People::view');
+
+    // Parse the URI
+    $page = $uri->setSilent()->getSegment(3, 1);
+    $personID = $uri->getSegment(4);
+
+    // Generate the view
+    $person = $model->getPerson($personID);
+    $data = [
+      'title' => 'View Person',
+      'person' => $person,
+      'createdBy' => Users::getUser($person['CreatedBy']),
+      'modifiedBy' => Users::getUser($person['ModifiedBy']),
+      'page' => $page,
+    ];
+    echo view('templates/header.php', $data);
+    echo view('templates/menu.php', $data);
+    echo view('people/view.php', $data);
+    echo view('templates/footer.php', $data);
   }
 
   /**
