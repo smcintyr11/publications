@@ -25,7 +25,4 @@
   <?= MyFormGeneration::generateIDTextBox("client",
     $client['Client'], "Client / Publisher"); ?>
 
-
-  </form>
-
 </div>
