@@ -244,7 +244,6 @@ class Publications extends Controller {
 
      // Generate the pager object
      $builder = $this-> generateIndexQB($session->get('filter'), $this->request->getPost('reportTypeID'), $this->request->getPost('statusID'), $this->request->getPost('costCentreID'), true, $session->get('currentSort'));
-     $sql = $this-> generateIndexQB2($session->get('filter'), $this->request->getPost('reportTypeID'), $this->request->getPost('statusID'), $this->request->getPost('costCentreID'), true, $session->get('currentSort'));
      $this->pager = new \App\Libraries\MyPager(current_url(true), $builder->getCompiledSelect(), $session->get('rowsPerPage'), $session->get('maxRows'), $page);
 
      // Get the publication model
@@ -259,7 +258,7 @@ class Publications extends Controller {
        'statuses' => $this->getStatuses(),
        'costCentres' => $this->getCostCentres(),
        'page' => $page,
-       'debug' => $sql,
+       'debug' => in_groups([1]),
      ];
 
      // Generate the view
