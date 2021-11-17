@@ -491,7 +491,7 @@ class Publications extends Controller {
     }
   }
 
- /**
+  /**
   * Name: edit
   * Purpose: Generates the edit page
   *
@@ -499,7 +499,7 @@ class Publications extends Controller {
   *
   * Returns: None
   */
- public function edit() {
+  public function edit() {
    // Get the URI service
    $uri = service('uri');
 
@@ -688,9 +688,9 @@ class Publications extends Controller {
      echo view('publications/edit.php', $data);
      echo view('templates/footer.php', $data);
    }
- }
+  }
 
- /**
+  /**
   * Name: getStatuses
   * Purpose: Get a list of all statuses in the database
   *
@@ -698,7 +698,7 @@ class Publications extends Controller {
   *
   * Returns: Array of objects representing the rows
   */
- private function getStatuses() {
+  private function getStatuses() {
    // Load the query builder
    $db = \Config\Database::connect('publications');
 
@@ -710,9 +710,9 @@ class Publications extends Controller {
 
    // Return the result
    return $builder->get()->getResult();
- }
+  }
 
- /**
+  /**
   * Name: getReportTypes
   * Purpose: Get a list of all report types in the database
   *
@@ -720,7 +720,7 @@ class Publications extends Controller {
   *
   * Returns: Array of objects representing the rows
   */
- private function getReportTypes() {
+  private function getReportTypes() {
    // Load the query builder
    $db = \Config\Database::connect('publications');
 
@@ -732,9 +732,9 @@ class Publications extends Controller {
 
    // Return the result
    return $builder->get()->getResult();
- }
+  }
 
- /**
+  /**
   * Name: getLinkTypes
   * Purpose: Get a list of all link types in the database
   *
@@ -742,7 +742,7 @@ class Publications extends Controller {
   *
   * Returns: Array of objects representing the rows
   */
- private function getLinkTypes() {
+  private function getLinkTypes() {
    // Load the query builder
    $db = \Config\Database::connect('publications');
 
@@ -754,9 +754,9 @@ class Publications extends Controller {
 
    // Return the result
    return $builder->get()->getResult();
- }
+  }
 
- /**
+  /**
   * Name: getCostCentres
   * Purpose: Get a list of all cost centres in the database
   *
@@ -764,7 +764,7 @@ class Publications extends Controller {
   *
   * Returns: Array of objects representing the rows
   */
- private function getCostCentres() {
+  private function getCostCentres() {
    // Load the query builder
    $db = \Config\Database::connect('publications');
 
@@ -776,9 +776,9 @@ class Publications extends Controller {
 
    // Return the result
    return $builder->get()->getResult();
- }
+  }
 
- /**
+  /**
   * Name: getStatusLog
   * Purpose: Get a list of all items in the PublicationsStatuses table related to this publication
   *
@@ -787,7 +787,7 @@ class Publications extends Controller {
   *
   * Returns: Array of objects representing the rows
   */
- private function getStatusLog(string $publicationID) {
+  private function getStatusLog(string $publicationID) {
    // Load the query builder
    $db = \Config\Database::connect('publications');
 
@@ -803,9 +803,9 @@ class Publications extends Controller {
    // Return the result
    // return $builder->get()->getResult();
    return $builder->get()->getResult();
- }
+  }
 
- /**
+  /**
   * Name: getAuthors
   * Purpose: Get a list of all items in the PublicationsAuthors table related to this publication
   *
@@ -814,7 +814,7 @@ class Publications extends Controller {
   *
   * Returns: Array of objects representing the rows
   */
- private function getAuthors(string $publicationID) {
+  private function getAuthors(string $publicationID) {
    // Load the query builder
    $db = \Config\Database::connect('publications');
 
@@ -829,9 +829,9 @@ class Publications extends Controller {
 
    // Retturn the result
    return $builder->get()->getResult();
- }
+  }
 
- /**
+  /**
   * Name: getReviewers
   * Purpose: Get a list of all items in the PublicationsReviewers table related to this publication
   *
@@ -840,7 +840,7 @@ class Publications extends Controller {
   *
   * Returns: Array of objects representing the rows
   */
- private function getReviewers(string $publicationID) {
+  private function getReviewers(string $publicationID) {
    // Load the query builder
    $db = \Config\Database::connect('publications');
 
@@ -855,9 +855,9 @@ class Publications extends Controller {
 
    // Retturn the result
    return $builder->get()->getResult();
- }
+  }
 
- /**
+  /**
   * Name: getKeywords
   * Purpose: Get a list of all items in the PublicationsKeywords table related to this publication
   *
@@ -866,7 +866,7 @@ class Publications extends Controller {
   *
   * Returns: Array of objects representing the rows
   */
- private function getKeywords(string $publicationID) {
+  private function getKeywords(string $publicationID) {
    // Load the query builder
    $db = \Config\Database::connect('publications');
 
@@ -880,9 +880,9 @@ class Publications extends Controller {
 
    // Retturn the result
    return $builder->get()->getResult();
- }
+  }
 
- /**
+  /**
   * Name: getLinks
   * Purpose: Get a list of all items in the PublicationsLinks table related to this publication
   *
@@ -891,7 +891,7 @@ class Publications extends Controller {
   *
   * Returns: Array of objects representing the rows
   */
- private function getLinks(string $publicationID) {
+  private function getLinks(string $publicationID) {
    // Load the query builder
    $db = \Config\Database::connect('publications');
 
@@ -905,9 +905,9 @@ class Publications extends Controller {
 
    // Retturn the result
    return $builder->get()->getResult();
- }
+  }
 
- /**
+  /**
   * Name: getComments
   * Purpose: Get a list of all items in the PublicationsComments table related to this publication
   *
@@ -916,7 +916,7 @@ class Publications extends Controller {
   *
   * Returns: Array of objects representing the rows
   */
- private function getComments(string $publicationID) {
+  private function getComments(string $publicationID) {
    // Load the query builder
    $db = \Config\Database::connect('publications');
 
@@ -929,215 +929,265 @@ class Publications extends Controller {
 
    // Retturn the result
    return $builder->get()->getResult();
- }
-
-/**
- * Name: updateCompleteStatus
- * Purpose: Updates the date completed field in the PublicationsStatuses table
- *  for the latest entry for the given PublicationID/StatusID combination
- *
- * Parameters:
- *   string $publicationID - The PublicationID we are updating
- *   string $statusID - The StatusID we are updating
- *
- * Returns: None
- */
-private function updateCompleteStatus(string $publicationID, string $statusID) {
-  // Load the authentication helper
-  helper('auth');
-
-  // Get the ID of the PublicationsStatuses row to updated
-  $publicationsStatusesID = $this->getLastPublicationStatusesID($publicationID, $statusID);
-
-  // Load the query builder
-  $db = \Config\Database::connect('publications');
-
-  // Generate the query
-  date_default_timezone_set("America/Edmonton");
-  $builder = $db->table('PublicationsStatuses');
-  $builder->set('CompletionDate', date("Y-m-d H:i:s"));
-  $builder->set('ModifiedBy', user_id());
-  $builder->where('deleted_at', null);
-  $builder->where('PublicationsStatusesID', $publicationsStatusesID);
-  $builder->update();
-}
-
-/**
- * Name: getLastPublicationStatusesID
- * Purpose: Updates the date completed field in the PublicationsStatuses table
- *  for the latest entry for the given PublicationID/StatusID combination
- *
- * Parameters:
- *   string $publicationID - The PublicationID we are updating
- *   string $statusID - The StatusID we are updating
- *
- * Returns:
- */
-private function getLastPublicationStatusesID(string $publicationID, string $statusID) {
-  // Load the query builder
-  $db = \Config\Database::connect('publications');
-
-  // Generate the query
-  $builder = $db->table('PublicationsStatuses');
-  $builder->selectMax("PublicationsStatusesID");
-  $builder->where('deleted_at', null);
-  $builder->where('PublicationID', $publicationID);
-  $builder->where('StatusID', $statusID);
-
-  // Return the result
-  $result = $builder->get()->getRow();
-  return $result->PublicationsStatusesID;
-}
-
-/**
- * Name: newStatus
- * Purpose: Adds a new row to the PublicationsStatuses table using the provided parameters
- *
- * Parameters:
- *   string $publicationID - The PublicationID we are inserting
- *   string $statusID - The StatusID we are inserting
- *   string $statusPersonID - The StatusPersonID we are inserting
- *   string $dueDate - The StatusDueDate we are inserting
- *
- * Returns: None
- */
-private function newStatus(string $publicationID, string $statusID, ?string $statusPersonID, ?string $dueDate) {
-  // Load the helpers
-  helper(['auth']);
-
-  // Load the query builder
-  $db = \Config\Database::connect('publications');
-
-  // Generate the query
-  date_default_timezone_set("America/Edmonton");
-  $builder = $db->table('PublicationsStatuses');
-  $builder->set('CreatedBy', user_id());
-  $builder->set('PublicationID', $publicationID);
-  $builder->set('StatusID', $statusID);
-  $builder->set('DateModified', date("Y-m-d H:i:s"));
-  if (empty($statusPersonID) == false) {
-    $builder->set('StatusPersonID', $statusPersonID);
-  }
-  if (empty($dueDate) == false) {
-    $builder->set('DueDate', $dueDate);
-  }
-  $builder->insert();
-}
-
-/**
- * Name: getLastPublicationID
- * Purpose: Gets the latest publicationID with the matching primary title,
- *  report type id, with an initial status
- *
- * Parameters:
- *   string $primaryTitle - The primary title we are searching for
- *   string $reportTypeID - The report type id we are searching for
- *
- * Returns:
- *  The publication id
- */
-private function getLastPublicationID(string $primaryTitle, string $reportTypeID) {
-  // Load the query builder
-  $db = \Config\Database::connect('publications');
-
-  // Generate the query
-  $builder = $db->table('Publications');
-  $builder->selectMax('PublicationID');
-  $builder->where('deleted_at', null);
-  $builder->where('PrimaryTitle', $primaryTitle);
-  $builder->where('ReportTypeID', $reportTypeID);
-  $builder->where('StatusID', $this->getDefaultStatus());
-
-  // Return the result
-  $result = $builder->get()->getRow();
-  return $result->PublicationID;
-}
-
-/**
- * Name: getDefaultStatus
- * Purpose: Gets the first StatusID (should be only 1) of the Status row where
- *  DefaultStatus = 1 (True)
- *
- * Parameters: None
- *
- * Returns:
- *  The StatusID
- */
-private function getDefaultStatus() {
-  // Load the query builder
-  $db = \Config\Database::connect('publications');
-
-  // Generate the query
-  $builder = $db->table('Statuses');
-  $builder->selectMax('StatusID');
-  $builder->where('deleted_at', null);
-  $builder->where('DefaultStatus', 1);
-
-  // Return the result
-  $result = $builder->get()->getRow();
-  if (empty($result)) {
-    return null;
-  }
-  return $result->StatusID;
-}
-
-/**
- * Name: delete
- * Purpose: Generates the delete page
- *
- * Parameters: None
- *
- * Returns: None
- */
-public function delete() {
-  // Get the URI service
-  $uri = service('uri');
-
-  // Check to see if the user is logged in
-  if (logged_in() == false) {
-    $publicationID = $uri->getSegment(4);
-    $_SESSION['redirect_url'] = base_url() . '/publications/delete/1/' . $publicationID;
-    return redirect()->to(base_url() . '/login');
   }
 
-  // Check to see if the user is in the appropriate group
-  if (in_groups(['pubsRC', 'pubsAdmin']) == false) {
-    $data = [
-      'title' => 'Not Authorized',
-    ];
-    echo view('templates/header.php', $data);
-    echo view('templates/menu.php', $data);
-    echo view('errors/notAuthorized.php', $data);
-    echo view('templates/footer.php', $data);
-    return;
+  /**
+  * Name: updateCompleteStatus
+  * Purpose: Updates the date completed field in the PublicationsStatuses table
+  *  for the latest entry for the given PublicationID/StatusID combination
+  *
+  * Parameters:
+  *   string $publicationID - The PublicationID we are updating
+  *   string $statusID - The StatusID we are updating
+  *
+  * Returns: None
+  */
+  private function updateCompleteStatus(string $publicationID, string $statusID) {
+    // Load the authentication helper
+    helper('auth');
+
+    // Get the ID of the PublicationsStatuses row to updated
+    $publicationsStatusesID = $this->getLastPublicationStatusesID($publicationID, $statusID);
+
+    // Load the query builder
+    $db = \Config\Database::connect('publications');
+
+    // Generate the query
+    date_default_timezone_set("America/Edmonton");
+    $builder = $db->table('PublicationsStatuses');
+    $builder->set('CompletionDate', date("Y-m-d H:i:s"));
+    $builder->set('ModifiedBy', user_id());
+    $builder->where('deleted_at', null);
+    $builder->where('PublicationsStatusesID', $publicationsStatusesID);
+    $builder->update();
   }
 
-  // Get the model
-  $model = new PublicationModel();
+  /**
+  * Name: getLastPublicationStatusesID
+  * Purpose: Updates the date completed field in the PublicationsStatuses table
+  *  for the latest entry for the given PublicationID/StatusID combination
+  *
+  * Parameters:
+  *   string $publicationID - The PublicationID we are updating
+  *   string $statusID - The StatusID we are updating
+  *
+  * Returns:
+  */
+  private function getLastPublicationStatusesID(string $publicationID, string $statusID) {
+    // Load the query builder
+    $db = \Config\Database::connect('publications');
 
-  // Set the session last page
-  $session = session();
-  $session->set('lastPage', 'Publications::delete');
+    // Generate the query
+    $builder = $db->table('PublicationsStatuses');
+    $builder->selectMax("PublicationsStatusesID");
+    $builder->where('deleted_at', null);
+    $builder->where('PublicationID', $publicationID);
+    $builder->where('StatusID', $statusID);
 
-  // Is this a post (deleting)
-  if ($this->request->getMethod() === 'post') {
-    // Delete the publication
-    $model->deletePublication($this->request->getPost('publicationID'));
+    // Return the result
+    $result = $builder->get()->getRow();
+    return $result->PublicationsStatusesID;
+  }
 
-    // Set the page
-    $page = 1;
+  /**
+  * Name: newStatus
+  * Purpose: Adds a new row to the PublicationsStatuses table using the provided parameters
+  *
+  * Parameters:
+  *   string $publicationID - The PublicationID we are inserting
+  *   string $statusID - The StatusID we are inserting
+  *   string $statusPersonID - The StatusPersonID we are inserting
+  *   string $dueDate - The StatusDueDate we are inserting
+  *
+  * Returns: None
+  */
+  private function newStatus(string $publicationID, string $statusID, ?string $statusPersonID, ?string $dueDate) {
+    // Load the helpers
+    helper(['auth']);
 
-    // Go back to index
-    $idx = session('publicationIndex') ?? 'index';
-    return redirect()->to(base_url() . "/publications/" . $idx . "/");
-  } else {  // // Not post - show delete form
+    // Load the query builder
+    $db = \Config\Database::connect('publications');
+
+    // Generate the query
+    date_default_timezone_set("America/Edmonton");
+    $builder = $db->table('PublicationsStatuses');
+    $builder->set('CreatedBy', user_id());
+    $builder->set('PublicationID', $publicationID);
+    $builder->set('StatusID', $statusID);
+    $builder->set('DateModified', date("Y-m-d H:i:s"));
+    if (empty($statusPersonID) == false) {
+      $builder->set('StatusPersonID', $statusPersonID);
+    }
+    if (empty($dueDate) == false) {
+      $builder->set('DueDate', $dueDate);
+    }
+    $builder->insert();
+  }
+
+  /**
+  * Name: getLastPublicationID
+  * Purpose: Gets the latest publicationID with the matching primary title,
+  *  report type id, with an initial status
+  *
+  * Parameters:
+  *   string $primaryTitle - The primary title we are searching for
+  *   string $reportTypeID - The report type id we are searching for
+  *
+  * Returns:
+  *  The publication id
+  */
+  private function getLastPublicationID(string $primaryTitle, string $reportTypeID) {
+    // Load the query builder
+    $db = \Config\Database::connect('publications');
+
+    // Generate the query
+    $builder = $db->table('Publications');
+    $builder->selectMax('PublicationID');
+    $builder->where('deleted_at', null);
+    $builder->where('PrimaryTitle', $primaryTitle);
+    $builder->where('ReportTypeID', $reportTypeID);
+    $builder->where('StatusID', $this->getDefaultStatus());
+
+    // Return the result
+    $result = $builder->get()->getRow();
+    return $result->PublicationID;
+  }
+
+  /**
+  * Name: getDefaultStatus
+  * Purpose: Gets the first StatusID (should be only 1) of the Status row where
+  *  DefaultStatus = 1 (True)
+  *
+  * Parameters: None
+  *
+  * Returns:
+  *  The StatusID
+  */
+  private function getDefaultStatus() {
+    // Load the query builder
+    $db = \Config\Database::connect('publications');
+
+    // Generate the query
+    $builder = $db->table('Statuses');
+    $builder->selectMax('StatusID');
+    $builder->where('deleted_at', null);
+    $builder->where('DefaultStatus', 1);
+
+    // Return the result
+    $result = $builder->get()->getRow();
+    if (empty($result)) {
+      return null;
+    }
+    return $result->StatusID;
+  }
+
+  /**
+  * Name: delete
+  * Purpose: Generates the delete page
+  *
+  * Parameters: None
+  *
+  * Returns: None
+  */
+  public function delete() {
+    // Get the URI service
+    $uri = service('uri');
+
+    // Check to see if the user is logged in
+    if (logged_in() == false) {
+      $publicationID = $uri->getSegment(4);
+      $_SESSION['redirect_url'] = base_url() . '/publications/delete/1/' . $publicationID;
+      return redirect()->to(base_url() . '/login');
+    }
+
+    // Check to see if the user is in the appropriate group
+    if (in_groups(['pubsRC', 'pubsAdmin']) == false) {
+      $data = [
+        'title' => 'Not Authorized',
+      ];
+      echo view('templates/header.php', $data);
+      echo view('templates/menu.php', $data);
+      echo view('errors/notAuthorized.php', $data);
+      echo view('templates/footer.php', $data);
+      return;
+    }
+
+    // Get the model
+    $model = new PublicationModel();
+
+    // Set the session last page
+    $session = session();
+    $session->set('lastPage', 'Publications::delete');
+
+    // Is this a post (deleting)
+    if ($this->request->getMethod() === 'post') {
+      // Delete the publication
+      $model->deletePublication($this->request->getPost('publicationID'));
+
+      // Set the page
+      $page = 1;
+
+      // Go back to index
+      $idx = session('publicationIndex') ?? 'index';
+      return redirect()->to(base_url() . "/publications/" . $idx . "/");
+    } else {  // // Not post - show delete form
+      // Parse the URI
+      $page = $uri->setSilent()->getSegment(3, 1);
+      $publicationID = $uri->getSegment(4);
+
+      // Generate the delete view
+      $data = [
+        'title' => 'Delete Publication',
+        'publication' => $model->getPublication($publicationID),
+        'page' => $page,
+        'statusLog' => $this->getStatusLog($publicationID),
+        'authorsList' => $this->getAuthors($publicationID),
+        'reviewersList' => $this->getReviewers($publicationID),
+        'keywordsList' => $this->getKeywords($publicationID),
+        'linksList' => $this->getLinks($publicationID),
+        'commentsList'=> $this->getComments($publicationID),
+      ];
+      echo view('templates/header.php', $data);
+      echo view('templates/menu.php', $data);
+      echo view('publications/delete.php', $data);
+      echo view('templates/footer.php', $data);
+    }
+  }
+
+  /**
+  * Name: view
+  * Purpose: Generates the view page
+  *
+  * Parameters: None
+  *
+  * Returns: None
+  */
+  public function view() {
+    // Get the URI service
+    $uri = service('uri');
+
+    // Check to see if the user is logged in
+    if (logged_in() == false) {
+      $page = $uri->setSilent()->getSegment(3, 1);
+      $publicationID = $uri->getSegment(4);
+      $_SESSION['redirect_url'] = base_url() . '/publications/view/' . $page . '/' . $publicationID;
+      return redirect()->to(base_url() . '/login');
+    }
+
+    // Get the model
+    $model = new PublicationModel();
+
+    // Set the session last page
+    $session = session();
+    $session->set('lastPage', 'Publications::view');
+
     // Parse the URI
     $page = $uri->setSilent()->getSegment(3, 1);
     $publicationID = $uri->getSegment(4);
 
     // Generate the delete view
     $data = [
-      'title' => 'Delete Publication',
+      'title' => 'View Publication',
       'publication' => $model->getPublication($publicationID),
       'page' => $page,
       'statusLog' => $this->getStatusLog($publicationID),
@@ -1149,152 +1199,7 @@ public function delete() {
     ];
     echo view('templates/header.php', $data);
     echo view('templates/menu.php', $data);
-    echo view('publications/delete.php', $data);
+    echo view('publications/view.php', $data);
     echo view('templates/footer.php', $data);
   }
-}
-
-/**
- * Name: view
- * Purpose: Generates the view page
- *
- * Parameters: None
- *
- * Returns: None
- */
-public function view() {
-  // Get the URI service
-  $uri = service('uri');
-
-  // Check to see if the user is logged in
-  if (logged_in() == false) {
-    $page = $uri->setSilent()->getSegment(3, 1);
-    $publicationID = $uri->getSegment(4);
-    $_SESSION['redirect_url'] = base_url() . '/publications/view/' . $page . '/' . $publicationID;
-    return redirect()->to(base_url() . '/login');
-  }
-
-  // Get the model
-  $model = new PublicationModel();
-
-  // Set the session last page
-  $session = session();
-  $session->set('lastPage', 'Publications::view');
-
-  // Parse the URI
-  $page = $uri->setSilent()->getSegment(3, 1);
-  $publicationID = $uri->getSegment(4);
-
-  // Generate the delete view
-  $data = [
-    'title' => 'View Publication',
-    'publication' => $model->getPublication($publicationID),
-    'page' => $page,
-    'statusLog' => $this->getStatusLog($publicationID),
-    'authorsList' => $this->getAuthors($publicationID),
-    'reviewersList' => $this->getReviewers($publicationID),
-    'keywordsList' => $this->getKeywords($publicationID),
-    'linksList' => $this->getLinks($publicationID),
-    'commentsList'=> $this->getComments($publicationID),
-  ];
-  echo view('templates/header.php', $data);
-  echo view('templates/menu.php', $data);
-  echo view('publications/view.php', $data);
-  echo view('templates/footer.php', $data);
-}
-
-public function generateIndexQB2(string $filter, ?string $reportTypeID, ?string $statusID, ?string $costCentreID, bool $detailed = false, string $sorting = '') {
-  // Load the query builder
-  $db = \Config\Database::connect('publications');
-  $builder = $db->table('Publications');
-
-  // Generate the builder object
-  if ($detailed) {
-    $builder->select("publications.Publications.PublicationID, publications.CostCentres.CostCentre, publications.Publications.ProjectCode,
-      publications.Publications.ReportNumber, publications.ReportTypes.Abbreviation, publications.ReportTypes.ReportType,
-      publications.Publications.PrimaryTitle, publications.Statuses.Status, publications.vPublicationAuthors.PublicationAuthors,
-      publications.Publications.StatusDueDate, IFNULL((DATEDIFF(publications.Publications.StatusDueDate, CURDATE())), 10000) AS DueDateDelta,
-      publications.Publications.RushPublication, users.users.DisplayName AS StatusPerson");
-  } else {
-    $builder->select('publications.Publications.PublicationID');
-  }
-  $builder->join('publications.CostCentres', 'publications.Publications.CostCentreID = publications.CostCentres.CostCentreID', 'left');
-  $builder->join('publications.ReportTypes', 'publications.Publications.ReportTypeID = publications.ReportTypes.ReportTypeID', 'left');
-  $builder->join('publications.Statuses', 'publications.Publications.StatusID = publications.Statuses.StatusID', 'left');
-  $builder->join('users.users', 'publications.Publications.StatusPersonID = users.users.ID', 'left');
-  $builder->join('publications.vPublicationAuthors', 'publications.Publications.PublicationID = publications.vPublicationAuthors.PublicationID', 'left');
-
-  // Are we filtering
-  $builder->where('publications.Publications.deleted_at', null);
-  if ($filter != '') {
-    if (empty($costCentreID)) {
-      $builder->like('publications.CostCentres.CostCentre', $filter);
-    }
-    $builder->orLike('publications.Publications.ProjectCode', $filter);
-    $builder->orLike('publications.Publications.ReportNumber', $filter);
-    if (empty($reportTypeID)) {
-      $builder->orLike('publications.ReportTypes.Abbreviation', $filter);
-      $builder->orLike('publications.ReportTypes.ReportType', $filter);
-    }
-    $builder->orLike('publications.Publications.PrimaryTitle', $filter);
-    if (empty($statusID)) {
-      $builder->orLike('publications.Statuses.Status', $filter);
-    }
-    $builder->orLike('publications.vPublicationAuthors.PublicationAuthors', $filter);
-    $builder->orLike('users.users.DisplayName', $filter);
-  }
-
-  if (empty($reportTypeID) == false) {
-    $builder->where('publications.Publications.ReportTypeID', $reportTypeID);
-  }
-  if (empty($statusID) == false) {
-    $builder->where('publications.Publications.StatusID', $statusID);
-  }
-  if (empty($costCentreID) == false) {
-    $builder->where('publications.Publications.CostCentreID', $costCentreID);
-  }
-  // Are we sorting
-  if ($detailed and $sorting != '') {
-    if ($sorting == "cc_asc") {
-      $builder->orderBy("publications.CostCentres.CostCentre", "ASC");
-    } elseif ($sorting == "cc_desc") {
-      $builder->orderBy("publications.CostCentres.CostCentre", "DESC");
-    } elseif ($sorting == "pc_asc") {
-      $builder->orderBy("publications.Publications.ProjectCode", "ASC");
-    } elseif ($sorting == "pc_desc") {
-      $builder->orderBy("publications.Publications.ProjectCode", "DESC");
-    } elseif ($sorting == "rn_asc") {
-      $builder->orderBy("publications.Publications.ReportNumber", "ASC");
-    } elseif ($sorting == "rn_desc") {
-      $builder->orderBy("publications.Publications.ReportNumber", "DESC");
-    } elseif ($sorting == "rt_asc") {
-      $builder->orderBy("publications.ReportTypes.ReportType", "ASC");
-    } elseif ($sorting == "rt_desc") {
-      $builder->orderBy("publications.ReportTypes.ReportType", "DESC");
-    } elseif ($sorting == "pt_asc") {
-      $builder->orderBy("publications.Publications.PrimaryTitle", "ASC");
-    } elseif ($sorting == "pt_desc") {
-      $builder->orderBy("publications.Publications.PrimaryTitle", "DESC");
-    } elseif ($sorting == "status_asc") {
-      $builder->orderBy("publications.Statuses.Status", "ASC");
-    } elseif ($sorting == "status_desc") {
-      $builder->orderBy("publications.Statuses.Status", "DESC");
-    } elseif ($sorting == "at_asc") {
-      $builder->orderBy("users.users.DisplayName", "ASC");
-    } elseif ($sorting == "at_desc") {
-      $builder->orderBy("users.users.DisplayName", "DESC");
-    } elseif ($sorting == "pa_asc") {
-      $builder->orderBy("publications.vPublicationAuthors.PublicationAuthors", "ASC");
-    } elseif ($sorting == "pa_desc") {
-      $builder->orderBy("publications.vPublicationAuthors.PublicationAuthors", "DESC");
-    } elseif ($sorting == "dd_asc") {
-      $builder->orderBy("DueDateDelta", "DESC");
-    } else {
-      $builder->orderBy("DueDateDelta", "ASC");
-    }
-  }
-
-  // return the object
-  return $builder->getCompiledSelect();
-}
 }
