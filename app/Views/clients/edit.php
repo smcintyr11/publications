@@ -12,7 +12,7 @@
       } else {
         $version = $version . "Modified by " . $modifiedBy . " on " . $client['Modified'];
       } */
-      echo (MyFormGeneration::generateItalicText("Version", $version, 12, "right"));
+      // echo (MyFormGeneration::generateItalicText("Version", $version, 12, "right"));
       ?>
   </div>
 
