@@ -7,12 +7,13 @@
     <div class="col-6">
     </div>
     <?php
-      $version = "Created by " . $createdBy . " on " . $client['Created'] . "<br>";
-      if (is_null($client['Modified'])) {
+      // $version = "Created by " . $createdBy . " on " . $client['Created'] . "<br>";
+      $version = "Create by ";
+/*      if (is_null($client['Modified'])) {
         $version = $version . "Not modified";
       } else {
         $version = $version . "Modified by " . $modifiedBy . " on " . $client['Modified'];
-      }
+      } */
       echo (MyFormGeneration::generateItalicText("Version", $version, 6, "right"));
       ?>
   </div>
