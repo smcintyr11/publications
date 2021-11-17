@@ -433,9 +433,12 @@ class Organizations extends Controller {
       $organizationID = $uri->getSegment(4);
 
       // Generate the edit view
+      $organization = $model->getOrganization($organizationID);
       $data = [
         'title' => 'Edit Organization',
-        'organization' => $model->getOrganization($organizationID),
+        'organization' => $organization,
+        'createdBy' => Users::getUser($organization['CreatedBy']),
+        'modifiedBy' => Users::getUser($organization['ModifiedBy']),
         'page' => $page,
       ];
       echo view('templates/header.php', $data);

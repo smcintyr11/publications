@@ -442,9 +442,12 @@ class ReportTypes extends Controller {
       $reportTypeID = $uri->getSegment(4);
 
       // Generate the edit view
+      $reportType = $model->getReportType($reportTypeID);
       $data = [
         'title' => 'Edit Report Type',
-        'reportType' => $model->getReportType($reportTypeID),
+        'reportType' => $reportType,
+        'createdBy' => Users::getUser($reportType['CreatedBy']),
+        'modifiedBy' => Users::getUser($reportType['ModifiedBy']),
         'page' => $page,
       ];
       echo view('templates/header.php', $data);

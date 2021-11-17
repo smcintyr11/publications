@@ -433,9 +433,12 @@ class FiscalYears extends Controller {
       $fiscalYearID = $uri->getSegment(4);
 
       // Generate the edit view
+      $fiscalYear = $model->getFiscalYear($fiscalYearID);
       $data = [
         'title' => 'Edit Fiscal Year',
-        'fiscalYear' => $model->getFiscalYear($fiscalYearID),
+        'fiscalYear' => $fiscalYear,
+        'createdBy' => Users::getUser($fiscalYear['CreatedBy']),
+        'modifiedBy' => Users::getUser($fiscalYear['ModifiedBy']),
         'page' => $page,
       ];
       echo view('templates/header.php', $data);

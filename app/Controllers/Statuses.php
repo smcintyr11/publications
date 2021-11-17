@@ -487,9 +487,12 @@ class Statuses extends Controller {
       $statusID = $uri->getSegment(4);
 
       // Generate the edit view
+      $status = $model->getStatus($statusID);
       $data = [
         'title' => 'Edit Status',
-        'status' => $model->getStatus($statusID),
+        'status' => $status,
+        'createdBy' => Users::getUser($status['CreatedBy']),
+        'modifiedBy' => Users::getUser($status['ModifiedBy']),
         'page' => $page,
       ];
       echo view('templates/header.php', $data);

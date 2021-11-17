@@ -433,9 +433,12 @@ class LinkTypes extends Controller {
       $linkTypeID = $uri->getSegment(4);
 
       // Generate the edit view
+      $linkType = $model->getLinkType($linkTypeID);
       $data = [
         'title' => 'Edit Link Type',
-        'linkType' => $model->getLinkType($linkTypeID),
+        'linkType' => $linkType,
+        'createdBy' => Users::getUser($linkType['CreatedBy']),
+        'modifiedBy' => Users::getUser($linkType['ModifiedBy']),
         'page' => $page,
       ];
       echo view('templates/header.php', $data);

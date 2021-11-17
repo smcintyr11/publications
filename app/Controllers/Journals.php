@@ -432,9 +432,12 @@ class Journals extends Controller {
       $journalID = $uri->getSegment(4);
 
       // Generate the edit view
+      $journal = $model->getJournal($journalID);
       $data = [
         'title' => 'Edit Journal',
-        'journal' => $model->getJournal($journalID),
+        'journal' => $journal,
+        'createdBy' => Users::getUser($journal['CreatedBy']),
+        'modifiedBy' => Users::getUser($journal['ModifiedBy']),    
         'page' => $page,
       ];
       echo view('templates/header.php', $data);
@@ -480,7 +483,7 @@ class Journals extends Controller {
       'title' => 'View Journal',
       'journal' => $journal,
       'createdBy' => Users::getUser($journal['CreatedBy']),
-      'modifiedBy' => Users::getUser($journal['ModifiedBy']),      
+      'modifiedBy' => Users::getUser($journal['ModifiedBy']),
       'page' => $page,
     ];
     echo view('templates/header.php', $data);

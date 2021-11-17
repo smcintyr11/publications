@@ -444,9 +444,12 @@ class CostCentres extends Controller
       $costCentreID = $uri->getSegment(4);
 
       // Generate the edit view
+      $costCentre = $model->getCostCentre($costCentreID);
       $data = [
         'title' => 'Edit Cost Centre',
-        'costCentre' => $model->getCostCentre($costCentreID),
+        'costCentre' => $costCentre,
+        'createdBy' => Users::getUser($costCentre['CreatedBy']),
+        'modifiedBy' => Users::getUser($costCentre['ModifiedBy']),
         'page' => $page,
       ];
       echo view('templates/header.php', $data);

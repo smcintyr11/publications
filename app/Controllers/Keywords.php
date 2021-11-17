@@ -441,9 +441,12 @@ class Keywords extends Controller {
       $keywordID = $uri->getSegment(4);
 
       // Generate the edit view
+      $keyword = $model->getKeyword($keywordID);
       $data = [
         'title' => 'Edit Keyword',
-        'keyword' => $model->getKeyword($keywordID),
+        'keyword' => $keyword,
+        'createdBy' => Users::getUser($keyword['CreatedBy']),
+        'modifiedBy' => Users::getUser($keyword['ModifiedBy']),
         'page' => $page,
       ];
       echo view('templates/header.php', $data);

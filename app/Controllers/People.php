@@ -471,9 +471,12 @@ class People extends Controller {
       $personID = $uri->getSegment(4);
 
       // Generate the edit view
+      $person = $model->getPerson($personID);
       $data = [
         'title' => 'Edit Person',
-        'person' => $model->getPerson($personID),
+        'person' => $person,
+        'createdBy' => Users::getUser($person['CreatedBy']),
+        'modifiedBy' => Users::getUser($person['ModifiedBy']),
         'page' => $page,
         'duplicate' => false,
       ];
