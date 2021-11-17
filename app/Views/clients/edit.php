@@ -5,6 +5,7 @@
 <div class="container my-3 py-3">
   <div class="form-row">
     <div class="col-6">
+      &nbsp;
     </div>
     <?php
       // $version = "Created by " . $createdBy . " on " . $client['Created'] . "<br>";
