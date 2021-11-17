@@ -22,7 +22,7 @@ class Publications extends Controller {
 	 *
 	 * Returns: QueryBuilder object
    */
-  public function generateIndexQB(string $filter, ?string $reportTypeID, ?string $statusID, ?string $costCentreID, bool $detailed = false, string $sorting = '') {
+  public function generateIndexQB(string $filter, ?string $reportTypeID, ?string $statusID, ?string $costCentreID, ?string $createdBy, ?string $statusPersonID, bool $detailed = false, string $sorting = '') {
     // Load the query builder
     $db = \Config\Database::connect('publications');
     $builder = $db->table('Publications');
@@ -71,6 +71,12 @@ class Publications extends Controller {
     }
     if (empty($costCentreID) == false) {
       $builder->where('publications.Publications.CostCentreID', $costCentreID);
+    }
+    if (empty($createdBy) == false) {
+      $builder->where('publications.Publications.CreatedBy', $createdBy);
+    }
+    if (empty($statusPersonID) == false) {
+      $builder->where('publications.Publications.StatusPersonID', $statusPersonID);
     }
     // Are we sorting
     if ($detailed and $sorting != '') {
@@ -129,7 +135,7 @@ class Publications extends Controller {
    */
   public function getMaxRows(string $filter = '') {
     // Get the maximum number of rows
-    return $this->generateIndexQB($filter, null, null, null)->get()->getNumRows();
+    return $this->generateIndexQB($filter, null, null, null, null, null)->get()->getNumRows();
   }
 
   /**
@@ -142,7 +148,7 @@ class Publications extends Controller {
 	 *
 	 * Returns: None
 	 */
-  public function processIndexSession($session, $detailed) {
+  public function processIndexSession($session, $indexType) {
     // Setup rows per page if it doesn't exist
     if ($session->has('rowsPerPage') == false) {
       $session->set('rowsPerPage', 25);
@@ -170,9 +176,12 @@ class Publications extends Controller {
     }
 
     // Last Page
-    if ($detailed) {
+    if ($indexType == "indexDetailed") {
       $session->set('lastPage', 'Publications::indexDetailed');
       $session->set('publicationIndex', 'indexDetailed');
+    } elseif ($indexType == "myPublications") {
+      $session->set('lastPage', 'Publications::myPublications');
+      $session->set('publicationIndex', 'myPublications');
     } else {
       $session->set('lastPage', 'Publications::index');
       $session->set('publicationIndex', 'index');
@@ -214,7 +223,7 @@ class Publications extends Controller {
      $session = session();
 
      // Process the session data
-     $this->processIndexSession($session, false);
+     $this->processIndexSession($session, "index");
 
      // Parse the URI
      $page = $uri->setSilent()->getSegment(3, 1);
@@ -243,7 +252,7 @@ class Publications extends Controller {
      }
 
      // Generate the pager object
-     $builder = $this-> generateIndexQB($session->get('filter'), $this->request->getPost('reportTypeID'), $this->request->getPost('statusID'), $this->request->getPost('costCentreID'), true, $session->get('currentSort'));
+     $builder = $this-> generateIndexQB($session->get('filter'), $this->request->getPost('reportTypeID'), $this->request->getPost('statusID'), $this->request->getPost('costCentreID'), null, null, true, $session->get('currentSort'));
      $this->pager = new \App\Libraries\MyPager(current_url(true), $builder->getCompiledSelect(), $session->get('rowsPerPage'), $session->get('maxRows'), $page);
 
      // Get the publication model
@@ -301,7 +310,7 @@ class Publications extends Controller {
     $session = session();
 
     // Process the session data
-    $this->processIndexSession($session, true);
+    $this->processIndexSession($session, "indexDetailed");
 
     // Parse the URI
     $page = $uri->setSilent()->getSegment(3, 1);
@@ -330,7 +339,7 @@ class Publications extends Controller {
     }
 
     // Generate the pager object
-    $builder = $this-> generateIndexQB($session->get('filter'), $this->request->getPost('reportTypeID'), $this->request->getPost('statusID'), $this->request->getPost('costCentreID'), true, $session->get('currentSort'));
+    $builder = $this-> generateIndexQB($session->get('filter'), $this->request->getPost('reportTypeID'), $this->request->getPost('statusID'), $this->request->getPost('costCentreID'), null, null, true, $session->get('currentSort'));
     $this->pager = new \App\Libraries\MyPager(current_url(true), $builder->getCompiledSelect(), $session->get('rowsPerPage'), $session->get('maxRows'), $page);
 
     // Get the publication model
@@ -1201,5 +1210,92 @@ class Publications extends Controller {
     echo view('templates/menu.php', $data);
     echo view('publications/view.php', $data);
     echo view('templates/footer.php', $data);
+  }
+
+  /**
+  * Name: myPublications
+  * Purpose: Generates the index page
+  *
+  * Parameters: None
+  *
+  * Returns: None
+  */
+  public function myPublications() {
+    // Check to see if the user is logged in
+    if (logged_in() == false) {
+      $_SESSION['redirect_url'] = base_url() . '/publications/myPublications';
+      return redirect()->to(base_url() . '/login');
+
+      if (in_groups(['pubsAdmin', 'pubsRC', 'pubsAuth', 'pubsRCMan']) == false) {
+        $data = [
+          'title' => 'Not Authorized',
+        ];
+        echo view('templates/header.php', $data);
+        echo view('templates/menu.php', $data);
+        echo view('errors/notAuthorized.php', $data);
+        echo view('templates/footer.php', $data);
+        return;
+      }
+    }
+
+    // Load helpers
+    helper(['form']);
+
+    // Get the services
+    $uri = service('uri');
+    $session = session();
+
+    // Process the session data
+    $this->processIndexSession($session, "myPublications");
+
+    // Parse the URI
+    $page = $uri->setSilent()->getSegment(3, 1);
+
+    // Get the sort parameter
+    $sort = $uri->getQuery(['only' => ['sort']]);
+    if ($sort != '') {
+      $sort = substr($sort, 5);
+      $session->set('currentSort', $sort);
+      $page = 1;
+    }
+
+    // Get the filter parameter
+    $filter = $uri->getQuery(['only' => ['filter']]);
+    if ($filter != '') {
+      $filter = substr($filter, 7);
+      $session->set('filter', $filter);
+    }
+
+    // Check for a post
+    if ($this->request->getMethod() === "post") {
+      $session->set('filter', $this->request->getPost('filter'));
+      if ($this->request->getPost('rowsPerPage') != $session->get('rowsPerPage')) {
+        $session->set('rowsPerPage', $this->request->getPost('rowsPerPage'));
+      }
+    }
+
+    // Generate the pager object
+    $builder = $this-> generateIndexQB($session->get('filter'), $this->request->getPost('reportTypeID'), $this->request->getPost('statusID'), $this->request->getPost('costCentreID'), user_id(), null, true, $session->get('currentSort'));
+    $this->pager = new \App\Libraries\MyPager(current_url(true), $builder->getCompiledSelect(), $session->get('rowsPerPage'), $session->get('maxRows'), $page);
+
+    // Get the publication model
+    $model = new PublicationModel();
+
+    // Populate the data going to the view
+    $data = [
+      'publications' => $this->pager->getCurrentRows(),
+      'links' => $this->pager->createLinks(),
+      'title' => 'My Publications',
+      'reportTypes' => $this->getReportTypes(),
+      'statuses' => $this->getStatuses(),
+      'costCentres' => $this->getCostCentres(),
+      'page' => $page,
+    ];
+
+    // Generate the view
+    echo view('templates/header.php', $data);
+		echo view('templates/menu.php', $data);
+		echo view('publications/myPublications.php', $data);
+		echo view('templates/footer.php', $data);
   }
 }

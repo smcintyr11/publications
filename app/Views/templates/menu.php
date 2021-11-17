@@ -13,6 +13,7 @@
             <a class="dropdown-item" href="<?= base_url() ?>/publications/new">New Publication</a>
             <a class="dropdown-item" href="<?= base_url() ?>/publications/indexDetailed">Publications Dashboard</a>
             <a class="dropdown-item" href="<?= base_url() ?>/publications/index">Publications Status Dashboard</a>
+            <a class="dropdown-item" href="<?= base_url() ?>/publications/myPublications">My Publications</a>
           </div>
         </li>
         <li class="nav-item">
