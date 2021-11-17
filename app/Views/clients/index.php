@@ -26,7 +26,7 @@
       <col style="width: 65%">
 
       <thead class="thead-light">
-        <th scope="col"><div class="btn">Edit | Delete</div></th>
+        <th scope="col"><div class="btn">View / Edit<br>Delete</div></th>
         <?= MyFormGeneration::generateColumnHeader("clients", "Client / Publisher ID",
           $id_sort_param, $_SESSION["currentSort"], "id_asc", "id_desc"); ?>
 
