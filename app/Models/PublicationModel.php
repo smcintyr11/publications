@@ -50,7 +50,7 @@ class PublicationModel extends Model {
 
     // Create the result
     foreach ($query->getResult() as $row) {
-      $StatusPerson = Users::getUser($row->StatusPersonID),
+      $StatusPerson = Users::getUser($row->StatusPersonID);
       $CreatedBy = Users::getUser($row->CreatedBy);
       $ModifiedBy = Users::getUser($row->ModifiedBy);
       $result = array(
