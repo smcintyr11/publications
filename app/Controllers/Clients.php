@@ -435,9 +435,12 @@ class Clients extends Controller {
       $clientID = $uri->getSegment(4);
 
       // Generate the edit view
+      $client = $model->getClient($clientID);
       $data = [
         'title' => 'Edit Client / Publisher',
-        'client' => $model->getClient($clientID),
+        'client' => $clientID,
+        'createdBy' => Users::getUser($client['CreatedBy']),
+        'modifiedBy' => Users::getUser($client['ModifiedBy']),
         'page' => $page,
       ];
       echo view('templates/header.php', $data);
