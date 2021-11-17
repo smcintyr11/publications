@@ -182,11 +182,13 @@ class Publications extends Controller {
     } elseif ($indexType == "myPublications") {
       $session->set('lastPage', 'Publications::myPublications');
       $session->set('publicationIndex', 'myPublications');
+    } elseif ($indexType == "assignedToMe") {
+      $session->set('lastPage', 'Publications::assignedToMe');
+      $session->set('publicationIndex', 'assignedToMe');
     } else {
       $session->set('lastPage', 'Publications::index');
       $session->set('publicationIndex', 'index');
     }
-
   }
 
   /**
@@ -1296,6 +1298,93 @@ class Publications extends Controller {
     echo view('templates/header.php', $data);
 		echo view('templates/menu.php', $data);
 		echo view('publications/myPublications.php', $data);
+		echo view('templates/footer.php', $data);
+  }
+
+  /**
+  * Name: assignedToMe
+  * Purpose: Generates the index page
+  *
+  * Parameters: None
+  *
+  * Returns: None
+  */
+  public function assignedToMe() {
+    // Check to see if the user is logged in
+    if (logged_in() == false) {
+      $_SESSION['redirect_url'] = base_url() . '/publications/assignedToMe';
+      return redirect()->to(base_url() . '/login');
+
+      if (in_groups(['pubsAdmin', 'pubsRC', 'pubsAuth', 'pubsRCMan']) == false) {
+        $data = [
+          'title' => 'Not Authorized',
+        ];
+        echo view('templates/header.php', $data);
+        echo view('templates/menu.php', $data);
+        echo view('errors/notAuthorized.php', $data);
+        echo view('templates/footer.php', $data);
+        return;
+      }
+    }
+
+    // Load helpers
+    helper(['form']);
+
+    // Get the services
+    $uri = service('uri');
+    $session = session();
+
+    // Process the session data
+    $this->processIndexSession($session, "assignedToMe");
+
+    // Parse the URI
+    $page = $uri->setSilent()->getSegment(3, 1);
+
+    // Get the sort parameter
+    $sort = $uri->getQuery(['only' => ['sort']]);
+    if ($sort != '') {
+      $sort = substr($sort, 5);
+      $session->set('currentSort', $sort);
+      $page = 1;
+    }
+
+    // Get the filter parameter
+    $filter = $uri->getQuery(['only' => ['filter']]);
+    if ($filter != '') {
+      $filter = substr($filter, 7);
+      $session->set('filter', $filter);
+    }
+
+    // Check for a post
+    if ($this->request->getMethod() === "post") {
+      $session->set('filter', $this->request->getPost('filter'));
+      if ($this->request->getPost('rowsPerPage') != $session->get('rowsPerPage')) {
+        $session->set('rowsPerPage', $this->request->getPost('rowsPerPage'));
+      }
+    }
+
+    // Generate the pager object
+    $builder = $this-> generateIndexQB($session->get('filter'), $this->request->getPost('reportTypeID'), $this->request->getPost('statusID'), $this->request->getPost('costCentreID'), null, user_id(), true, $session->get('currentSort'));
+    $this->pager = new \App\Libraries\MyPager(current_url(true), $builder->getCompiledSelect(), $session->get('rowsPerPage'), $session->get('maxRows'), $page);
+
+    // Get the publication model
+    $model = new PublicationModel();
+
+    // Populate the data going to the view
+    $data = [
+      'publications' => $this->pager->getCurrentRows(),
+      'links' => $this->pager->createLinks(),
+      'title' => 'Publications Assigned To Me',
+      'reportTypes' => $this->getReportTypes(),
+      'statuses' => $this->getStatuses(),
+      'costCentres' => $this->getCostCentres(),
+      'page' => $page,
+    ];
+
+    // Generate the view
+    echo view('templates/header.php', $data);
+		echo view('templates/menu.php', $data);
+		echo view('publications/assignedToMe.php', $data);
 		echo view('templates/footer.php', $data);
   }
 }
