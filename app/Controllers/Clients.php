@@ -438,7 +438,7 @@ class Clients extends Controller {
       $client = $model->getClient($clientID);
       $data = [
         'title' => 'Edit Client / Publisher',
-        'client' => $clientID,
+        'client' => $client,
         'createdBy' => Users::getUser($client['CreatedBy']),
         'modifiedBy' => Users::getUser($client['ModifiedBy']),
         'page' => $page,
