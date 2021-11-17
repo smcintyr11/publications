@@ -341,9 +341,12 @@ class FiscalYears extends Controller {
       $dependentRecords = $this->findDependentRecords($fiscalYearID);
 
       // Generate the delete view
+      $fiscalYear = $model->getFiscalYear($fiscalYearID);
       $data = [
         'title' => 'Delete Fiscal Year',
-        'fiscalYear' => $model->getFiscalYear($fiscalYearID),
+        'fiscalYear' => $fiscalYear,
+        'createdBy' => Users::getUser($fiscalYear['CreatedBy']),
+        'modifiedBy' => Users::getUser($fiscalYear['ModifiedBy']),
         'page' => $page,
         'dependentRecords' => $dependentRecords,
       ];

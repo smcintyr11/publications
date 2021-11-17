@@ -343,9 +343,12 @@ class Clients extends Controller {
       $dependentRecords = $this->findDependentRecords($clientID);
 
       // Generate the delete view
+      $client = $model->getClient($clientID);
       $data = [
         'title' => 'Delete Client / Publisher',
-        'client' => $model->getClient($clientID),
+        'client' => $client,
+        'createdBy' => Users::getUser($client['CreatedBy']),
+        'modifiedBy' => Users::getUser($client['ModifiedBy']),
         'page' => $page,
         'dependentRecords' => $dependentRecords,
       ];

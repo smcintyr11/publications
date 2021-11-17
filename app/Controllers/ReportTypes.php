@@ -348,9 +348,12 @@ class ReportTypes extends Controller {
       $dependentRecords = $this->findDependentRecords($reportTypeID);
 
       // Generate the delete view
+      $reportType = $model->getReportType($reportTypeID);
       $data = [
         'title' => 'Delete Report Type',
-        'reportType' => $model->getReportType($reportTypeID),
+        'reportType' => $reportType,
+        'createdBy' => Users::getUser($reportType['CreatedBy']),
+        'modifiedBy' => Users::getUser($reportType['ModifiedBy']),
         'page' => $page,
         'dependentRecords' => $dependentRecords,
       ];

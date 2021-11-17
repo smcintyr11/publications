@@ -340,9 +340,12 @@ class Journals extends Controller {
       $dependentRecords = $this->findDependentRecords($journalID);
 
       // Generate the delete view
+      $journal = $model->getJournal($journalID);
       $data = [
         'title' => 'Delete Journal',
-        'journal' => $model->getJournal($journalID),
+        'journal' => $journal,
+        'createdBy' => Users::getUser($journal['CreatedBy']),
+        'modifiedBy' => Users::getUser($journal['ModifiedBy']),
         'page' => $page,
         'dependentRecords' => $dependentRecords,
       ];
@@ -437,7 +440,7 @@ class Journals extends Controller {
         'title' => 'Edit Journal',
         'journal' => $journal,
         'createdBy' => Users::getUser($journal['CreatedBy']),
-        'modifiedBy' => Users::getUser($journal['ModifiedBy']),    
+        'modifiedBy' => Users::getUser($journal['ModifiedBy']),
         'page' => $page,
       ];
       echo view('templates/header.php', $data);

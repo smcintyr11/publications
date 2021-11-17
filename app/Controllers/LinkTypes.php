@@ -341,9 +341,12 @@ class LinkTypes extends Controller {
       $dependentRecords = $this->findDependentRecords($linkTypeID);
 
       // Generate the delete view
+      $linkType = $model->getLinkType($linkTypeID);
       $data = [
         'title' => 'Delete Link Type',
-        'linkType' => $model->getLinkType($linkTypeID),
+        'linkType' => $linkType,
+        'createdBy' => Users::getUser($linkType['CreatedBy']),
+        'modifiedBy' => Users::getUser($linkType['ModifiedBy']),
         'page' => $page,
         'dependentRecords' => $dependentRecords,
       ];

@@ -350,9 +350,12 @@ class CostCentres extends Controller
       $dependentRecords = $this->findDependentRecords($costCentreID);
 
       // Generate the delete view
+      $costCentre = $model->getCostCentre($costCentreID);
       $data = [
         'title' => 'Delete Cost Centre',
-        'costCentre' => $model->getCostCentre($costCentreID),
+        'costCentre' => $costCentre,
+        'createdBy' => Users::getUser($costCentre['CreatedBy']),
+        'modifiedBy' => Users::getUser($costCentre['ModifiedBy']),
         'page' => $page,
         'dependentRecords' => $dependentRecords,
       ];

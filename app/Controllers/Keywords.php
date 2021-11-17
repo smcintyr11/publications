@@ -347,9 +347,12 @@ class Keywords extends Controller {
       $dependentRecords = $this->findDependentRecords($keywordID);
 
       // Generate the delete view
+      $keyword = $model->getKeyword($keywordID);
       $data = [
         'title' => 'Delete Keyword',
-        'keyword' => $model->getKeyword($keywordID),
+        'keyword' => $keyword,
+        'createdBy' => Users::getUser($keyword['CreatedBy']),
+        'modifiedBy' => Users::getUser($keyword['ModifiedBy']),
         'page' => $page,
         'dependentRecords' => $dependentRecords,
       ];

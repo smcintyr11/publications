@@ -341,9 +341,12 @@ class Organizations extends Controller {
       $dependentRecords = $this->findDependentRecords($organizationID);
 
       // Generate the delete view
+      $organization = $model->getOrganization($organizationID);
       $data = [
         'title' => 'Delete Organization',
-        'organization' => $model->getOrganization($organizationID),
+        'organization' => $organization,
+        'createdBy' => Users::getUser($organization['CreatedBy']),
+        'modifiedBy' => Users::getUser($organization['ModifiedBy']),
         'page' => $page,
         'dependentRecords' => $dependentRecords,
       ];

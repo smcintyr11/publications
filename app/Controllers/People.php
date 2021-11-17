@@ -369,9 +369,12 @@ class People extends Controller {
       $dependentRecords = $this->findDependentRecords($personID);
 
       // Generate the delete view
+      $person = $model->getPerson($personID);
       $data = [
         'title' => 'Delete Person',
-        'person' => $model->getPerson($personID),
+        'person' => $person,
+        'createdBy' => Users::getUser($person['CreatedBy']),
+        'modifiedBy' => Users::getUser($person['ModifiedBy']),
         'page' => $page,
         'dependentRecords' => $dependentRecords,
       ];

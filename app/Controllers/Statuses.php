@@ -378,9 +378,12 @@ class Statuses extends Controller {
       $dependentRecords = $this->findDependentRecords($statusID);
 
       // Generate the delete view
+      $status = $model->getStatus($statusID);
       $data = [
         'title' => 'Delete Status',
-        'status' => $model->getStatus($statusID),
+        'status' => $status,
+        'createdBy' => Users::getUser($status['CreatedBy']),
+        'modifiedBy' => Users::getUser($status['ModifiedBy']),
         'page' => $page,
         'dependentRecords' => $dependentRecords,
       ];
