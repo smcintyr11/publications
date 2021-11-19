@@ -17,12 +17,18 @@ class Publications extends Controller {
 	 *
 	 * Parameters:
    *  string $filter - A string that will be used to filter columns
+   *  string $reportTypeID - Filter based on a specific reportTypeID
+   *  string $statusID - Filter based on a specific statusID
+   *  string $costCentreID - Filter based on a specific costCentreID
+   *  string $createdBy - Filter based on a specific createdBy value
+   *  string $statusPersonID - Filter based on  a specific statusPersonID
    *  bool $detailed - Should only the PublicationID be returned or all the columns
    *  string $sorting - A string that represents the type of sorting on the query
 	 *
 	 * Returns: QueryBuilder object
    */
-  public function generateIndexQB(string $filter, ?string $reportTypeID, ?string $statusID, ?string $costCentreID, ?string $createdBy, ?string $statusPersonID, bool $detailed = false, string $sorting = '') {
+  public function generateIndexQB(string $filter, ?string $reportTypeID, ?string $statusID, ?string $costCentreID,
+  ?string $createdBy, ?string $statusPersonID, bool $detailed = false, string $sorting = '') {
     // Load the query builder
     $db = \Config\Database::connect('publications');
     $builder = $db->table('Publications');
@@ -130,12 +136,18 @@ class Publications extends Controller {
    *
    * Parameters:
    *  string $filter - A string that will be used to filter columns
+   *  string $reportTypeID - Filter based on a specific reportTypeID
+   *  string $statusID - Filter based on a specific statusID
+   *  string $costCentreID - Filter based on a specific costCentreID
+   *  string $createdBy - Filter based on a specific createdBy value
+   *  string $statusPersonID - Filter based on  a specific statusPersonID
    *
    * Returns: int - The number of rows
    */
-  public function getMaxRows(string $filter = '') {
+  public function getMaxRows(string $filter = '', ?string $reportTypeID = null, ?string $statusID = null,
+  ?string $costCentreID = null, ?string $createdBy = null, ?string $statusPersonID = null) {
     // Get the maximum number of rows
-    return $this->generateIndexQB($filter, null, null, null, null, null)->get()->getNumRows();
+    return $this->generateIndexQB($filter, $reportTypeID, $statusID, $costCentreID, $createdBy, $statusPersonID)->get()->getNumRows();
   }
 
   /**
@@ -154,6 +166,12 @@ class Publications extends Controller {
       $session->set('rowsPerPage', 25);
     }
 
+    // Calculate the max rows
+    $filter = is_null($session->get('filter')) ? '' : $session->get('filter');
+    $session->set('maxRows', $this->getMaxRows($filter, $this->request->getPost('reportTypeID'),
+      $this->request->getPost('statusID'), $this->request->getPost('costCentreID'),
+      ($indexType == "myPublications") ? user_id() : null, ($indexType == "assignedToMe") ? user_id() : null));
+
     // Are we coming from a People page
     if (substr($session->get('lastPage'), 0, 12) == 'Publications') {
       // Current sort
@@ -164,13 +182,9 @@ class Publications extends Controller {
       if ($session->has('filter') == false) {
         $session->set('filter', '');
       }
-      // Max rows
-      if ($session->has('maxRows') == false) {
-          $session->set('maxRows', $this->getMaxRows($session->get('filter')));
-      }
+
     } else {    // Not from index - setup variables
       // Setup the filter and max rows
-      $session->set('maxRows', $this->getMaxRows(''));
       $session->set('filter', '');
       $session->set('currentSort', 'dd_desc');
     }
