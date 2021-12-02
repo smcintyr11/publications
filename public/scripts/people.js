@@ -1,5 +1,6 @@
 // Global Variable
 var baseurl = 'http://s-dev-drupal/publications';
+//var baseUrl = 'http://localhost:8080/';
 
 // Checks to see if the Organization textbox is filled in, and OrganizationID
 // is empty.  If so, that means what was typed in the Organization field, does

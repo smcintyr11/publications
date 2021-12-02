@@ -1,5 +1,6 @@
 // Global Variable
 var baseUrl = 'http://s-dev-drupal/publications';
+//var baseUrl = 'http://localhost:8080/';
 
 function lookup(lookupField, lookupID, url) {
   $(lookupField).autocomplete({

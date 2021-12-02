@@ -1,5 +1,6 @@
 // Global Variable
-var baseurl = 'http://s-dev-drupal/publications';
+var baseurl = 'http://s-dev-drupal/publicaions';
+//var baseUrl = 'http://localhost:8080/';
 
 function openTab(evt, tabName) {
   // Declare all variables
