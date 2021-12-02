@@ -44,7 +44,7 @@
  <div class="container my-3 py-3">
    <div class="form-row">
      <div class="col-6">
-       <?= MyFormGeneration::generateDeleteOptions(false, 'publications', 'publication', $page, session('publicationIndex') ?? 'index'); ?>
+       <?= MyFormGeneration::generateDeleteOptions(false, 'publications', 'publication', $page, session('publicationIndex') ?? 'index', "frmDeletePublication"); ?>
      </div>
      <?php
        $version = "Created by " . $publication['CreatedBy'] . " on " . $publication['Created'] . "<br>";

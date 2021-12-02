@@ -38,7 +38,7 @@ CREATE TABLE `Clients` (
   `deleted_at` timestamp NULL DEFAULT NULL,
   `DeletedBy` int(11) UNSIGNED DEFAULT NULL,
   `ClientID` int(11) NOT NULL,
-  `Client` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL
+  `Client` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --

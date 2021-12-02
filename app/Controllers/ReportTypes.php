@@ -571,10 +571,11 @@ class ReportTypes extends Controller {
     $db = \Config\Database::connect('publications');
     $builder = $db->table('ReportTypes');
     $builder->where('deleted_at', null);
+    $builder->groupStart();
     $builder->like('ReportType', $searchString);
     $builder->orLike('Abbreviation', $searchString);
+    $builder->groupEnd();
     $builder->select('ReportTypeID,CONCAT (ReportType, " (", Abbreviation, ")") AS DDValue');
-
 
     // Run the query and compile an array of report data
     $autoComplete = array();
