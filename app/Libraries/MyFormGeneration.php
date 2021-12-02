@@ -550,7 +550,7 @@ class MyFormGeneration {
   public static function generateColumnHeader(string $controller, string $columnTitle, string $sortParam, string $currentSort, string $upID, string $downID) {
     // Generate the html
     $html = '<th scope="col" class="align-top">
-      <a class="btn btn-link" href="/' . $controller . '/index/1?sort=' . $sortParam . '">' . $columnTitle . '</a>';
+      <a class="btn btn-link" href="' . base_url() . '/' . $controller . '/index/1?sort=' . $sortParam . '">' . $columnTitle . '</a>';
       if ($currentSort == $upID) {
         $html = $html . '<i class="fas fa-sort-up"></i>';
       } elseif ($currentSort == $downID) {
