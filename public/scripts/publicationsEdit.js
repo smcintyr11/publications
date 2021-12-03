@@ -1568,7 +1568,7 @@ $(document).ready(function(){
     $("#assignedTo").val("");
     $("#statusPersonID").val("");
 
-    // Try to get the expected duration
+    // Try to get the expected duration & instructions
     $.ajax({
       url: baseurl + "/statuses/getExpectedDuration",
       type: "POST",
@@ -1590,6 +1590,19 @@ $(document).ready(function(){
             $("#ipdNumber").val(formatter.format(nowDate));
           } else {
               $("#statusDueDate").val("");
+          }
+
+          // Get the instructions
+          var instructions = dataResult.instructions;
+
+          // Are there instructions
+          if (instructions != null) {
+            $("#statusPopup").show();
+            $("#statusPopup").attr('data-content', instructions);
+            //$("#statusPopup").data('content', instructions);
+          } else {
+            $("#statusPopup").attr('data-content', "");
+            $("#statusPopup").hide();
           }
         }
         else if(dataResult.statusCode==201) {
@@ -1619,6 +1632,14 @@ $(document).ready(function(){
   $(function () {
     $('[data-toggle="tooltip"]').tooltip()
   });
+
+  // Enable popups
+  $(function () {
+    $('[data-toggle="popover"]').popover()
+  });
+  $('.popover-dismiss').popover({
+    trigger: 'focus'
+  })
 
   // Make the view comments text area read only
   //$('#viewPublicationsCommentsComment').attr('readonly','readonly');
@@ -1699,4 +1720,6 @@ $(document).ready(function(){
   // Intercept form submition
   const form = document.getElementById('frmEditPublication');
   form.addEventListener('submit', checkLookups);
+
+  $("#statusID").change();
 });

@@ -502,7 +502,7 @@
       <?php
         // Determine if the user has permissions to edit
         if (in_groups(['pubsAdmin', 'pubsRC', 'pubsRCMan']) == true) {
-          echo (MyFormGeneration::generateSelect("statusID",
+          echo (MyFormGeneration::generateStatusSelect("statusID", "statusPopup",
             set_value('statusID', $publication['StatusID']),
             "-- Select a status --", "Status", $statuses));
 

@@ -402,6 +402,52 @@ class MyFormGeneration {
    return $html;
  }
 
+   /**
+      * Name: generateSelectBox
+      * Purpose: Generates the label and textbox HTML
+      *
+      * Parameters:
+      *  string $selectID   - The value to use for the select name field
+      *  string $value       - The value to populate the select with
+      *  string $placeholder - The placeholder text for the first option
+      *  string $textboxLabel  - The text for the label
+      *  array $optionList  - The array of rows to be converted to options
+      *  bool $hidden - A boolean value indicating whether to hide the html element with the display style element
+      *
+      * Returns: string - The HTML for these form elements
+      */
+  public static function generateStatusSelect(string $selectID, string $popupID, ?string $value, string $placeholder, string $selectLabel, array $options, bool $hidden=false) {
+    // Convert the options to html
+    $optionList = MyFormGeneration::generateOptions($options, $value);
+
+    // Variable declaration
+    $html = '';
+
+    // Generate the HTML
+    if ($hidden) {
+      $html = '<div style="display: none;">';
+    }
+
+   $html = $html . '<div class="form-group row">
+     <div class="col-2">
+     <label for="' . $selectID . '" class="col-form-label font-weight-bold">' . $selectLabel . ':</label>
+     <button id="' . $popupID . '" type="button" class="btn btn-primary btn-sm fas fa-question-circle" data-trigger="focus" 
+     data-container="body" data-toggle="popover" data-placement="right" data-content="-- placeholder --">
+     </button>
+     </div>
+     <div class="col-10">
+     <select class="form-control" id="' . $selectID . '" name="' . $selectID . '" value="' . $value . '" >
+     <option value="">' . $placeholder . '</option>' . $optionList . '
+     </select><br /></div></div>';
+
+     if ($hidden) {
+       $html = $html . '</div>';
+     }
+
+    // Return the resultinng HTML
+    return $html;
+  }
+
  /**
       * Name: generateOptions
       * Purpose: Converts an array of database rows to HTML options

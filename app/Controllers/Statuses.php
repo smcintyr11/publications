@@ -600,7 +600,7 @@ class Statuses extends Controller {
   /**
    * Name: getExpectedDuration
    * Purpose: Uses a query variable passed to the URL to search for a status'
-   *  expected duration
+   *  expected duration and instructions
    *
    * Parameters: None
    *
@@ -620,7 +620,7 @@ class Statuses extends Controller {
     // Create the query builder object
     $db = \Config\Database::connect('publications');
     $builder = $db->table('Statuses');
-    $builder->select('ExpectedDuration');
+    $builder->select('ExpectedDuration, Instructions');
     $builder->where('deleted_at', null);
     $builder->where('StatusID', $statusID);
 
@@ -631,7 +631,7 @@ class Statuses extends Controller {
       return;
     }
     $builder = $db->table('Statuses');
-    $builder->select('ExpectedDuration');
+    $builder->select('ExpectedDuration, Instructions');
     $builder->where('StatusID', $statusID);
     $results = $builder->get()->getRow();
 
@@ -639,6 +639,7 @@ class Statuses extends Controller {
     $result = array(
       "statusCode"=>200,
       "expectedDuration"=>$results->ExpectedDuration,
+      "instructions"=>$results->Instructions,
     );
 
     // Return the success
