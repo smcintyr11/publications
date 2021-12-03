@@ -233,6 +233,7 @@ class MyFormGeneration {
     *  string $placeholder - The placeholder text
     *  string $textboxLabel  - The text for the label
     *  int $rows            - The number of rows for the textbox
+    *  bool $readonly - A boolena value indicating whether the textbox is read only or not
     *  bool $hidden - A boolean value indicating whether to hide the html element with the display style element
     *
     * Returns: string - The HTML for these form elements
