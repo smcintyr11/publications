@@ -38,6 +38,10 @@
     <?= MyFormGeneration::generateCheckBox("defaultStatus",
         set_value('defaultStatus', $status['DefaultStatus']), "Make Default"); ?>
 
+    <?= MyFormGeneration::generateMultilineTextBox("instructions",
+        set_value('instructions', $status['Instructions']),
+        "-- Enter any instructions related to this status --", "Instructions", 3); ?>
+
     <button class="btn btn-success m-1" type="submit" name="submit">Save Status</button>
     <a class="btn btn-info m-1" href="<?= base_url() ?>/statuses/index/<?= $page ?>">Back to Statuses</a>
   </form>

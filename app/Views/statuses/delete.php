@@ -12,7 +12,7 @@
       echo (MyFormGeneration::generateItalicText("Version", $version, 12, "right"));
       ?>
   </div>
-  
+
   <h1><?= esc($title); ?></h1>
 
   <form class="form-group" action="<?= base_url() ?>/statuses/delete" method="post">
@@ -33,6 +33,9 @@
 
     <?= MyFormGeneration::generateIDTextBox("defaultStatus",
         ($status['DefaultStatus'] == 0 ? "No" : "Yes"), "Default Status"); ?>
+
+    <?= MyFormGeneration::generateMultilineTextBox("instructions",
+        $status['Instructions'], "", "Instructions", 3, true); ?>
 
     <?= MyFormGeneration::generateDeleteOptions($dependentRecords, 'statuses', 'status', $page); ?>
 

@@ -30,4 +30,7 @@
   <?= MyFormGeneration::generateIDTextBox("defaultStatus",
       ($status['DefaultStatus'] == 0 ? "No" : "Yes"), "Default Status"); ?>
 
+  <?= MyFormGeneration::generateMultilineTextBox("instructions",
+      $status['Instructions'], "", "Instructions", 3, true); ?>
+
 </div>

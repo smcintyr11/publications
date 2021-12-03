@@ -251,12 +251,17 @@ class Statuses extends Controller {
         if ($expectedDuration == "") {
           $expectedDuration = NULL;
         }
+        $instructions = $this->request->getPost('instructions');
+        if ($instructions == "") {
+          $instructions = NULL;
+        }
 
         // Save
         $model->save([
           'CreatedBy' => user_id(),
           'Status' => $this->request->getPost('status'),
           'ExpectedDuration' => $expectedDuration,
+          'Instructions' => $instructions,
         ]);
 
         // If the make default was checked update the default status
@@ -451,6 +456,10 @@ class Statuses extends Controller {
         if ($expectedDuration == "") {
           $expectedDuration = NULL;
         }
+        $instructions = $this->request->getPost('instructions');
+        if ($instructions == "") {
+          $instructions = NULL;
+        }
 
         // Save
         $model->save([
@@ -459,6 +468,7 @@ class Statuses extends Controller {
           'Modified' => date("Y-m-d H:i:s"),
           'Status' => $this->request->getPost('status'),
           'ExpectedDuration' => $expectedDuration,
+          'Instructions' => $instructions,
         ]);
 
         // If the make default was checked update the default status

@@ -28,10 +28,11 @@
   <div class="table-responsive-lg">
     <table class="table table-striped table-bordered">
       <col style="width: 15%">
-      <col style="width: 17%">
-      <col style="width: 41%">
-      <col style="width: 17%">
       <col style="width: 10%">
+      <col style="width: 30%">
+      <col style="width: 10%">
+      <col style="width: 10%">
+      <col style="width: 25%">
 
        <thead class="thead-light">
          <th scope="col"><div class="btn">View / Edit<br>Delete</div></th>
@@ -46,6 +47,8 @@
 
          <?= MyFormGeneration::generateColumnHeader("statuses", "Default",
            $def_sort_param, $_SESSION["currentSort"], "def_asc", "def_desc"); ?>
+
+         <th scope="col" class="align-top"><div class="btn">Instructions</div></th>
        </thead>
 
        <tbody>
@@ -57,6 +60,7 @@
                <td><?= $status->Status; ?></td>
                <td><?= $status->ExpectedDuration; ?></td>
                <td><?= $status->DefaultStatus == 0 ? "No" : "Yes" ?></td>
+               <td><?= $status->Instructions; ?></td>
              </tr>
            <?php endforeach; ?>
          <?php endif ?>

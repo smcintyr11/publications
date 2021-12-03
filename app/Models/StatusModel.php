@@ -8,7 +8,7 @@ class StatusModel extends Model {
   protected $table = "Statuses";
   protected $primaryKey = "StatusID";
   protected $useSoftDeletes = true;
-  protected $allowedFields = ["CreatedBy","ModifiedBy","Modified","DeletedBy","deleted_at","Status", "ExpectedDuration", "DefaultStatus"];
+  protected $allowedFields = ["CreatedBy","ModifiedBy","Modified","DeletedBy","deleted_at","Status", "ExpectedDuration", "DefaultStatus", "Instructions"];
 
   /**
    * Name: getStatus
