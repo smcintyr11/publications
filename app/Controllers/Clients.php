@@ -237,7 +237,7 @@ class Clients extends Controller {
       $page = $this->request->getPost('page');
 
       // Set validation rules
-      $validation->setRule('client', 'Client / Publisher', 'required|max_length[128]');
+      $validation->setRule('client', 'Client / Publisher', 'required|max_length[256]');
       if ($validation->withRequest($this->request)->run(null, null, 'publications')) {
         // Save
         $model->save([
@@ -408,7 +408,7 @@ class Clients extends Controller {
       $page = $this->request->getPost('page');
 
       // Validate the data
-      $validation->setRule('client', 'Client / Publisher', 'required|max_length[128]');
+      $validation->setRule('client', 'Client / Publisher', 'required|max_length[256]');
       if ($validation->withRequest($this->request)->run(null, null, 'publications')) {  // Valid
         // Save
         $model->save([
