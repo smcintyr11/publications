@@ -83,6 +83,7 @@ class PublicationModel extends Model {
         "CrossReferenceNumber" => $row->CrossReferenceNumber,
         "ProjectCode" => $row->ProjectCode,
         "ReportNumber" => $row->ReportNumber,
+        "DuplicateReportNumber" => $this->isDuplicateReportNumber($row->ReportNumber),
         "ManuscriptNumber" => $row->ManuscriptNumber,
         "CostCentreID" => $row->CostCentreID,
         "CostCentre" => $row->CostCentre,
@@ -310,5 +311,29 @@ class PublicationModel extends Model {
     ];
     $builder->where('PublicationID', $publicationID);
     $builder->update($data);
+  }
+
+  /**
+   * Name: isDuplicateReportNumber
+   * Purpose: Searches for an existing publication that has a matching report number
+   *
+   * Parameters:
+   *  string $reportNumber - The report number to search for
+   *
+   * Returns:
+   *  Boolean - True (exists) / False (does not exist)
+   */
+  private function isDuplicateReportNumber($reportNumber) {
+    // Load the query builder
+    $db = \Config\Database::connect('publications');
+
+    // Create the query
+    $builder = $db->table('Publications');
+    $builder->select('PublicationID');
+    $builder->where('ReportNumber', $reportNumber);
+    $builder->where('deleted_at', null);
+
+    // Return the result
+    return $builder->countAllResults() > 1;
   }
 }

@@ -439,7 +439,8 @@
 
       <?= MyFormGeneration::generateTextBox("reportNumber",
         set_value('reportNumber', $publication['ReportNumber']),
-        "-- Enter the report number --", "Report Number"); ?>
+        "-- Enter the report number --", "Report Number", false,
+        ($publication['DuplicateReportNumber'] == false ? null : 'Duplicate Record Number')); ?>
 
       <?= MyFormGeneration::generateTextBox("agreementNumber",
         set_value('agreementNumber', $publication['AgreementNumber']),

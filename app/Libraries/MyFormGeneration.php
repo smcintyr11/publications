@@ -32,7 +32,7 @@ class MyFormGeneration {
     *
     * Returns: string - The HTML for these form elements
     */
-  public static function generateIDTextBox(string $textboxID, ?string $value, string $textboxLabel, bool $hidden=false) {
+  public static function generateIDTextBox(string $textboxID, ?string $value, string $textboxLabel, bool $hidden=false, string $badgeText = null) {
     // Variable declaration
     $html = '';
 
@@ -42,7 +42,12 @@ class MyFormGeneration {
     }
 
    $html = $html . '<div class="form-group row">
-    <label for="' . $textboxID . '" class="col-2 col-form-label font-weight-bold">' . $textboxLabel . ':</label>
+    <div class="col-2">
+      <label for="' . $textboxID . '" class="col-form-label font-weight-bold">' . $textboxLabel . ':</label>';
+    if ($badgeText != null) {
+      $html = $html . '&nbsp;&nbsp;<span class="badge badge-primary">' . $badgeText . '</span>';
+    }
+    $html = $html . '</div>
     <div class="col-10">
     <input type="text" readonly class="form-control-plaintext" name="' . $textboxID . '" id="' . $textboxID . '" value="' . $value . '" />
     <br /></div></div>';
@@ -114,7 +119,7 @@ class MyFormGeneration {
    *
    * Returns: string - The HTML for these form elements
    */
- public static function generateTextBox(string $textboxID, ?string $value, string $placeholder, string $textboxLabel, bool $hidden=false) {
+ public static function generateTextBox(string $textboxID, ?string $value, string $placeholder, string $textboxLabel, bool $hidden=false, string $badgeText = null) {
    // Variable declaration
    $html = '';
 
@@ -124,7 +129,12 @@ class MyFormGeneration {
    }
 
    $html = $html . '<div class="form-group row">
-    <label for="' . $textboxID . '" class="col-2 col-form-label font-weight-bold">' . $textboxLabel . ':</label>
+    <div class="col-2">
+      <label for="' . $textboxID . '" class="col-form-label font-weight-bold">' . $textboxLabel . ':</label>';
+    if ($badgeText != null) {
+      $html = $html . '&nbsp;&nbsp;<span class="badge badge-primary">' . $badgeText . '</span>';
+    }
+    $html = $html . '</div>
     <div class="col-10">
     <input class="form-control" type="input" name="' . $textboxID . '" value="' . $value . '" placeholder="' . $placeholder . '" id="' . $textboxID . '"  />
     <br /></div></div>';
@@ -431,7 +441,7 @@ class MyFormGeneration {
    $html = $html . '<div class="form-group row">
      <div class="col-2">
      <label for="' . $selectID . '" class="col-form-label font-weight-bold">' . $selectLabel . ':</label>
-     <button id="' . $popupID . '" type="button" class="btn btn-primary btn-sm fas fa-question-circle" data-trigger="focus" 
+     <button id="' . $popupID . '" type="button" class="btn btn-primary btn-sm fas fa-question-circle" data-trigger="focus"
      data-container="body" data-toggle="popover" data-placement="right" data-content="-- placeholder --">
      </button>
      </div>

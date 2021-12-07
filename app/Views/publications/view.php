@@ -127,7 +127,8 @@
        ($publication['RushPublication'] == 0 ? "No" : "Yes"), "Rush Publication"); ?>
 
      <?= MyFormGeneration::generateIDTextBox("reportNumber",
-       $publication['ReportNumber'], "Report Number"); ?>
+       $publication['ReportNumber'], "Report Number", false,
+       ($publication['DuplicateReportNumber'] == false ? null : 'Duplicate Record Number')); ?>
 
      <?= MyFormGeneration::generateIDTextBox("agreementNumber",
        $publication['AgreementNumber'], "Agreement Number", $hideDetailedFields); ?>
