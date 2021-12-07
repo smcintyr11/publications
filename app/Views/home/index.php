@@ -18,21 +18,26 @@
         <th scope="col">Details</th>
       </tr>
     </thead>
-    <tr>
-      <td>
-      <?php
-        echo ($updated);
+    <?php
+      foreach ($versions as $version) {
+        echo ('<tr>');
+        echo ('<td>' . $version['Updated']);
         $now = time();
-        $updatedTime = strtotime($updated);
+        $updatedTime = strtotime($version['Updated']);
         $difference = $now - $updatedTime;
         $days = round ($difference / (60 * 60 * 24));
-        if ($days < 7) {
-          echo('&nbsp;&nbsp;<span class="badge badge-primary">Updated</span>');
+        if ($days == 0) {
+          echo('&nbsp;&nbsp;<span class="badge badge-primary">Today</span>');
+        } elseif ($days == 1) {
+          echo('&nbsp;&nbsp;<span class="badge badge-primary">Yesterday</span>');
+        } elseif ($days < 7) {
+          echo('&nbsp;&nbsp;<span class="badge badge-primary">' . $days . ' days ago</span>');
         }
-       ?>
-      </td>
-      <td><?= $version ?></td>
-      <td><?= $description ?></td>
-    </tr>
+        echo ('</td>');
+        echo ('<td>' . $version['Version'] . '</td>');
+        echo ('<td>' . $version['Description'] . '</td>');
+        echo ('</tr>');
+      }
+    ?>
   </table>
 </div>

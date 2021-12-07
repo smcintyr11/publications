@@ -17,12 +17,10 @@ class Home extends BaseController
 		$session->destroy();
 		$session->set('lastPage', 'Home::index');
 
-		$versionInfo = $this->getVersionInformation();
+		$versions = $this->getVersionInformation(5);
 
 		$data['title'] = "Home Page";
-		$data['updated'] = $versionInfo['Updated'];
-		$data['version'] = $versionInfo['Version'];
-		$data['description'] = $versionInfo['Description'];
+		$data['versions'] = $versions;
 		echo view('templates/header.php', $data);
 		echo view('templates/menu.php', $data);
 		echo view('home/index.php', $data);
@@ -30,14 +28,16 @@ class Home extends BaseController
 	}
 
 	/**
-	 * Name: index
-	 * Purpose: Generates the index page
+	 * Name: getVersionInformation
+	 * Purpose: Gets the last 5 rows from the version table
 	 *
-	 * Parameters: None
+	 * Parameters:
+	 *	$rows - The number of rows to get
 	 *
-	 * Returns: None
+	 * Returns:
+	 *	Array of rows
 	 */
-	private function getVersionInformation()
+	private function getVersionInformation($rows)
 	{
 		// Load the query builder
 		$db = \Config\Database::connect('publications');
@@ -45,13 +45,17 @@ class Home extends BaseController
 		// Generate the query
 		$builder = $db->table('Versions');
 		$builder->orderBy('VersionID', 'DESC');
+		$builder->limit($rows);
 
 		// Return the result
-		$result = $builder->get()->getRow();
-		if (empty($result)) {
+		$results = array();
+		foreach ($builder->get()->getResult() as $row) {
+				$r = array ('Updated' => $row->CreatedOn, 'Version' => $row->Version, 'Description' => $row->Description, );
+				array_push($results, $r);
+		}
+		if (count($results) == 0) {
 			return null;
 		}
-		$result = array('Updated' => $result->CreatedOn, 'Version' => $result->Version, 'Description' => $result->Description, );
-		return $result;
+		return $results;
 	}
 }
