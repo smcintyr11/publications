@@ -9,4 +9,30 @@
   </thead>
   <p>Please send any feedback to
     <a href="mailto:scott.mcIntyre@nrcan-rncan.gc.ca">Scott McIntyre</a></p>
+  <br />
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Updated On</th>
+        <th scope="col">Version #</th>
+        <th scope="col">Details</th>
+      </tr>
+    </thead>
+    <tr>
+      <td>
+      <?php
+        echo ($updated);
+        $now = time();
+        $updatedTime = strtotime($updated);
+        $difference = $now - $updatedTime;
+        $days = round ($difference / (60 * 60 * 24));
+        if ($days < 7) {
+          echo('&nbsp;&nbsp;<span class="badge badge-primary">Updated</span>');
+        }
+       ?>
+      </td>
+      <td><?= $version ?></td>
+      <td><?= $description ?></td>
+    </tr>
+  </table>
 </div>
