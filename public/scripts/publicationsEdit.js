@@ -1019,6 +1019,13 @@ function AddPublicationAuthor(authorID, authorName, publicationID) {
         // Clear the author boxes
         $("#newAuthor").val("");
         $("#authorID").val("");
+
+        // Clear the adhoc boxes (just in case)
+        $("#newLastName").val("");
+        $("#newFirstName").val("");
+        $("#newDisplayName").val("");
+        $("#newPOrganization").val("");
+        $("#newPOrganizationID").val("");
       }
     });
 }
