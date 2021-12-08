@@ -5,7 +5,10 @@
 <script type="text/javascript" src="<?= base_url() ?>/scripts/publicationDelete.js"></script>
 
 <?php use App\Libraries\MyFormGeneration; ?>
-<?php $hideDetailedFields = true; ?>
+<?php 
+  $hideDetailedFields = true;
+  $disableField = true;
+?>
 
 <!-- View Comment Modal -->
  <div class="modal fade" id="commentModal" tabindex="-1" role="dialog">
@@ -77,7 +80,7 @@
      <li class="nav-item">
        <a class="nav-link tablink" onclick="openTab(event, 'tbAuthors')">Authors</a>
      </li>
-     <li class="nav-item">
+     <li class="nav-item" <?= ($disableField ? 'style="display: none;"' : '') ?> >
        <a class="nav-link tablink" onclick="openTab(event, 'tbReviewers')">Reviewers</a>
      </li>
      <li class="nav-item" <?= ($hideDetailedFields ? 'style="display: none;"' : '') ?> >

@@ -9,7 +9,10 @@
 
 <?php use App\Libraries\MyFormGeneration; ?>
 <?php helper('auth'); ?>
-<?php $hideDetailedFields = true; ?>
+<?php
+  $hideDetailedFields = true;
+  $disableField = true;
+?>
 
 <!-- Edit Link Modal -->
  <div class="modal fade" id="linkModal" tabindex="-1" role="dialog">
@@ -369,7 +372,7 @@
     <li class="nav-item">
       <a class="nav-link tablink" onclick="openTab(event, 'tbAuthors')">Authors</a>
     </li>
-    <li class="nav-item">
+    <li class="nav-item" <?= ($disableField ? 'style="display: none;"' : '') ?> >
       <a class="nav-link tablink" onclick="openTab(event, 'tbReviewers')">Reviewers</a>
     </li>
     <li class="nav-item" <?= ($hideDetailedFields ? 'style="display: none;"' : '') ?> >
