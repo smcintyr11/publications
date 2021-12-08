@@ -336,6 +336,15 @@
      <?= MyFormGeneration::generateIDTextBox("doi",
        $publication['DOI'], "DOI", $hideDetailedFields); ?>
 
+     <?= MyFormGeneration::generateMultilineTextBox("conferenceName",
+         $publication['ConferenceName'], "", "Conference Name", 2, true); ?>
+
+     <?= MyFormGeneration::generateIDTextBox("conferenceDate",
+       $publication['ConferenceDate'], "Conference Date"); ?>
+
+     <?= MyFormGeneration::generateMultilineTextBox("conferenceLocation",
+         $publication['ConferenceLocation'], "", "Conference Location", 2, true); ?>
+
    </div>
 
    <!-- Dates Tab -->

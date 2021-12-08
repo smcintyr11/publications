@@ -358,7 +358,6 @@
      }
     ?>
 
-
   <!-- Tab links -->
   <ul class="nav nav-tabs">
     <li class="nav-item">
@@ -763,6 +762,17 @@
       <?= MyFormGeneration::generateTextBox("doi",
           set_value('doi', $publication['DOI']),
           "-- Enter the DOI --", "DOI", $hideDetailedFields); ?>
+
+      <?= MyFormGeneration::generateMultilineTextBox("conferenceName",
+          set_value('conferenceName', $publication['ConferenceName']),
+          "-- Enter the name of the conference --", "Conference Name", 2); ?>
+
+      <?= MyFormGeneration::generateDateTextBox("conferenceDate",
+          set_value('conferenceDate', $publication['ConferenceDate']), "Conference Date"); ?>
+
+      <?= MyFormGeneration::generateMultilineTextBox("conferenceLocation",
+          set_value('conferenceLocation', $publication['ConferenceLocation']),
+          "-- Enter the location of the conference --", "Conference Location", 2); ?>
 
     </div>
 
