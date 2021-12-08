@@ -37,7 +37,7 @@
 
   <form class="form-inline" action="<?= base_url() ?>/publications/assignedToMe/1" method="post" id="frmSearch">
     <?= csrf_field() ?>
-    <input class="form-control mr-2" type="text" name="filter" placeholder="Search">
+    <input class="form-control mr-2" type="text" id="filter" name="filter" placeholder="Search" value="<?= set_value('filter', '') ?>" >
     <button class="btn btn-success m-1" type="submit">Search</button>
     <a class="btn btn-info m-1" href="<?= base_url() ?>/publications/assignedToMe/1?filter=">Reset</a>
   </form>

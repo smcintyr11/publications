@@ -18,7 +18,7 @@
 <div class="container my-3 py-3">
   <h1><?= esc($title); ?></h1>
 
-  <?= MyFormGeneration::generateIndexSearch("costCentres", csrf_field()); ?>
+  <?= MyFormGeneration::generateIndexSearch("costCentres", csrf_field(), set_value('filter', '')); ?>
 
   <a class="btn btn-primary my-3" href="<?= base_url() ?>/costCentres/new/<?= $page ?>">Create Cost Centre</a>
 

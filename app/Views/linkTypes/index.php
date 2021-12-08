@@ -15,7 +15,7 @@
 <div class="container my-3 py-3">
   <h1><?= esc($title); ?></h1>
 
-  <?= MyFormGeneration::generateIndexSearch("linkTypes", csrf_field()); ?>
+  <?= MyFormGeneration::generateIndexSearch("linkTypes", csrf_field(), set_value('filter', '')); ?>
 
   <a class="btn btn-primary my-3" href="<?= base_url() ?>/linkTypes/new/<?= $page ?>">Create Link Type</a>
 

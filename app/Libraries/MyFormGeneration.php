@@ -695,20 +695,23 @@ class MyFormGeneration {
   * Parameters:
   *  string $controller - The name of the controller
   *  string $csrf_field - The html for the csrf_field
+  *  string $searchValue - The value to populate the search box with
   *
   * Returns: string - The HTML for the form part
   */
-  public static function generateIndexSearch(string $controller, string $csrf_field) {
+  public static function generateIndexSearch(string $controller, string $csrf_field, string $searchValue="") {
     // Generate the html
     $html = '<form class="form-inline" action="' . base_url() . '/' . $controller . '/index/1" method="post" id="frmSearch">
       ' . $csrf_field . '
-      <input class="form-control mr-2" type="text" name="filter" placeholder="Search">
+      <input class="form-control mr-2" type="text" id="filter" name="filter" placeholder="Search" value="'. $searchValue . '">
       <button class="btn btn-success m-1" type="submit">Search</button>
       <a class="btn btn-info m-1" href="' . base_url() . '/' . $controller . '/index/1?filter=">Reset</a>
       </form>';
 
     // Return the html
     return $html;
+
+
   }
 
   /**

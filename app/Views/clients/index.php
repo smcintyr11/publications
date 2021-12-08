@@ -15,7 +15,7 @@
 <div class="container my-3 py-3">
   <h1><?= esc($title); ?></h1>
 
-  <?= MyFormGeneration::generateIndexSearch("clients", csrf_field()); ?>
+  <?= MyFormGeneration::generateIndexSearch("clients", csrf_field(), set_value('filter', '')); ?>
 
   <a class="btn btn-primary my-3" href="<?= base_url() ?>/clients/new/<?= $page ?>">Create Client / Publisher</a>
 

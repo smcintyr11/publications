@@ -139,6 +139,9 @@ class Clients extends Controller {
       }
     }
 
+    // Load the helpers
+    helper(['url', 'form', 'auth']);
+
     // Get the URI service
     $uri = service('uri');
     $session = session();

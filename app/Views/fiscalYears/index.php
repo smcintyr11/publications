@@ -15,7 +15,7 @@
 <div class="container my-3 py-3">
   <h1><?= esc($title); ?></h1>
 
-  <?= MyFormGeneration::generateIndexSearch("fiscalYears", csrf_field()); ?>
+  <?= MyFormGeneration::generateIndexSearch("fiscalYears", csrf_field(), set_value('filter', '')); ?>
 
   <a class="btn btn-primary my-3" href="<?= base_url() ?>/fiscalYears/new/<?= $page ?>">Create Fiscal Year</a>
 

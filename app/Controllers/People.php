@@ -155,6 +155,9 @@ class People extends Controller {
       }
     }
 
+    // Load the helpers
+    helper(['url', 'form', 'auth']);
+
     // Get the services
     $uri = service('uri');
     $session = session();

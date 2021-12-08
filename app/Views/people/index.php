@@ -24,7 +24,7 @@
 <div class="container my-3 py-3">
   <h1><?= esc($title); ?></h1>
 
-  <?= MyFormGeneration::generateIndexSearch("people", csrf_field()); ?>
+  <?= MyFormGeneration::generateIndexSearch("people", csrf_field(), set_value('filter', '')); ?>
 
   <a class="btn btn-primary my-3" href="<?= base_url() ?>/people/new/<?= $page ?>">Create Person</a>
 

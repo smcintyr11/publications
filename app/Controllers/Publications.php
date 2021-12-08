@@ -52,6 +52,7 @@ class Publications extends Controller {
     // Are we filtering
     $builder->where('publications.Publications.deleted_at', null);
     if ($filter != '') {
+      $builder->groupStart();
       if (empty($costCentreID)) {
         $builder->like('publications.CostCentres.CostCentre', $filter);
       }
@@ -67,6 +68,7 @@ class Publications extends Controller {
       }
       $builder->orLike('publications.vPublicationAuthors.PublicationAuthors', $filter);
       $builder->orLike('users.users.DisplayName', $filter);
+      $builder->groupEnd();
     }
 
     if (empty($reportTypeID) == false) {
@@ -172,14 +174,23 @@ class Publications extends Controller {
       $this->request->getPost('statusID'), $this->request->getPost('costCentreID'),
       ($indexType == "myPublications") ? user_id() : null, ($indexType == "assignedToMe") ? user_id() : null));
 
-    // Are we coming from a People page
+    // Are we coming from a publications page
     if (substr($session->get('lastPage'), 0, 12) == 'Publications') {
-      // Current sort
-      if ($session->has('currentSort') == false) {
+      // Get the previous indexType
+      $previousIndex = substr($session->get('lastPage'),14);
+
+      // Check to see if we are coming from the same indexType
+      if ($previousIndex == $indexType) {
+        // Current sort
+        if ($session->has('currentSort') == false) {
+          $session->set('currentSort', 'id_asc');
+        }
+        // Filter
+        if ($session->has('filter') == false) {
+          $session->set('filter', '');
+        }
+      } else {
         $session->set('currentSort', 'id_asc');
-      }
-      // Filter
-      if ($session->has('filter') == false) {
         $session->set('filter', '');
       }
 
