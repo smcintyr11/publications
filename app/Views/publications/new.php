@@ -52,6 +52,13 @@
 
     <input type="hidden" name="page" value="<?= $page ?>">
 
+    <!-- For use in Javascript -->
+    <?= MyFormGeneration::generateHiddenInput('UserID', user_id()); ?>
+
+    <?= MyFormGeneration::generateHiddenInput('AdvancedUser', intval(in_groups(['pubsAdmin', 'pubsRC', 'pubsRCMan']))); ?>
+
+    <!-- Main form -->
+
     <?= MyFormGeneration::generateMultilineTextBox("primaryTitle",
       set_value('primaryTitle'),
       "-- Enter the primary title --", "Primary Title", 3); ?>

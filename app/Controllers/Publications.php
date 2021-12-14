@@ -573,10 +573,16 @@ class Publications extends Controller {
      // Get the view data from the form
      $page = $this->request->getPost('page');
 
+     // Check the status ID
+     if (empty($this->request->getPost('statusID'))) {
+       $statusID = $this->request->getPost('originalStatusID');
+     } else {
+       $statusID = $this->request->getPost('statusID');
+     }
+
      // Validate the data
      $validation->setRule('primaryTitle', 'Primary Title', 'required');
      $validation->setRule('reportTypeID', 'Report Type', 'required');
-     $validation->setRule('statusID', 'Status', 'required');
      if (!empty($this->request->getPost('publicationDate'))) {
         $validation->setRule('publicationDate', 'Publication Date', 'valid_date');
      }
@@ -589,6 +595,8 @@ class Publications extends Controller {
      $validation->setRule('reportNumber', 'Report Number', 'max_length[64]');
      $validation->setRule('manuscriptNumber', 'Manuscript Number', 'max_length[64]');
      $validation->setRule('isbn', 'ISBN', 'max_length[64]');
+
+
      if (!empty($this->request->getPost('statusDueDate'))) {
        $validation->setRule('statusDueDate ', 'Status Due Date ', 'valid_date');
      }
@@ -649,7 +657,7 @@ class Publications extends Controller {
          'CostCentreID' => $this->request->getPost('costCentreID') == "" ? null : $this->request->getPost('costCentreID'),
          'JournalID' => $this->request->getPost('journalID') == "" ? null : $this->request->getPost('journalID'),
          'ReportTypeID' => $this->request->getPost('reportTypeID'), // **
-         'StatusID' => $this->request->getPost('statusID'), // **
+         'StatusID' => $statusID, // **
          'StatusPersonID' => $this->request->getPost('statusPersonID') == "" ? null : $this->request->getPost('statusPersonID'),
          'StatusDueDate' => $this->request->getPost('statusDueDate') == "" ? null : $this->request->getPost('statusDueDate'),
          'DOI' => $this->request->getPost('doi') == "" ? null : $this->request->getPost('doi'),
@@ -671,11 +679,11 @@ class Publications extends Controller {
        ]);
 
        // Did the status change?  If so update the publications statuses table
-       if ($this->request->getPost('originalStatusID') != $this->request->getPost('statusID')) {
+       if ($this->request->getPost('originalStatusID') != $statusID) {
         $this->updateCompleteStatus($this->request->getPost('publicationID'), $this->request->getPost('originalStatusID'));
-        $this->newStatus($this->request->getPost('publicationID'), $this->request->getPost('statusID'), $this->request->getPost('statusPersonID'), $this->request->getPost('statusDueDate'));
+        $this->newStatus($this->request->getPost('publicationID'), $statusID, $this->request->getPost('statusPersonID'), $this->request->getPost('statusDueDate'));
       } elseif (($this->request->getPost('originalStatusPersonID') != $this->request->getPost('statusPersonID')) || ($this->request->getPost('originalStatusDueDate') != $this->request->getPost('statusDueDate'))) {
-        $this->newStatus($this->request->getPost('publicationID'), $this->request->getPost('statusID'), $this->request->getPost('statusPersonID'), $this->request->getPost('statusDueDate'));
+        $this->newStatus($this->request->getPost('publicationID'), $statusID, $this->request->getPost('statusPersonID'), $this->request->getPost('statusDueDate'));
       }
 
        // Go back to index
@@ -1000,7 +1008,6 @@ class Publications extends Controller {
     $builder = $db->table('PublicationsStatuses');
     $builder->set('CompletionDate', date("Y-m-d H:i:s"));
     $builder->set('ModifiedBy', user_id());
-    $builder->where('deleted_at', null);
     $builder->where('PublicationsStatusesID', $publicationsStatusesID);
     $builder->update();
   }

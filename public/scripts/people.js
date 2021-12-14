@@ -1,6 +1,6 @@
 // Global Variable
 var baseurl = 'http://s-dev-drupal/publications';
-//var baseUrl = 'http://localhost:8080/';
+//var baseurl = 'http://localhost:8080/';
 
 // Checks to see if the Organization textbox is filled in, and OrganizationID
 // is empty.  If so, that means what was typed in the Organization field, does
@@ -51,6 +51,12 @@ function checkOrganization(event) {
 
 // Function to add an organization to the database
 function addOrganization() {
+  // Check to make sure the field is not too long
+  if ($("#newOrganization").val().length > 128) {
+    alert("The organization can be at most 128 characters.");
+    return;
+  }
+
   $.ajax({
       url: baseurl + "/organizations/add",
       type: "POST",

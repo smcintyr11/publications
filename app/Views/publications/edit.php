@@ -10,7 +10,7 @@
 <?php use App\Libraries\MyFormGeneration; ?>
 <?php helper('auth'); ?>
 <?php
-  $hideDetailedFields = true;
+  $hideDetailedFields = false;
   $disableField = true;
 ?>
 
@@ -407,6 +407,13 @@
     <input type="hidden" name="page" value="<?= $page ?>">
 
     <br />
+    <!-- For use in javascript -->
+    <?= MyFormGeneration::generateHiddenInput('CreatedByID', $publication['CreatedByID']); ?>
+
+    <?= MyFormGeneration::generateHiddenInput('UserID', user_id()); ?>
+
+    <?= MyFormGeneration::generateHiddenInput('AdvancedUser', intval(in_groups(['pubsAdmin', 'pubsRC']))); ?>
+
     <!-- Tab content -->
     <!-- General Tab -->
     <div id="tbGeneral" class="tabcontent" style="display: block;">
@@ -497,39 +504,21 @@
       <?= MyFormGeneration::generateHiddenInput('originalStatusDueDate',
         set_value('originalStatusID', $publication['OriginalStatusDueDate'])); ?>
 
-      <!-- Hidden button to trigger modal -->
-      <div style="display: none;">
-        <button type="button" data-toggle="modal" data-target="#newPersonModal" id="btnNewPerson" />
-      </div>
-
       <?php
         // Determine if the user has permissions to edit
-        if (in_groups(['pubsAdmin', 'pubsRC', 'pubsRCMan']) == true) {
+        if ((in_groups(['pubsAdmin', 'pubsRC', 'pubsRCMan']) == true) || (user_id() == $publication['CreatedByID'])) {
+          echo ('<div class="card"><div class="card-header"><h3>New / Update Status</h3></div><div class="card-body">');
           echo (MyFormGeneration::generateStatusSelect("statusID", "statusPopup",
-            set_value('statusID', $publication['StatusID']),
+            set_value('statusID'),
             "-- Select a status --", "Status", $statuses));
 
           echo (MyFormGeneration::generateLookupTextBox("assignedTo",
-            set_value('assignedTo', $publication['AssignedTo']),
-            "-- Enter a person --", "Assigned To",
-            "statusPersonID", set_value('statusPersonID', $publication['StatusPersonID'])));
+            set_value('assignedTo'), "-- Enter a person --", "Assigned To",
+            "statusPersonID", set_value('statusPersonID')));
 
           echo (MyFormGeneration::generateDateTextBox("statusDueDate",
-              set_value('statusDueDate', $publication['StatusDueDate']),
-              "Due Date"));
-        } else {
-          echo (MyFormGeneration::generateHiddenInput('statusID',
-            set_value('statusID', $publication['StatusID'])));
-          echo (MyFormGeneration::generateIDTextBox("status",
-            $publication['Status'], "Status"));
-
-          echo (MyFormGeneration::generateHiddenInput('statusPersonID',
-            set_value('statusPersonID', $publication['StatusPersonID'])));
-          echo (MyFormGeneration::generateIDTextBox("assignedTo",
-            $publication['AssignedTo'], "Assigned To"));
-
-          echo (MyFormGeneration::generateIDTextBox("statusDueDate",
-            $publication['StatusDueDate'], "Due Date"));
+              set_value('statusDueDate'), "Due Date"));
+          echo ('</div></div><br />');
         }
        ?>
 
@@ -573,6 +562,11 @@
 
       <?= MyFormGeneration::generateLookupTextBoxWithButton("newAuthor",
         null, "-- Enter a person --", "Author", null, "authorID", null, "btnAddAuthor", "Add to Publication"); ?>
+
+      <!-- Hidden button to trigger modal -->
+      <div style="display: none;">
+        <button type="button" data-toggle="modal" data-target="#newPersonModal" id="btnNewPerson" />
+      </div>
 
       <div class="form-group row">
       <h3>Authors</h3>

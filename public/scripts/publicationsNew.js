@@ -40,9 +40,14 @@ function checkReportType(event) {
             // Stop saving temporarily
             event.preventDefault();
 
-            // Trigger the new report type dialog
-            $("#newReportType").val(reportType);
-            btnNewReportType.click();
+            // Check to see if the user has permissions to add report types
+            if ($("#AdvancedUser").val() == "1") {
+              // Trigger the new report type dialog
+              $("#newReportType").val(reportType);
+              btnNewReportType.click();
+            } else {
+              alert("You must enter a report type that already exists in the system.\n\rIf you are unsure what report types are available, go to Lookup Tables -> Report Types.");
+            }
           }
         }
       });
@@ -54,6 +59,17 @@ function addReportType() {
   // Make sure report type and abbreviation are filled in
   if (($("#newReportType").val() == "") || ($("#newAbbreviation").val() == "")) {
     alert("You must enter both a Report Type and an Abbreviation.");
+    return;
+  }
+
+  // Check to make sure the field is not too long
+  if ($("#newReportType").val().length > 64) {
+    alert("The report type can be at most 64 characters.");
+    return;
+  }
+
+  if ($("#newAbbreviation").val().length > 16) {
+    alert ("The abbreviation can be at most 16 characters.");
     return;
   }
 

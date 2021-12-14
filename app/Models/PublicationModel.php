@@ -56,6 +56,7 @@ class PublicationModel extends Model {
       $result = array(
         "Created" => $row->Created,
         "CreatedBy" => $CreatedBy,
+        "CreatedByID" => $row->CreatedBy,
         "Modified" => $row->Modified,
         "ModifiedBy" => $ModifiedBy,
         "PublicationID" => $row->PublicationID,

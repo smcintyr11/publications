@@ -188,6 +188,13 @@ function editLink() {
           $("#ll_lt_" + plID).html(newLT);
           $("#ll_l_" + plID).html(newLink);
           displaySuccessMessage("Link updated.");
+
+          // Clean up the form
+          $("#editPublicationsLinksID").val("");
+          var selectedID = $('#editLinkTypeID').find(":selected").val();
+          $("#editLinkTypeID").find('option[value="'+selectedID+'"]').attr("selected",false);
+          $("#editLinkTypeID").find('option[value=""]').attr("selected",true);
+          $("#editLink").val("");
           $('#linkModal').modal('hide');
         }
         else {  // Error
@@ -318,9 +325,14 @@ function checkReportType(event) {
             // Stop saving temporarily
             event.preventDefault();
 
-            // Trigger the new report type dialog
-            $("#newReportType").val(reportType);
-            btnNewReportType.click();
+            // Check to see if the user has permissions to add report types
+            if ($("#AdvancedUser").val() == "1") {
+              // Trigger the new report type dialog
+              $("#newReportType").val(reportType);
+              btnNewReportType.click();
+            } else {
+              alert("You must enter a report type that already exists in the system.\n\rIf you are unsure what report types are available, go to Lookup Tables -> Report Types.");
+            }
           }
         }
       });
@@ -343,6 +355,17 @@ function addReportType() {
  // Make sure report type and abbreviation are filled in
  if (($("#newReportType").val() == "") || ($("#newAbbreviation").val() == "")) {
    alert("You must enter both a Report Type and an Abbreviation.");
+   return;
+ }
+
+ // Check to make sure the field is not too long
+ if ($("#newReportType").val().length > 64) {
+   alert("The report type can be at most 64 characters.");
+   return;
+ }
+
+ if ($("#newAbbreviation").val().length > 16) {
+   alert ("The abbreviation can be at most 16 characters.");
    return;
  }
 
@@ -437,9 +460,14 @@ function checkFiscalYear(event) {
             // Check to see if the fiscal year is in the correct format before
             // trying to add it to the database
             if (checkFiscalYearFormat()) {
-              // Trigger the new report type dialog
-              $("#newFiscalYear").val(fiscalYear);
-              btnNewFiscalYear.click();
+              // Check to see if the user has permissions to add a fiscal year
+              if ($("#AdvancedUser").val() == "1") {
+                // Trigger the new report type dialog
+                $("#newFiscalYear").val(fiscalYear);
+                btnNewFiscalYear.click();
+              } else {
+                alert("You must enter a fiscal year that already exists in the system.\n\rIf you are unsure what report types are available, go to Lookup Tables -> Fiscal Years.");
+              }
             } else {
               // Tell the user that fiscal year is not even in the correct format
               alert('Fiscal year must be in the format "#### / ####"\nFor example "2021 / 2022".');
@@ -572,9 +600,16 @@ function checkOrganization(event) {
             // Stop saving temporarily
             event.preventDefault();
 
-            // Trigger the new report type dialog
-            $("#newOrganization").val(organization);
-            btnNewOrganization.click();
+            // Check to see if the user has permissions to add organizations
+            if ($("#AdvancedUser").val() == "1") {
+              // Trigger the new report type dialog
+              $("#newOrganization").val(organization);
+              btnNewOrganization.click();
+            } else {
+              alert("You must enter an organization that already exists in the system.\n\rIf you are unsure what report types are available, go to Lookup Tables -> Organizations.");
+            }
+
+
           }
         }
       });
@@ -594,6 +629,12 @@ function checkOrganization(event) {
  *  None
  */
 function addOrganization() {
+  // Check to make sure the field is not too long
+  if ($("#newOrganization").val().length > 128) {
+    alert("The organization can be at most 128 characters.");
+    return;
+  }
+
  // Add the organization
  $.ajax({
      url: baseurl + "/organizations/add",
@@ -704,6 +745,12 @@ function checkClient(event) {
  *  None
  */
 function addClient() {
+  // Check to make sure the field is not too long
+  if ($("#newClient").val().length > 256) {
+    alert("The client / publisher can be at most 256 characters.");
+    return;
+  }
+
   // Add the client
   $.ajax({
       url: baseurl + "/clients/add",
@@ -792,9 +839,16 @@ function checkJournal(event) {
             // Stop saving temporarily
             event.preventDefault();
 
-            // Trigger the new journal dialog
-            $("#newJournal").val(journal);
-            btnNewJournal.click();
+            // Check to see if the user has permissions to add a journal
+            if ($("#AdvancedUser").val() == "1") {
+              // Trigger the new journal dialog
+              $("#newJournal").val(journal);
+              btnNewJournal.click();
+            } else {
+              alert("You must enter a journal that already exists in the system.\n\rIf you are unsure what report types are available, go to Lookup Tables -> Journals.");
+            }
+
+
           }
         }
       });
@@ -814,6 +868,12 @@ function checkJournal(event) {
  *  None
  */
 function addJournal() {
+  // Check to make sure the field is not too long
+  if ($("#newJournal").val().length > 256) {
+    alert("The journal can be at most 256 characters.");
+    return;
+  }
+
   // Add the journal
   $.ajax({
       url: baseurl + "/journals/add",
@@ -1070,6 +1130,13 @@ function AddPublicationReviewer(reviewerID, reviewerName, publicationID) {
         // Clear the reviewer boxes
         $("#newReviewer").val("");
         $("#reviewerID").val("");
+
+        // Clear the adhoc boxes (just in case)
+        $("#newLastName").val("");
+        $("#newFirstName").val("");
+        $("#newDisplayName").val("");
+        $("#newPOrganization").val("");
+        $("#newPOrganizationID").val("");
       }
     });
 }
@@ -1183,6 +1250,9 @@ function CheckPerson(person, message, click, callback) {
  *    None
  */
 function CheckUser(person) {
+  var originalStatusPersonID = $("#originalStatusPersonID").val();
+  var originalAssignedTo = $("#originalAssignedTo").val();
+
   // Check if the user exists
   $.ajax({
       url: baseurl + "/users/searchExactDisplayName",
@@ -1201,8 +1271,8 @@ function CheckUser(person) {
         else {
           // User not found
           alert("The user you have entered in the \"Assigned To\" field under status does not exist.\nThis most likely occured because you did not select the person's name from the drop down.\nThe field has been reset.");
-          $("#statusPersonID").val("#OriginalStatusPersonID");
-          $("#assignedTo").val("#originalAssignedTo");
+          $("#statusPersonID").val(originalStatusPersonID);
+          $("#assignedTo").val(originalAssignedTo);
         }
       }
     });
@@ -1229,6 +1299,17 @@ function addNewKeyword() {
     return;
   }
 
+  // Check to make sure the field is not too long
+  if ($("#newKeywordE").val().length > 128) {
+    alert("The english keyword can be at most 128 characters.");
+    return;
+  }
+
+  if ($("#newKeywordF").val().length > 128) {
+    alert ("The french keyword can be at most 128 characters.");
+    return;
+  }
+
   // Add the keyword to the database
   $.ajax({
       url: baseurl + "/keywords/add",
@@ -1249,63 +1330,15 @@ function addNewKeyword() {
           AddPublicationKeyword(KeywordID, PublicationID);
 
           // Close the Modal
+          $("#newKeywordE").val("");
+          $("#newKeywordF").val("");
+          $("#newKeyword").val("");
           $("#btnCloseKeywordModal").click();
           return;
         }
         else if(dataResult.statusCode==201) {  // Error
           displayErrorMessage("Error occurred creating keyword");
           return;
-        }
-      }
-    });
-}
-
-/* Name: addJournal
- *
- * Purpose: Function to add a journal to the database
- *
- * Parameters:
- *  None
- *
- * Returns:
- *  None
- */
-function addJournal() {
-  // Add the journal
-  $.ajax({
-      url: baseurl + "/journals/add",
-      type: "POST",
-      data: {
-        journal: $("#newJournal").val(),
-      },
-      cache: false,
-      success: function(dataResult){
-        var dataResult = JSON.parse(dataResult);
-        if(dataResult.statusCode==200) {  // Success
-          // Get the new journalID
-          var JournalID = dataResult.journalID;
-
-          // Update the journalID field
-          $("#journalID").val(JournalID);
-
-          // Close the dialog
-          $("#btnCloseJournalModal").click();
-
-          // Click the save button again
-          $("#btnSubmit").click();
-        }
-        else if(dataResult.statusCode==201) {  // Error
-          alert("Error adding journal.  Try adding it manually first, and then try saving the publication again.");
-          $("#btnCloseJournalModal").click();
-        } else if (dataResult.statusCode==202) {  // Duplicate journal
-          // Get the new journalID
-          var JournalID = dataResult.journalID;
-
-          // Update the journalID field
-          $("#journalID").val(JournalID);
-
-          // Click the save button again
-          $("#btnSubmit").click();
         }
       }
     });
@@ -1329,6 +1362,20 @@ function addNewPerson(callback) {
 
   if (displayName == "") {
     alert ("You must enter at least a display name for the person.");
+    return;
+  }
+
+  // Check to make sure the field is not too long
+  if ($("#newFirstName").val().length > 64) {
+    alert("The first name can be at most 64 characters.");
+    return;
+  }
+  if ($("#newLastName").val().length > 64) {
+    alert("The last name can be at most 64 characters.");
+    return;
+  }
+  if (displayName.length > 128) {
+    alert("The display name can be at most 128 characters.");
     return;
   }
 
@@ -1615,6 +1662,8 @@ $(document).ready(function(){
         else if(dataResult.statusCode==201) {
           // Unknown expected duration
           $("#statusDueDate").val("");
+          $("#statusPopup").attr('data-content', "");
+          $("#statusPopup").hide();
         }
       },
     });
@@ -1672,6 +1721,8 @@ $(document).ready(function(){
             var linkTypeID = dataResult.publicationLink.LinkTypeID
             var link = dataResult.publicationLink.Link
             // Populate the modal
+            var selectedID = $('#editLinkTypeID').find(":selected").val();
+            $("#editLinkTypeID").find('option[value="'+selectedID+'"]').attr("selected",false);
             $("#editLinkTypeID").find('option[value="'+linkTypeID+'"]').attr("selected",true);
             $("#editLink").val(link)
           }
