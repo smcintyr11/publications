@@ -10,7 +10,7 @@
 <?php use App\Libraries\MyFormGeneration; ?>
 <?php helper('auth'); ?>
 <?php
-  $hideDetailedFields = false;
+  $hideDetailedFields = true;
   $disableField = true;
 ?>
 
