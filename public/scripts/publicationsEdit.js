@@ -186,7 +186,16 @@ function editLink() {
         if(dataResult.statusCode==200) {  // Success
           // Update the table cells
           $("#ll_lt_" + plID).html(newLT);
-          $("#ll_l_" + plID).html(newLink);
+
+          // Check to see if the new link is navigable
+          let re = /http|https|ftp/i;
+          if (re.test(newLink)) {
+            link = '<a href="' + newLink + '" target="_blank">' + newLink + '</a>';
+            $("#ll_l_" + plID).html(link);
+          } else {
+            $("#ll_l_" + plID).html(newLink);
+          }
+
           displaySuccessMessage("Link updated.");
 
           // Clean up the form
