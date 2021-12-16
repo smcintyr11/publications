@@ -129,6 +129,9 @@
      <?= MyFormGeneration::generateIDTextBox("rushPublication",
        ($publication['RushPublication'] == 0 ? "No" : "Yes"), "Rush Publication"); ?>
 
+     <?= MyFormGeneration::generateIDTextBox("submissionDeadline",
+       $publication['SubmissionDeadline'], "Submission Deadline"); ?>
+
      <?= MyFormGeneration::generateIDTextBox("reportNumber",
        $publication['ReportNumber'], "Report Number", false,
        ($publication['DuplicateReportNumber'] == false ? null : 'Duplicate Record Number')); ?>

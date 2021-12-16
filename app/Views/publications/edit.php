@@ -446,6 +446,9 @@
         }
        ?>
 
+     <?= MyFormGeneration::generateDateTextBox("submissionDeadline",
+         set_value('submissionDeadline', $publication['SubmissionDeadline']), "Submission Deadline"); ?>
+
       <?= MyFormGeneration::generateTextBox("reportNumber",
         set_value('reportNumber', $publication['ReportNumber']),
         "-- Enter the report number --", "Report Number", false,

@@ -5,7 +5,7 @@
 <script type="text/javascript" src="<?= base_url() ?>/scripts/publicationDelete.js"></script>
 
 <?php use App\Libraries\MyFormGeneration; ?>
-<?php 
+<?php
   $hideDetailedFields = true;
   $disableField = true;
 ?>
@@ -131,6 +131,9 @@
 
        <?= MyFormGeneration::generateIDTextBox("rushPublication",
          ($publication['RushPublication'] == 0 ? "No" : "Yes"), "Rush Publication"); ?>
+
+       <?= MyFormGeneration::generateIDTextBox("submissionDeadline",
+         $publication['SubmissionDeadline'], "Submission Deadline"); ?>
 
        <?= MyFormGeneration::generateIDTextBox("reportNumber",
          $publication['ReportNumber'], "Report Number", false,

@@ -675,6 +675,7 @@ class Publications extends Controller {
          'ReportFormatted' => $this->request->getPost('reportFormatted') == "on" ? 1 : 0,
          'RecordNumber' => $this->request->getPost('recordNumber') == "" ? null : $this->request->getPost('recordNumber'),
          'RushPublication' => $this->request->getPost('rushPublication') == "on" ? 1 : 0,
+         'SubmissionDeadline' => $this->request->getPost('submissionDeadline') == "" ? null : $this->request->getPost('submissionDeadline'),
          'ConferenceName' => $this->request->getPost('conferenceName') == "" ? null : $this->request->getPost('conferenceName'),
          'ConferenceDate' => $this->request->getPost('conferenceDate') == "" ? null : $this->request->getPost('conferenceDate'),
          'ConferenceLocation' => $this->request->getPost('conferenceLocation') == "" ? null : $this->request->getPost('conferenceLocation'),

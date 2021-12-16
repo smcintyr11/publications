@@ -15,7 +15,7 @@ class PublicationModel extends Model {
     "ManuscriptNumber", "CostCentreID", "JournalID", "ReportTypeID", "StatusID", "StatusPersonID", "StatusDueDate", "DOI",
     "JournalSubmissionDate", "JournalAcceptanceDate", "ConferenceSubmissionDate", "ConferenceAcceptanceDate", "EmbargoPeriod",
     "EmbargoEndDate", "WebPublicationDate", "SentToClient", "SentToClientDate", "ReportFormatted", "RecordNumber",
-    "RushPublication", "ConferenceName", "ConferenceDate", "ConferenceLocation"];
+    "RushPublication", "SubmissionDeadline", "ConferenceName", "ConferenceDate", "ConferenceLocation"];
 
   /**
    * Name: getPublication
@@ -36,8 +36,8 @@ class PublicationModel extends Model {
       cc.CostCentre, p.JournalID, j.Journal, p.ReportTypeID, CONCAT (rt.ReportType, " (", rt.Abbreviation, ")") AS ReportType,
       p.StatusID, s.Status, p.StatusPersonID, p.StatusDueDate, p.DOI, p.JournalSubmissionDate, p.JournalAcceptanceDate,
       p.ConferenceSubmissionDate, p.ConferenceAcceptanceDate, p.EmbargoPeriod, p.EmbargoEndDate, p.WebPublicationDate,
-      p.SentToClient, p.SentToClientDate, p.ReportFormatted, p.RecordNumber, p.RushPublication, p.ConferenceName, p.ConferenceDate,
-      p.ConferenceLocation, DATEDIFF(p.StatusDueDate, CURDATE()) AS DueDateDelta
+      p.SentToClient, p.SentToClientDate, p.ReportFormatted, p.RecordNumber, p.RushPublication, p.SubmissionDeadline,
+      p.ConferenceName, p.ConferenceDate, p.ConferenceLocation, DATEDIFF(p.StatusDueDate, CURDATE()) AS DueDateDelta
       FROM (((((((Publications AS p LEFT JOIN FiscalYears AS fy ON p.FiscalYearID = fy.FiscalYearID)
       LEFT JOIN Clients AS c ON p.ClientID = c.ClientID)
       LEFT JOIN Organizations AS o ON p.OrganizationID = o.OrganizationID)
@@ -114,6 +114,7 @@ class PublicationModel extends Model {
         "ReportFormatted" => $row->ReportFormatted,
         "RecordNumber" => $row->RecordNumber,
         "RushPublication" => $row->RushPublication,
+        "SubmissionDeadline" => $row->SubmissionDeadline,
         "DueDateDelta" => $row->DueDateDelta,
         "ConferenceName" => $row->ConferenceName,
         "ConferenceDate" => $row->ConferenceDate,
