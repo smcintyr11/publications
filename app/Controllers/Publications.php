@@ -735,8 +735,8 @@ class Publications extends Controller {
        'linkTypes' => $linkTypes,
        'linksList' => $this->getLinks($publicationID),
        'commentsList'=> $this->getComments($publicationID),
-       'VHideDetailedFields' => boolval($variables->getVariable("HideDetailedFields")),
-       'VDisableField' => boolval($variables->getVariable("DisableField")),
+       'VHideDetailedFields' => ($variables->getVariable("HideDetailedFields") == 'True' ? True : False),
+       'VDisableField' => ($variables->getVariable("DisableField") ? True : False),
      ];
      echo view('templates/header.php', $data);
      echo view('templates/menu.php', $data);
