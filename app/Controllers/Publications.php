@@ -3,6 +3,7 @@
 use App\Models\PublicationModel;
 use App\Libraries\MyPager;
 use CodeIgniter\Controller;
+use App\Controllers\SystemVariables;
 
 // Load the authentication helper
 helper(['url', 'auth']);
@@ -553,6 +554,7 @@ class Publications extends Controller {
 
    // Create a new Model
    $model = new PublicationModel();
+   $variables = new SystemVariables();
 
    // Load helpers
    helper(['url', 'form', 'auth']);
@@ -733,6 +735,8 @@ class Publications extends Controller {
        'linkTypes' => $linkTypes,
        'linksList' => $this->getLinks($publicationID),
        'commentsList'=> $this->getComments($publicationID),
+       'VHideDetailedFields' => boolval($variables->getVariable("HideDetailedFields")),
+       'VDisableField' => boolval($variables->getVariable("DisableField")),
      ];
      echo view('templates/header.php', $data);
      echo view('templates/menu.php', $data);

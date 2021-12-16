@@ -10,8 +10,8 @@
 <?php use App\Libraries\MyFormGeneration; ?>
 <?php helper('auth'); ?>
 <?php
-  $hideDetailedFields = true;
-  $disableField = true;
+  $hideDetailedFields = $VHideDetailedFields;
+  $disableField = $VDisableField;
 ?>
 
 <!-- Edit Link Modal -->
