@@ -24,6 +24,8 @@ class SystemVariables extends Controller {
     $result = $builder->get()->getRow();
 
     // Return the result
+    if (is_null($result))
+      return null;
     return $result->Value;
   }
 }
