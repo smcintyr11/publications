@@ -2,7 +2,7 @@
 var baseUrl = 'http://s-dev-drupal/publications';
 //var baseUrl = 'http://localhost:8080/';
 
-function lookup(lookupField, lookupID, url) {
+function lookup(lookupField, lookupID, url, callback = null) {
   $(lookupField).autocomplete({
     minLength: 1,
     source: function(request, response) {
@@ -20,6 +20,9 @@ function lookup(lookupField, lookupID, url) {
     },
     select: function(event, ui) {
       $(lookupID).val(ui.item.id);
+      if (callback != null) {
+        callback();
+      }
     }
   }).keyup(function(){
     if (event.which != 13) {

@@ -145,6 +145,7 @@ class PublicationModel extends Model {
     $this->deletePublicationsReviewers($publicationID);
     $this->deletePublicationsKeywords($publicationID);
     $this->deletePulibcationsLinks($publicationID);
+    $this->deleteRelatedPublications($publicationID);
     $this->deletePublicationsComments($publicationID);
 
     // Delete the publication
@@ -180,6 +181,7 @@ class PublicationModel extends Model {
       'deleted_at' => date("Y-m-d H:i:s"),
     ];
     $builder->where('PublicationID', $publicationID);
+    $builder->where('deleted_at', null);
     $builder->update($data);
   }
 
@@ -207,6 +209,7 @@ class PublicationModel extends Model {
       'deleted_at' => date("Y-m-d H:i:s"),
     ];
     $builder->where('PublicationID', $publicationID);
+    $builder->where('deleted_at', null);
     $builder->update($data);
   }
 
@@ -234,6 +237,7 @@ class PublicationModel extends Model {
       'deleted_at' => date("Y-m-d H:i:s"),
     ];
     $builder->where('PublicationID', $publicationID);
+    $builder->where('deleted_at', null);
     $builder->update($data);
   }
 
@@ -261,6 +265,7 @@ class PublicationModel extends Model {
       'deleted_at' => date("Y-m-d H:i:s"),
     ];
     $builder->where('PublicationID', $publicationID);
+    $builder->where('deleted_at', null);
     $builder->update($data);
   }
 
@@ -288,6 +293,38 @@ class PublicationModel extends Model {
       'deleted_at' => date("Y-m-d H:i:s"),
     ];
     $builder->where('PublicationID', $publicationID);
+    $builder->where('deleted_at', null);
+    $builder->update($data);
+  }
+
+  /**
+   * Name: deleteRelatedPublications
+   * Purpose: Deletes all rows in the RelatedPublications table with the specified
+   *  PublicationID
+   *
+   * Parameters:
+   *  int $publicationID - The PublicationID that corresponds to rows in the table
+   *
+   * Returns: None
+   */
+  public function deleteRelatedPublications($publicationID) {
+    // Load the helper functions
+    helper(['auth']);
+
+    // Load the query builder
+    $db = \Config\Database::connect('publications');
+    $builder = $db->table('RelatedPublications');
+
+    // Generate and execute the delete
+    $data = [
+      'DeletedBy' => user_id(),
+      'deleted_at' => date("Y-m-d H:i:s"),
+    ];
+    $builder->groupStart();
+      $builder->where('ParentPublicationID', $publicationID);
+      $builder->orWhere('ChildPublicationID', $publicationID);
+    $builder->groupEnd();
+    $builder->where('deleted_at', null);
     $builder->update($data);
   }
 
@@ -315,6 +352,7 @@ class PublicationModel extends Model {
       'deleted_at' => date("Y-m-d H:i:s"),
     ];
     $builder->where('PublicationID', $publicationID);
+    $builder->where('deleted_at', null);
     $builder->update($data);
   }
 

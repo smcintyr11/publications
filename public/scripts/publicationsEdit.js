@@ -237,6 +237,28 @@ function removeLink(rowID, plID) {
     });
 }
 
+function removeRelatedPublication(rowID, rpID) {
+  $.ajax({
+      url: baseurl + "/relatedPublications/remove",
+      type: "POST",
+      data: {
+        relatedPublicationsID: rpID,
+      },
+      cache: false,
+      success: function(dataResult){
+        var dataResult = JSON.parse(dataResult);
+        if(dataResult.statusCode==200) {
+          // Success
+          $("#" + rowID).remove();
+          displaySuccessMessage("relationship removed.");
+        }
+        else if(dataResult.statusCode==201) {  // Error
+          displayErrorMessage("Error occurred removing relationship.");
+        }
+      }
+    });
+}
+
 function removeComment(rowID, pcID) {
   $.ajax({
       url: baseurl + "/publicationsComments/remove",
@@ -971,6 +993,97 @@ function checkKeyword(keyword) {
     });
 }
 
+/* Name: checkReportNumber
+ *
+ * Purpose: Check to see if what has been entered into the newRelatedPublication
+ *    textbox exists in the database.  If it matches exactly, then populate
+ *    relatedPublicationsID with the corresponding publicationID.  This occurs
+ *    when a user types in a value but doesn't select it from the drop down
+ *    list.
+ *
+ * Parameters:
+ *  reportNumber - The reportNumber to search for
+ *  callback - The function to call if the report number exists
+ *
+ * Returns:
+ *  None
+ */
+function checkReportNumber(reportNumber, callback) {
+    // Check if the publication exists
+    $.ajax({
+        url: baseurl + "/relatedPublications/searchExactReportNumber",
+        type: "POST",
+        data: {
+          reportNumber: reportNumber,
+        },
+        cache: false,
+        success: function(dataResult){
+          var dataResult = JSON.parse(dataResult);
+          if(dataResult.statusCode==200) {  // Success
+            $("#relatedPublicationsID").val(dataResult.publicationID);
+            callback();
+          } else {
+            alert("The report number you entered could not be found in the database.");
+          }
+        }
+      });
+}
+
+/* Name: AddPublicationKeyword
+ *
+ * Purpose: Function to add a keyword to the publication
+ *
+ * Parameters:
+ *  keywordID - The KeywordID to add
+ *  publicationID - The PublicationID to add
+ *
+ * Returns:
+ *  None
+ */
+function AddRelatedPublication() {
+  // Get the form variables
+  var publicationID = $("#publicationID").val();
+  var publication2ID = $("#relatedPublicationsID").val();
+  var reportNumber = $("#newRelatedPublication").val();
+
+  // Do the insert
+  $.ajax({
+      url: baseurl + "/RelatedPublications/add",
+      type: "POST",
+      data: {
+        publicationID: publicationID,
+        publication2ID: publication2ID,
+      },
+      cache: false,
+      success: function(dataResult){
+        var dataResult = JSON.parse(dataResult);
+        if(dataResult.statusCode==200) {
+          // Get the new relatedPublicationsID
+          var relatedPublicationsID = dataResult.relatedPublicationsID;
+          var rpublicationID = dataResult.publicationID;
+          var reportNumber = dataResult.reportNumber;
+          var reportType = dataResult.reportType;
+
+          // Success
+
+          var html = '<tr id="rp_'+relatedPublicationsID+'"><td>'+relatedPublicationsID+'</td><td><a href="'+baseurl+'/publications/view/1/'+rpublicationID+'" target="_blank">'+reportNumber+'</a></td><td>'+reportType+'</td><td><button class="btn btn-danger m-1 fas fa-trash-alt" type="button" title="Remove Relationship" onclick="removeRelatedPublication(\'rp_'+relatedPublicationsID+'\', '+relatedPublicationsID+')"></button></td></tr>';
+          $(html).prependTo('#tblRelatedPublications');
+          displaySuccessMessage("Relationship Created");
+        } else if (dataResult.statusCode == 202) {
+          displayErrorMessage("This relationship already exists.");
+        } else if (dataResult.statusCode == 203) {
+          displayErrorMessage("You can't create a relationship from this publication to this publication.");
+        } else {  // Error
+          displayErrorMessage("Error occurred creating relationship");
+        }
+
+        // Clear the related publications boxes
+        $("#newRelatedPublication").val("");
+        $("#relatedPublicationsID").val("");
+      }
+    });
+}
+
 /* Name: AddPublicationKeyword
  *
  * Purpose: Function to add a keyword to the publication
@@ -1422,6 +1535,42 @@ function addNewPerson(callback) {
     });
 }
 
+/* Name: CheckPublicationTitle
+ *
+ * Purpose: Function to add a person to the database, and then add the person
+ *  to the publication using the callback function
+ *
+ * Parameters:
+ *  callback - The function to call after the person has been successfully added
+ *             to the database
+ *
+ * Returns:
+ *  None
+ */
+function CheckPublicationTitle() {
+  // Clear the title field
+  $("#relatedPublicationTitle").val("");
+
+  // Try to get the title
+  $.ajax({
+    url: baseurl + "/relatedPublications/getTitle",
+    type: "POST",
+    data: {
+      publicationID: $("#relatedPublicationsID").val(),
+    },
+    success: function(dataResult){
+      var dataResult = JSON.parse(dataResult);
+      if(dataResult.statusCode==200) {
+        // Get the title
+        var title = dataResult.title;
+
+        // Populate the title
+        $("#relatedPublicationTitle").val(title);
+      }
+    },
+  });
+}
+
 $(document).ready(function(){
   // Report Type autocomplete
   lookup("#reportType", "#reportTypeID", "/reportTypes/searchReportType");
@@ -1452,6 +1601,9 @@ $(document).ready(function(){
 
   // Person Modal Organization lookup
   lookup("#newPOrganization", "#newPOrganizationID", "/organizations/searchOrganization");
+
+  // Related publication autocomplete
+  lookup("#newRelatedPublication", "#relatedPublicationsID", "/relatedPublications/searchPublication", CheckPublicationTitle);
 
   // Add author function
   $("#btnAddAuthor").click(function(){
@@ -1623,6 +1775,24 @@ $(document).ready(function(){
           $("#newComment").val("");
         }
       });
+  });
+
+  // Add relationship function
+  $("#btnAddRelatedPublication").click(function(){
+    // Get the form variables
+    var publicationID = $("#publicationID").val();
+    var publication2ID = $("#relatedPublicationsID").val();
+    var reportNumber = $("#newRelatedPublication").val();
+
+    // Check that everything is filled in
+    if ((reportNumber == "") && (publication2ID == "")) {
+      alert("You select a publication first.");
+      return;
+    } else if ((reportNumber != "") && (publication2ID == "")) {
+      checkReportNumber(reportNumber, AddRelatedPublication);
+    } else {
+      AddRelatedPublication();
+    }
   });
 
   // Status change function

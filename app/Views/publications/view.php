@@ -103,6 +103,9 @@
        <a class="nav-link tablink" onclick="openTab(event, 'tbDates')">Dates</a>
      </li>
      <li class="nav-item">
+       <a class="nav-link tablink" onclick="openTab(event, 'tbRelated')">Related Publications</a>
+     </li>
+     <li class="nav-item">
        <a class="nav-link tablink" onclick="openTab(event, 'tbLinks')">Links</a>
      </li>
      <li class="nav-item">
@@ -388,6 +391,40 @@
 
      <?= MyFormGeneration::generateIDTextBox("reportFormatted",
        ($publication['ReportFormatted'] == 0 ? "No" : "Yes"), "Report Formatted"); ?>
+
+   </div>
+
+   <!-- Related Publications Tab -->
+   <div id="tbRelated" class="tabcontent" style="display: none;">
+
+     <div class="form-group row">
+     <h3>Related Publications</h3>
+     </div>
+
+     <div class="form-group row">
+       <div class="table-responsive">
+         <table class="table table-striped table-bordered">
+            <thead class="thead-light">
+              <th scope="col">ID</th>
+              <th scope="col">Report Number</th>
+              <th scope="col">Report Type</th>
+            </thead>
+            <tbody id="tblRelatedPublications">
+              <?php if (! empty($relatedPublications) && is_array($relatedPublications)) : ?>
+                <?php foreach ($relatedPublications as $rp): ?>
+                  <tr id="rp_<?= $rp["relatedPublicationsID"] ?>">
+                    <td><?= $rp["relatedPublicationsID"] ?></td>
+                    <td>
+                      <a href="<?= base_url() ?>/publications/view/1/<?= $rp["publicationID"] ?>" target="_blank"><?= $rp["reportNumber"] ?></a>
+                    </td>
+                    <td><?= $rp["reportType"] ?></td>
+                  </tr>
+                <?php endforeach; ?>
+              <?php endif ?>
+            </tbody>
+         </table>
+       </div>
+     </div>
 
    </div>
 

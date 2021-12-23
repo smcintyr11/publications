@@ -394,6 +394,9 @@
       <a class="nav-link tablink" onclick="openTab(event, 'tbDates')">Dates</a>
     </li>
     <li class="nav-item">
+      <a class="nav-link tablink" onclick="openTab(event, 'tbRelated')">Related Publications</a>
+    </li>
+    <li class="nav-item">
       <a class="nav-link tablink" onclick="openTab(event, 'tbLinks')">Links</a>
     </li>
     <li class="nav-item">
@@ -812,6 +815,51 @@
 
       <?= MyFormGeneration::generateCheckBox("reportFormatted",
           set_value('reportFormatted', $publication['ReportFormatted']), "Report Formatted"); ?>
+
+    </div>
+
+    <!-- Related Publications Tab -->
+    <div id="tbRelated" class="tabcontent" style="display: none;">
+
+      <?= MyFormGeneration::generateLookupTextBoxWithButton("newRelatedPublication",
+        null, "-- Enter a Report Number --", "Related Publication", null, "relatedPublicationsID",
+        null, "btnAddRelatedPublication", "Create Relationship"); ?>
+
+      <?= MyFormGeneration::generateIDTextBox("relatedPublicationTitle", "",
+        "Title"); ?>
+
+      <div class="form-group row">
+      <h3>Related Publications</h3>
+      </div>
+
+      <div class="form-group row">
+        <div class="table-responsive">
+          <table class="table table-striped table-bordered">
+             <thead class="thead-light">
+               <th scope="col">ID</th>
+               <th scope="col">Report Number</th>
+               <th scope="col">Report Type</th>
+               <th scope="col">Remove relationship</th>
+             </thead>
+             <tbody id="tblRelatedPublications">
+               <?php if (! empty($relatedPublications) && is_array($relatedPublications)) : ?>
+                 <?php foreach ($relatedPublications as $rp): ?>
+                   <tr id="rp_<?= $rp["relatedPublicationsID"] ?>">
+                     <td><?= $rp["relatedPublicationsID"] ?></td>
+                     <td>
+                       <a href="<?= base_url() ?>/publications/view/1/<?= $rp["publicationID"] ?>" target="_blank"><?= $rp["reportNumber"] ?></a>
+                     </td>
+                     <td><?= $rp["reportType"] ?></td>
+                     <td>
+                       <button class="btn btn-danger m-1 fas fa-trash-alt" type="button" title="Remove Relationship" onclick="removeRelatedPublication('rp_<?= $rp["relatedPublicationsID"] ?>', <?= $rp["relatedPublicationsID"] ?>)" />
+                     </td>
+                   </tr>
+                 <?php endforeach; ?>
+               <?php endif ?>
+             </tbody>
+          </table>
+        </div>
+      </div>
 
     </div>
 

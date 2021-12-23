@@ -735,6 +735,7 @@ class Publications extends Controller {
        'keywordsList' => $this->getKeywords($publicationID),
        'linkTypes' => $linkTypes,
        'linksList' => $this->getLinks($publicationID),
+       'relatedPublications' => $this->getRelatedPublications($publicationID),
        'commentsList'=> $this->getComments($publicationID),
        'VHideDetailedFields' => ($variables->getVariable("HideDetailedFields") == 'True' ? True : False),
        'VDisableField' => ($variables->getVariable("DisableField") ? True : False),
@@ -961,6 +962,75 @@ class Publications extends Controller {
 
    // Retturn the result
    return $builder->get()->getResult();
+  }
+
+  /**
+  * Name: getRelatedPublications
+  * Purpose: Get a list of all related publicationns from the RelatedPublications
+  *   table
+  *
+  * Parameters:
+  *   string $publicationID - The PublicationID we are filtering against
+  *
+  * Returns: Array of objects representing the rows
+  */
+  private function getRelatedPublications(string $publicationID) {
+   // Load the query builder
+   $db = \Config\Database::connect('publications');
+
+   // Generate the initial query
+   $builder = $db->table('RelatedPublications');
+   $builder->select("RelatedPublicationsID, ParentPublicationID");
+   $builder->where('deleted_at', null);
+   $builder->where('ChildPublicationID', $publicationID);
+
+   // Compile the results
+   $results = array();
+   foreach ($builder->get()->getResult() as $row) {
+     array_push($results, $this->getRelatedPublicationDetails($row->RelatedPublicationsID, $row->ParentPublicationID));
+   }
+
+   // Generate the 2nd query
+   $builder2 = $db->table('RelatedPublications');
+   $builder2->select("RelatedPublicationsID, ChildPublicationID");
+   $builder2->where('deleted_at', null);
+   $builder2->where('ParentPublicationID', $publicationID);
+
+   // Compile the results
+   foreach ($builder2->get()->getResult() as $row) {
+     array_push($results, $this->getRelatedPublicationDetails($row->RelatedPublicationsID, $row->ChildPublicationID));
+   }
+
+   // Return the results
+   return $results;
+  }
+
+  /**
+  * Name: getRelatedPublicationDetails
+  * Purpose: Get the details (PublicationID, ReportType, ReportNumber) of the
+  *   specified PublicationID
+  *
+  * Parameters:
+  *   string $relatedPublicationsID - The RelatedPublicationID (used for populating results only)
+  *   string $publicationID - The PublicationID we are filtering against
+  *
+  * Returns: Array of objects representing the row
+  */
+  private function getRelatedPublicationDetails(string $relatedPublicationsID, string $publicationID) {
+    // Load the query builder
+    $db = \Config\Database::connect('publications');
+
+    // Generate the query
+    $builder = $db->table('Publications');
+    $builder->select("Publications.ReportNumber, ReportTypes.ReportType");
+    $builder->join("ReportTypes", 'Publications.ReportTypeID = ReportTypes.ReportTypeID', 'left');
+    $builder->where('Publications.deleted_at', null);
+    $builder->where('PublicationID', $publicationID);
+
+    // Return the results
+    $result = $builder->get()->getRow();
+    return array("relatedPublicationsID" => $relatedPublicationsID, "publicationID" => $publicationID,
+      "reportNumber" => $result->ReportNumber, "reportType" => $result->ReportType);
   }
 
   /**
@@ -1199,6 +1269,7 @@ class Publications extends Controller {
         'authorsList' => $this->getAuthors($publicationID),
         'reviewersList' => $this->getReviewers($publicationID),
         'keywordsList' => $this->getKeywords($publicationID),
+        'relatedPublications' => $this->getRelatedPublications($publicationID),
         'linksList' => $this->getLinks($publicationID),
         'commentsList'=> $this->getComments($publicationID),
       ];
@@ -1250,6 +1321,7 @@ class Publications extends Controller {
       'reviewersList' => $this->getReviewers($publicationID),
       'keywordsList' => $this->getKeywords($publicationID),
       'linksList' => $this->getLinks($publicationID),
+      'relatedPublications' => $this->getRelatedPublications($publicationID),
       'commentsList'=> $this->getComments($publicationID),
     ];
     echo view('templates/header.php', $data);
