@@ -419,6 +419,7 @@ class Publications extends Controller {
 
     // Create a new Model
     $model = new PublicationModel();
+    $variables = new SystemVariables();
 
     // Load the lookup tables
     $statuses = $this->getStatuses();
@@ -475,9 +476,12 @@ class Publications extends Controller {
             'authorsList' => $this->getAuthors($publicationID),
             'reviewersList' => $this->getReviewers($publicationID),
             'keywordsList' => $this->getKeywords($publicationID),
+            'relatedPublications' => $this->getRelatedPublications($publicationID),
             'linkTypes' => $this->getLinkTypes(),
             'linksList' => $this->getLinks($publicationID),
             'commentsList'=> $this->getComments($publicationID),
+            'VHideDetailedFields' => ($variables->getVariable("HideDetailedFields") == 'True' ? True : False),
+            'VDisableField' => ($variables->getVariable("DisableField") ? True : False),
           ];
           echo view('templates/header.php', $data);
           echo view('templates/menu.php', $data);
