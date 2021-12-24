@@ -62,7 +62,8 @@ class RelatedPublications extends Controller {
 
      // Return the success
      echo json_encode(array("statusCode"=>200, "relatedPublicationsID"=>$relatedPublicationsID,
-      "publicationID"=>$childPublicationID, "reportNumber"=>$details->ReportNumber, "reportType"=>$details->ReportType));
+      "publicationID"=>$childPublicationID, "reportNumber"=>$details->ReportNumber,
+      "primaryTitle"=>$details->PrimaryTitle, "reportType"=>$details->ReportType));
    }
 
    /**
@@ -142,7 +143,7 @@ class RelatedPublications extends Controller {
      // Create the query builder object
      $db = \Config\Database::connect('publications');
      $builder = $db->table('Publications');
-     $builder->select('Publications.ReportNumber, ReportTypes.ReportType');
+     $builder->select('Publications.ReportNumber, Publications.PrimaryTitle, ReportTypes.ReportType');
      $builder->join('ReportTypes', 'Publications.ReportTypeID = ReportTypes.ReportTypeID', 'left');
      $builder->where('Publications.deleted_at', null);
      $builder->where('Publications.PublicationID', $relatedPublicationsID);
@@ -215,9 +216,13 @@ class RelatedPublications extends Controller {
      $searchString = $this->request->getVar('term');
      $db = \Config\Database::connect('publications');
      $builder = $db->table('Publications');
-     $builder->select('PublicationID, ReportNumber');
+     $builder->select('PublicationID, CONCAT(PrimaryTitle, " (", ReportNumber, ")") AS Description');
      $builder->where('deleted_at', null);
-     $builder->like('ReportNumber', $searchString);
+     $builder->groupStart();
+       $builder->like('ReportNumber', $searchString);
+       $builder->orLike('PrimaryTitle', $searchString);
+     $builder->groupEnd();
+     $builder->orderBy('PublicationID', 'DESC');
 
      // Run the query and compile an array of organization data
      $autoComplete = array();
@@ -226,8 +231,8 @@ class RelatedPublications extends Controller {
      {
        $item = array(
        'id'=>$row->PublicationID,
-       'label'=>$row->ReportNumber,
-       'value'=>$row->ReportNumber,
+       'label'=>$row->Description,
+       'value'=>$row->Description,
        );
        array_push($autoComplete,$item);
      }
@@ -252,7 +257,10 @@ class RelatedPublications extends Controller {
      $builder = $db->table('Publications');
      $builder->select('PublicationID');
      $builder->where('deleted_at', null);
-     $builder->where('ReportNumber', $searchString);
+     $builder->groupStart();
+       $builder->where('ReportNumber', $searchString);
+       $builder->orWhere('PrimaryTitle', $searchString);
+     $builder->groupEnd();
 
      // Search for a result
      $result = $builder->get()->getRow();

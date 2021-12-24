@@ -1063,10 +1063,11 @@ function AddRelatedPublication() {
           var rpublicationID = dataResult.publicationID;
           var reportNumber = dataResult.reportNumber;
           var reportType = dataResult.reportType;
+          var title = dataResult.primaryTitle;
 
           // Success
 
-          var html = '<tr id="rp_'+relatedPublicationsID+'"><td>'+relatedPublicationsID+'</td><td><a href="'+baseurl+'/publications/view/1/'+rpublicationID+'" target="_blank">'+reportNumber+'</a></td><td>'+reportType+'</td><td><button class="btn btn-danger m-1 fas fa-trash-alt" type="button" title="Remove Relationship" onclick="removeRelatedPublication(\'rp_'+relatedPublicationsID+'\', '+relatedPublicationsID+')"></button></td></tr>';
+          var html = '<tr id="rp_'+relatedPublicationsID+'"><td>'+relatedPublicationsID+'</td><td>'+reportNumber+'</td><td><a href="'+baseurl+'/publications/view/1/'+rpublicationID+'" target="_blank">'+title+'</a></td><td>'+reportType+'</td><td><button class="btn btn-danger m-1 fas fa-trash-alt" type="button" title="Remove Relationship" onclick="removeRelatedPublication(\'rp_'+relatedPublicationsID+'\', '+relatedPublicationsID+')"></button></td></tr>';
           $(html).prependTo('#tblRelatedPublications');
           displaySuccessMessage("Relationship Created");
         } else if (dataResult.statusCode == 202) {

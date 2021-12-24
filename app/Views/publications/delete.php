@@ -410,6 +410,7 @@
               <thead class="thead-light">
                 <th scope="col">ID</th>
                 <th scope="col">Report Number</th>
+                <th scope="col">Title</th>
                 <th scope="col">Report Type</th>
               </thead>
               <tbody id="tblRelatedPublications">
@@ -417,8 +418,9 @@
                   <?php foreach ($relatedPublications as $rp): ?>
                     <tr id="rp_<?= $rp["relatedPublicationsID"] ?>">
                       <td><?= $rp["relatedPublicationsID"] ?></td>
+                      <td><?= $rp["reportNumber"] ?></td>
                       <td>
-                        <a href="<?= base_url() ?>/publications/view/1/<?= $rp["publicationID"] ?>" target="_blank"><?= $rp["reportNumber"] ?></a>
+                        <a href="<?= base_url() ?>/publications/view/1/<?= $rp["publicationID"] ?>" target="_blank"><?= $rp["primaryTitle"] ?></a>
                       </td>
                       <td><?= $rp["reportType"] ?></td>
                     </tr>

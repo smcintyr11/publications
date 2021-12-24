@@ -1026,7 +1026,7 @@ class Publications extends Controller {
 
     // Generate the query
     $builder = $db->table('Publications');
-    $builder->select("Publications.ReportNumber, ReportTypes.ReportType");
+    $builder->select("Publications.ReportNumber, Publications.PrimaryTitle, ReportTypes.ReportType");
     $builder->join("ReportTypes", 'Publications.ReportTypeID = ReportTypes.ReportTypeID', 'left');
     $builder->where('Publications.deleted_at', null);
     $builder->where('PublicationID', $publicationID);
@@ -1034,7 +1034,7 @@ class Publications extends Controller {
     // Return the results
     $result = $builder->get()->getRow();
     return array("relatedPublicationsID" => $relatedPublicationsID, "publicationID" => $publicationID,
-      "reportNumber" => $result->ReportNumber, "reportType" => $result->ReportType);
+      "primaryTitle" => $result->PrimaryTitle, "reportNumber" => $result->ReportNumber, "reportType" => $result->ReportType);
   }
 
   /**
