@@ -480,6 +480,7 @@ class Publications extends Controller {
             'linkTypes' => $this->getLinkTypes(),
             'linksList' => $this->getLinks($publicationID),
             'commentsList'=> $this->getComments($publicationID),
+            'sensitivityOptions' => $this->getSensitivityOptions(),
             'VHideDetailedFields' => ($variables->getVariable("HideDetailedFields") == 'True' ? True : False),
             'VDisableField' => ($variables->getVariable("DisableField") ? True : False),
           ];
@@ -569,6 +570,7 @@ class Publications extends Controller {
    $reportTypes = $this->getReportTypes();
    $costCentres = $this->getCostCentres();
    $linkTypes = $this->getLinkTypes();
+   $sensitivityOptions = $this->getSensitivityOptions();
 
    // Set the session last page
    $session = session();
@@ -602,7 +604,6 @@ class Publications extends Controller {
      $validation->setRule('manuscriptNumber', 'Manuscript Number', 'max_length[64]');
      $validation->setRule('isbn', 'ISBN', 'max_length[64]');
 
-
      if (!empty($this->request->getPost('statusDueDate'))) {
        $validation->setRule('statusDueDate ', 'Status Due Date ', 'valid_date');
      }
@@ -632,6 +633,10 @@ class Publications extends Controller {
        $validation->setRule('sentToClientDate', 'Sent To Client Date', 'valid_date');
      }
      $validation->setRule('recordNumber', 'Record Number', 'max_length[64]');
+     if ($this->request->getPost('sensitivePublication') == "on") {
+       $validation->setRule('sensitivityOptionID', 'Send Sensitive Publication To', 'required');
+       $validation->setRule('sensitivityDetails', 'Sensitivity Details', 'required');
+     }
      if ($validation->withRequest($this->request)->run(null, null, 'publications')) {  // Valid
        // Save
        $model->save([
@@ -683,6 +688,11 @@ class Publications extends Controller {
          'ConferenceName' => $this->request->getPost('conferenceName') == "" ? null : $this->request->getPost('conferenceName'),
          'ConferenceDate' => $this->request->getPost('conferenceDate') == "" ? null : $this->request->getPost('conferenceDate'),
          'ConferenceLocation' => $this->request->getPost('conferenceLocation') == "" ? null : $this->request->getPost('conferenceLocation'),
+         'SensitivePublication' => $this->request->getPost('sensitivePublication') == "on" ? 1 : 0,
+         'SensitivityOptionID' => $this->request->getPost('sensitivityOptionID') == "" ? null : $this->request->getPost('sensitivityOptionID'),
+         'SensitivityDetails' => $this->request->getPost('sensitivityDetails') == "" ? null : $this->request->getPost('sensitivityDetails'),
+         'ArisingIP' => $this->request->getPost('arisingIP') == "on" ? 1 : 0,
+         'IPDisclosureKitComplete' => $this->request->getPost('ipDisclosureKitComplete') == "on" ? 1 : 0,
        ]);
 
        // Did the status change?  If so update the publications statuses table
@@ -712,7 +722,10 @@ class Publications extends Controller {
          'keywordsList' => $this->getKeywords($publicationID),
          'linkTypes' => $linkTypes,
          'linksList' => $this->getLinks($publicationID),
-         'commentsList'=> $this->getComments($publicationID),
+         'commentsList' => $this->getComments($publicationID),
+         'sensitivityOptions' => $sensitivityOptions,
+         'VHideDetailedFields' => ($variables->getVariable("HideDetailedFields") == 'True' ? True : False),
+         'VDisableField' => ($variables->getVariable("DisableField") ? True : False),
        ];
        echo view('templates/header.php', $data);
        echo view('templates/menu.php', $data);
@@ -741,6 +754,7 @@ class Publications extends Controller {
        'linksList' => $this->getLinks($publicationID),
        'relatedPublications' => $this->getRelatedPublications($publicationID),
        'commentsList'=> $this->getComments($publicationID),
+       'sensitivityOptions' => $sensitivityOptions,
        'VHideDetailedFields' => ($variables->getVariable("HideDetailedFields") == 'True' ? True : False),
        'VDisableField' => ($variables->getVariable("DisableField") ? True : False),
      ];
@@ -838,6 +852,28 @@ class Publications extends Controller {
    // Return the result
    return $builder->get()->getResult();
   }
+
+  /**
+  * Name: getSensitivityOptions
+  * Purpose: Get a list of all sensitivity options in the database
+  *
+  * Parameters: None
+  *
+  * Returns: Array of objects representing the rows
+  */
+  private function getSensitivityOptions() {
+   // Load the query builder
+   $db = \Config\Database::connect('publications');
+
+   // Generate the query
+   $builder = $db->table('SensitivityOptions');
+   $builder->select("SensitivityOptionID, SensitivityOption");
+   $builder->orderBy("SensitivityOptionID");
+
+   // Return the result
+   return $builder->get()->getResult();
+  }
+
 
   /**
   * Name: getStatusLog

@@ -442,6 +442,7 @@
         <button type="button" data-toggle="modal" data-target="#newReportTypeModal" id="btnNewReportType" />
       </div>
 
+      <!-- Rush publication -->
       <?php
         if (in_groups(['pubsAdmin','pubsRC'])) {
           echo MyFormGeneration::generateCheckBox("rushPublication",
@@ -449,8 +450,45 @@
         }
        ?>
 
-     <?= MyFormGeneration::generateDateTextBox("submissionDeadline",
-         set_value('submissionDeadline', $publication['SubmissionDeadline']), "Submission Deadline"); ?>
+      <!-- Sensitive Publication Section -->
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title">
+            <h5>Sensitive Publication Information</h5>
+          </div>
+
+          <div class="card-text">
+            <?= MyFormGeneration::generateCheckBox("sensitivePublication",
+              set_value('sensitivePublication', $publication['SensitivePublication']), "Sensitive Publication"); ?>
+
+            <div id="sensitivtyOptions">
+              <div class="form-group row">
+                <div class="col-2 text-right">
+                  <i class="btn btn-outline-info m-1 fas fa-info" aria-hidden="true"></i>
+                </div>
+                <div class="col-10">
+                  <p>Flagging this publication as sensitive will result in it being sent to a
+                    policy advisor who will then pass it to ADMO and possibly communications accordingly.  The
+                    policy advisor will most likely reach out to you for more details.</p>
+                </div>
+              </div>
+
+              <?= MyFormGeneration::generateSelect("sensitivityOptionID",
+                set_value('sensitivityOptionID', $publication['SensitivityOptionID']),
+                "-- Select where the sensitive publication is sent --", "Send Sensitive Publication to", $sensitivityOptions); ?>
+
+              <?= MyFormGeneration::generateMultilineTextBox("sensitivityDetails",
+                set_value('sensitivityDetails', $publication['SensitivityDetails']),
+                "-- Please provide details as to why this publication is sensitive --", "Sensitivity Details", 3); ?>
+            </div>
+         </div>
+        </div>
+      </div>
+      <br />
+
+
+      <?= MyFormGeneration::generateDateTextBox("submissionDeadline",
+        set_value('submissionDeadline', $publication['SubmissionDeadline']), "Submission Deadline"); ?>
 
       <?= MyFormGeneration::generateTextBox("reportNumber",
         set_value('reportNumber', $publication['ReportNumber']),
@@ -731,6 +769,28 @@
       <div style="display: none;">
         <button type="button" data-toggle="modal" data-target="#newClientModal" id="btnNewClient" />
       </div>
+
+      <!-- IP Disclosure Section -->
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title">
+            <h5>Intellectual Property Considerations</h5>
+          </div>
+
+          <div class="card-text">
+
+            <?= MyFormGeneration::generateCheckBox("arisingIP",
+              set_value('arisingIP', $publication['ArisingIP']), "Have you considered any arising IP issues?"); ?>
+
+            <div id="ipdOptions">
+              <?= MyFormGeneration::generateCheckBox("ipDisclosureKitComplete",
+                set_value('ipDisclosureKitComplete', $publication['IPDisclosureKitComplete']), "Have you completed the IP Disclosure Kit?"); ?>
+            </div>
+         </div>
+        </div>
+      </div>
+      <br />
+
 
       <?= MyFormGeneration::generateLookupTextBox("journal",
         set_value('journal', $publication['Journal']),

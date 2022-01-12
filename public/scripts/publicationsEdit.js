@@ -1572,6 +1572,49 @@ function CheckPublicationTitle() {
   });
 }
 
+/* Name: CheckSensitivity
+ *
+ * Purpose: Function to hide / unhide sensitivity controls.  If controls are
+ *  hidden, then values are cleared
+ *
+ * Parameters:
+ *  None
+ *
+ * Returns:
+ *  None
+ */
+function CheckSensitivity() {
+  if ($("#sensitivePublication").is(':checked')) {
+    $("#sensitivtyOptions").attr('style', "display: inline;");
+    // Do nothing
+  } else {
+    $("#sensitivityOptionID option:selected").prop("selected", false)
+    $("#sensitivityDetails").val("");
+    $("#sensitivtyOptions").attr('style', "display: none;");
+  }
+}
+
+/* Name: CheckIPD
+ *
+ * Purpose: Function to hide / unhide IPD controls.  If controls are
+ *  hidden, then values are cleared
+ *
+ * Parameters:
+ *  None
+ *
+ * Returns:
+ *  None
+ */
+function CheckIPD() {
+  if ($("#arisingIP").is(':checked')) {
+    $("#ipdOptions").attr('style', "display: inline;");
+    // Do nothing
+  } else {
+    $("#ipDisclosureKitComplete").prop('checked', false);
+    $("#ipdOptions").attr('style', "display: none;");
+  }
+}
+
 $(document).ready(function(){
   // Report Type autocomplete
   lookup("#reportType", "#reportTypeID", "/reportTypes/searchReportType");
@@ -1854,6 +1897,16 @@ $(document).ready(function(){
     CheckUser($("#assignedTo").val());
   });
 
+  // Sensitive Publication change function
+  $("#sensitivePublication").change(function(){
+    CheckSensitivity();
+  });
+
+  // IPD change function
+  $("#arisingIP").change(function(){
+    CheckIPD();
+  });
+
   // Select the General Tab
   $("#tbGeneralLink").className += " active";
 
@@ -1960,4 +2013,8 @@ $(document).ready(function(){
   form.addEventListener('submit', checkLookups);
 
   $("#statusID").change();
+
+  // Trigger value changed functions
+  CheckSensitivity();
+  CheckIPD();
 });

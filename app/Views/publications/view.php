@@ -132,6 +132,27 @@
      <?= MyFormGeneration::generateIDTextBox("rushPublication",
        ($publication['RushPublication'] == 0 ? "No" : "Yes"), "Rush Publication"); ?>
 
+     <!-- Sensitive Publication Section -->
+     <div class="card">
+       <div class="card-body">
+         <div class="card-title">
+           <h5>Sensitive Publication Information</h5>
+         </div>
+
+         <div class="card-text">
+           <?= MyFormGeneration::generateIDTextBox("sensitivePublication",
+             ($publication['SensitivePublication'] == 0 ? "No" : "Yes"), "Sensitive Publication"); ?>
+
+           <?= MyFormGeneration::generateIDTextBox("sensitivityOption",
+             $publication['SensitivityOption'], "Send Sensitive Publication to"); ?>
+
+           <?= MyFormGeneration::generateMultilineTextBox("sensitivityDetails",
+               $publication['SensitivityDetails'], "", "Sensitivity Details", 3, true); ?>
+        </div>
+       </div>
+     </div>
+     <br />
+
      <?= MyFormGeneration::generateIDTextBox("submissionDeadline",
        $publication['SubmissionDeadline'], "Submission Deadline"); ?>
 
@@ -323,6 +344,25 @@
 
      <?= MyFormGeneration::generateIDTextBox("client",
        $publication['Client'], "Client"); ?>
+
+     <!-- IP Disclosure Section -->
+     <div class="card">
+       <div class="card-body">
+         <div class="card-title">
+           <h5>Intellectual Property Considerations</h5>
+         </div>
+
+         <div class="card-text">
+
+           <?= MyFormGeneration::generateIDTextBox("arisingIP",
+             ($publication['ArisingIP'] == 0 ? "No" : "Yes"), "Have you considered any arising IP issues?"); ?>
+
+           <?= MyFormGeneration::generateIDTextBox("ipDisclosureKitComplete",
+             ($publication['IPDisclosureKitComplete'] == 0 ? "No" : "Yes"), "Have you completed the IP Disclosure Kit?"); ?>
+        </div>
+       </div>
+     </div>
+     <br />
 
      <?= MyFormGeneration::generateIDTextBox("journal",
        $publication['Journal'], "Journal", $hideDetailedFields); ?>

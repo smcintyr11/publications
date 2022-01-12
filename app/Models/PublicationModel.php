@@ -9,13 +9,15 @@ class PublicationModel extends Model {
   protected $table = "Publications";
   protected $primaryKey = "PublicationID";
   protected $useSoftDeletes = true;
-  protected $allowedFields = ["CreatedBy","ModifiedBy","Modified","DeletedBy","deleted_at","PrimaryTitle", "SecondaryTitle", "PublicationDate", "FiscalYearID",
-    "Volume", "StartPage", "EndPage", "ClientID", "OrganizationID", "AbstractEnglish", "AbstractFrench", "PLSEnglish", "PLSFrench",
-    "PRSEnglish", "PRSFrench", "ISBN", "AgreementNumber", "IPDNumber", "CrossReferenceNumber", "ProjectCode", "ReportNumber",
-    "ManuscriptNumber", "CostCentreID", "JournalID", "ReportTypeID", "StatusID", "StatusPersonID", "StatusDueDate", "DOI",
-    "JournalSubmissionDate", "JournalAcceptanceDate", "ConferenceSubmissionDate", "ConferenceAcceptanceDate", "EmbargoPeriod",
-    "EmbargoEndDate", "WebPublicationDate", "SentToClient", "SentToClientDate", "ReportFormatted", "RecordNumber",
-    "RushPublication", "SubmissionDeadline", "ConferenceName", "ConferenceDate", "ConferenceLocation"];
+  protected $allowedFields = ["CreatedBy","ModifiedBy","Modified","DeletedBy","deleted_at","PrimaryTitle", "SecondaryTitle",
+    "PublicationDate", "FiscalYearID", "Volume", "StartPage", "EndPage", "ClientID", "OrganizationID", "AbstractEnglish",
+    "AbstractFrench", "PLSEnglish", "PLSFrench", "PRSEnglish", "PRSFrench", "ISBN", "AgreementNumber", "IPDNumber",
+    "CrossReferenceNumber", "ProjectCode", "ReportNumber", "ManuscriptNumber", "CostCentreID", "JournalID", "ReportTypeID",
+    "StatusID", "StatusPersonID", "StatusDueDate", "DOI", "JournalSubmissionDate", "JournalAcceptanceDate",
+    "ConferenceSubmissionDate", "ConferenceAcceptanceDate", "EmbargoPeriod", "EmbargoEndDate", "WebPublicationDate",
+    "SentToClient", "SentToClientDate", "ReportFormatted", "RecordNumber", "RushPublication", "SubmissionDeadline",
+    "ConferenceName", "ConferenceDate", "ConferenceLocation", "SensitivePublication", "SensitivityOptionID", "SensitivityDetails",
+    "ArisingIP", "IPDisclosureKitComplete"];
 
   /**
    * Name: getPublication
@@ -37,14 +39,16 @@ class PublicationModel extends Model {
       p.StatusID, s.Status, p.StatusPersonID, p.StatusDueDate, p.DOI, p.JournalSubmissionDate, p.JournalAcceptanceDate,
       p.ConferenceSubmissionDate, p.ConferenceAcceptanceDate, p.EmbargoPeriod, p.EmbargoEndDate, p.WebPublicationDate,
       p.SentToClient, p.SentToClientDate, p.ReportFormatted, p.RecordNumber, p.RushPublication, p.SubmissionDeadline,
-      p.ConferenceName, p.ConferenceDate, p.ConferenceLocation, DATEDIFF(p.StatusDueDate, CURDATE()) AS DueDateDelta
-      FROM (((((((Publications AS p LEFT JOIN FiscalYears AS fy ON p.FiscalYearID = fy.FiscalYearID)
+      p.ConferenceName, p.ConferenceDate, p.ConferenceLocation, p.SensitivePublication, p.SensitivityOptionID, so.SensitivityOption,
+      p.SensitivityDetails, p.ArisingIP, p.IPDisclosureKitComplete, DATEDIFF(p.StatusDueDate, CURDATE()) AS DueDateDelta
+      FROM ((((((((Publications AS p LEFT JOIN FiscalYears AS fy ON p.FiscalYearID = fy.FiscalYearID)
       LEFT JOIN Clients AS c ON p.ClientID = c.ClientID)
       LEFT JOIN Organizations AS o ON p.OrganizationID = o.OrganizationID)
       LEFT JOIN CostCentres AS cc ON p.CostCentreID = cc.CostCentreID)
       LEFT JOIN Journals AS j ON p.JournalID = j.JournalID)
       LEFT JOIN ReportTypes AS rt ON p.ReportTypeID = rt.ReportTypeID)
       LEFT JOIN Statuses AS s ON p.StatusID = s.StatusID)
+      LEFT JOIN SensitivityOptions AS so ON p.SensitivityOptionID = so.SensitivityOptionID)
       WHERE p.deleted_at is null
       AND p.PublicationID = ' . $publicationID);
 
@@ -119,6 +123,12 @@ class PublicationModel extends Model {
         "ConferenceName" => $row->ConferenceName,
         "ConferenceDate" => $row->ConferenceDate,
         "ConferenceLocation" => $row->ConferenceLocation,
+        "SensitivePublication" => $row->SensitivePublication,
+        "SensitivityOptionID" => $row->SensitivityOptionID,
+        "SensitivityOption" => $row->SensitivityOption,
+        "SensitivityDetails" => $row->SensitivityDetails,
+        "ArisingIP" => $row->ArisingIP,
+        "IPDisclosureKitComplete" => $row->IPDisclosureKitComplete,
       );
     }
 

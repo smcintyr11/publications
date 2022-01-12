@@ -519,7 +519,7 @@ class MyFormGeneration {
     $html = $html . '<div class="form-group row">
     <label for="' . $checkboxID . '" class="col-2 col-form-label font-weight-bold">' . $checkboxLabel . ':</label>
     <div class="col-10">
-    <input class="custom-control custom-checkbox" type="checkbox" name="' . $checkboxID . '" ';
+    <input class="custom-control custom-checkbox" type="checkbox" name="' . $checkboxID . '" id="' . $checkboxID . '"';
     if ($value) {
       $html = $html . " checked ";
     }
